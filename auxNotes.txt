@@ -1,0 +1,6 @@
+Left trim (either side) sets(2 beeps) or clears(1 beep) AUX 1
+Center trim appears not to do anything but beep while pressed
+right trim appears not to do anything but beep while pressed
+switch on left joystick makes long beeps and sets AUX 3
+switch on right joystick makes short beeps until pressed again
+
