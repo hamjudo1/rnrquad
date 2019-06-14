@@ -1,4 +1,4 @@
-#include "Adafruit_VL53L0X.h"
+#include "../ModifiedExternal/vl53l0x/Adafruit_VL53L0X.h"
 
 // #include <Adafruit_NeoPixel.h>
 // i2c pin 31 SDA Arduino20 (default for wire library)
