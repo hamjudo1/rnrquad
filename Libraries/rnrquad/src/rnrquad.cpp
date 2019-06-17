@@ -1,6 +1,20 @@
 #include "rnrquad.h"
-#include "src/state.h"
+#include "state.h"
 
+const boolean normalComm = true;
+
+const int versionGPIO = 4; // grounded on greenboard.
+long initTime = 0;
+extern int activeRangeFinderCnt;
+
+extern void pollWatcher();
+long debugTime = 0, debugStart = 0;
+long commTime = 0, commStart = 0;
+long neoTime = 0, neoStart = 0;
+long rangeTime = 0, rangeStart = 0;
+long thinkTime = 0, thinkStart = 0;
+long nextDebugPacket = 1000;
+long iter = 0;
 void baseSetup()
 {
     while(1)
@@ -102,17 +116,3 @@ void setupSerial() {
         }
     }
 }
-const boolean normalComm = true;
-
-const int versionGPIO = 4; // grounded on greenboard.
-long initTime = 0;
-extern int activeRangeFinderCnt;
-
-extern void pollWatcher();
-long debugTime = 0, debugStart = 0;
-long commTime = 0, commStart = 0;
-long neoTime = 0, neoStart = 0;
-long rangeTime = 0, rangeStart = 0;
-long thinkTime = 0, thinkStart = 0;
-long nextDebugPacket = 1000;
-long iter = 0;

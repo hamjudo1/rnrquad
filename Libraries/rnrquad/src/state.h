@@ -136,6 +136,7 @@ extern const char *J5X5name ;
 
 extern void pollComm();
 extern void setupComm();
+extern void setupSerial();
 extern int radioDefault(void);
 extern void xn297L_debug(void);
 extern int XN297L_regs[32];  // brainstem only looks at 0x07, 0x0F, 0x17
