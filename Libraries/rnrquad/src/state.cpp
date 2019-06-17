@@ -1,5 +1,5 @@
 #include "state.h"
-#include "rt.h"
+
 boolean radioInitialized = false;
 int mode;
 long longestQuietTime = 0;

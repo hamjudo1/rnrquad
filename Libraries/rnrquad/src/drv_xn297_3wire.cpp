@@ -4,7 +4,7 @@
 // and ignoring the bytes we read back as we send, and by sending 0 bytes when we are receiving.
 //
 #include <SPI.h>  // just to get definition of boolean
-#include "rt.h"
+
 #include "state.h"
 
 int XN297L_regs[32];

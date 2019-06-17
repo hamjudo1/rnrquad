@@ -1,4 +1,4 @@
-#include "rt.h"
+
 #include "state.h"
 extern void xn_writereg(int reg, int val);
 rx_mode_t rxmode = RX_MODE_BIND;

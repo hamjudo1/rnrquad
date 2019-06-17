@@ -22,7 +22,7 @@
 */
 // #include <SERCOM.h>
 #include <SPI.h>
-#include "rt.h"
+
 #include "state.h"
 
 const int DIO8 = 8; // arduino8 DIO8 on logic analyzer
