@@ -1,6 +1,7 @@
 #include "rnrquad.h"
 #include "state.h"
 
+
 const boolean normalComm = true;
 
 const int versionGPIO = 4; // grounded on greenboard.
@@ -15,14 +16,8 @@ long rangeTime = 0, rangeStart = 0;
 long thinkTime = 0, thinkStart = 0;
 long nextDebugPacket = 1000;
 long iter = 0;
-void baseSetup()
+void rnrquad::baseSetup()
 {
-    while(1)
-    {
-        Serial.println("horse");
-        delay(1000);
-    }
-
     pinMode(versionGPIO, INPUT_PULLUP);
     if ( digitalRead(versionGPIO) ) {
         whiteBoard = true;
@@ -58,7 +53,7 @@ void baseSetup()
     initTime = millis();
 }
 
-void baseLoop()
+void rnrquad::baseLoop()
 {
     while (1) {
         colorSingleDot(1, 60);

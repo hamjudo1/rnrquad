@@ -10,7 +10,18 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="aa7f0cee-55a1-4b17-9938-597613779834" name="Default Changelist" comment="">
+      <change afterPath="$PROJECT_DIR$/Libraries/rnrquad/src/classes/src/ControllerState.cpp" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Libraries/rnrquad/src/classes/src/ControllerState.h" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Libraries/rnrquad/src/classes/src/Lidar.cpp" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Libraries/rnrquad/src/classes/src/Lidar.h" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Libraries/rnrquad/src/classes/src/RgbLed.cpp" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Libraries/rnrquad/src/classes/src/RgbLed.h" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Libraries/rnrquad/src/classes/src/SensorState.cpp" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Libraries/rnrquad/src/classes/src/SensorState.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Libraries/rnrquad/examples/hover/hover.ino" beforeDir="false" afterPath="$PROJECT_DIR$/Libraries/rnrquad/examples/hover/hover.ino" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Libraries/rnrquad/src/rnrquad.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/Libraries/rnrquad/src/rnrquad.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Libraries/rnrquad/src/rnrquad.h" beforeDir="false" afterPath="$PROJECT_DIR$/Libraries/rnrquad/src/rnrquad.h" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -24,10 +35,13 @@
   <component name="FileEditorManager">
     <leaf>
       <file pinned="false" current-in-tab="true">
-        <entry file="file://$PROJECT_DIR$/Libraries/rnrquad/examples/hover/hover.ino">
+        <entry file="file://$PROJECT_DIR$/Libraries/rnrquad/src/rnrquad.cpp">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="204">
-              <caret line="12" column="1" lean-forward="true" selection-start-line="12" selection-start-column="1" selection-end-line="12" selection-end-column="1" />
+            <state relative-caret-position="1462">
+              <caret line="86" column="27" selection-start-line="86" selection-start-column="27" selection-end-line="86" selection-end-column="27" />
+              <folding>
+                <element signature="e#0#20#0" expanded="true" />
+              </folding>
             </state>
           </provider>
         </entry>
@@ -42,6 +56,12 @@
       <find>setup</find>
       <find>activeRangeFinderCnt</find>
       <find>setupSerial</find>
+      <find>modified</find>
+      <find>horse</find>
+      <find>pollThink</find>
+      <find>pollThing</find>
+      <find>class</find>
+      <find>neoRule</find>
     </findStrings>
     <replaceStrings>
       <replace />
@@ -64,7 +84,24 @@
         <option value="$PROJECT_DIR$/Libraries/rnrquad/src/cortex.ino" />
         <option value="$PROJECT_DIR$/Libraries/rnrquad/rnrquad.cpp" />
         <option value="$PROJECT_DIR$/Libraries/rnrquad/src/state.h" />
+        <option value="$PROJECT_DIR$/Libraries/rnrquad/src/quadRange.cpp" />
         <option value="$PROJECT_DIR$/Libraries/rnrquad/examples/hover/hover.ino" />
+        <option value="$PROJECT_DIR$/Libraries/rnrquad/src/inputState.cpp" />
+        <option value="$PROJECT_DIR$/Libraries/rnrquad/src/controllerState.cpp" />
+        <option value="$PROJECT_DIR$/Libraries/rnrquad/src/ControllerState.cpp" />
+        <option value="$PROJECT_DIR$/Libraries/rnrquad/src/InputState.cpp" />
+        <option value="$PROJECT_DIR$/Libraries/rnrquad/src/Lidar.cpp" />
+        <option value="$PROJECT_DIR$/Libraries/rnrquad/src/SensorState.cpp" />
+        <option value="$PROJECT_DIR$/Libraries/rnrquad/src/rnrquad.h" />
+        <option value="$PROJECT_DIR$/Libraries/rnrquad/src/rnrquad.cpp" />
+        <option value="$PROJECT_DIR$/Libraries/rnrquad/src/classes/src/Lidar.h" />
+        <option value="$PROJECT_DIR$/Libraries/rnrquad/src/classes/src/ControllerState.h" />
+        <option value="$PROJECT_DIR$/Libraries/rnrquad/src/classes/src/SensorState.h" />
+        <option value="$PROJECT_DIR$/Libraries/rnrquad/src/classes/src/SensorState.cpp" />
+        <option value="$PROJECT_DIR$/Libraries/rnrquad/src/classes/src/Lidar.cpp" />
+        <option value="$PROJECT_DIR$/Libraries/rnrquad/src/classes/src/ControllerState.cpp" />
+        <option value="$PROJECT_DIR$/Libraries/rnrquad/src/classes/src/RgbLed.h" />
+        <option value="$PROJECT_DIR$/Libraries/rnrquad/src/classes/src/RgbLed.cpp" />
       </list>
     </option>
   </component>
@@ -121,6 +158,23 @@
               <item name="rnrquad" type="462c0819:PsiDirectoryNode" />
               <item name="src" type="462c0819:PsiDirectoryNode" />
             </path>
+            <path>
+              <item name="rnrquad" type="b2602c69:ProjectViewProjectNode" />
+              <item name="rnrquad" type="462c0819:PsiDirectoryNode" />
+              <item name="Libraries" type="462c0819:PsiDirectoryNode" />
+              <item name="rnrquad" type="462c0819:PsiDirectoryNode" />
+              <item name="src" type="462c0819:PsiDirectoryNode" />
+              <item name="classes" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="rnrquad" type="b2602c69:ProjectViewProjectNode" />
+              <item name="rnrquad" type="462c0819:PsiDirectoryNode" />
+              <item name="Libraries" type="462c0819:PsiDirectoryNode" />
+              <item name="rnrquad" type="462c0819:PsiDirectoryNode" />
+              <item name="src" type="462c0819:PsiDirectoryNode" />
+              <item name="classes" type="462c0819:PsiDirectoryNode" />
+              <item name="src" type="462c0819:PsiDirectoryNode" />
+            </path>
           </expand>
           <select />
         </subPane>
@@ -130,7 +184,7 @@
   <component name="PropertiesComponent">
     <property name="SHARE_PROJECT_CONFIGURATION_FILES" value="true" />
     <property name="WebServerToolWindowFactoryState" value="false" />
-    <property name="last_opened_file_path" value="$PROJECT_DIR$/Libraries/rnrquad" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$/Libraries/rnrquad/src/classes/src" />
     <property name="node.js.detected.package.eslint" value="true" />
     <property name="node.js.path.for.package.eslint" value="project" />
     <property name="node.js.selected.package.eslint" value="(autodetect)" />
@@ -139,16 +193,18 @@
   </component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$/Libraries/rnrquad/src/classes/src" />
+      <recent name="$PROJECT_DIR$/Libraries/rnrquad/src" />
       <recent name="$PROJECT_DIR$/Libraries/rnrquad" />
       <recent name="$PROJECT_DIR$/Libraries" />
       <recent name="$PROJECT_DIR$/Libraries/rnrquad/examples" />
     </key>
     <key name="MoveFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$/Libraries/rnrquad/src/classes/src" />
+      <recent name="$PROJECT_DIR$/Libraries/rnrquad/src/classes" />
       <recent name="$PROJECT_DIR$/Libraries/rnrquad/src" />
       <recent name="$PROJECT_DIR$/Libraries/rnrquad/examples/hover" />
       <recent name="$PROJECT_DIR$" />
-      <recent name="$PROJECT_DIR$/Libraries/rnrquad/Docs" />
-      <recent name="$PROJECT_DIR$/Libraries/rnrquad/ModifiedExternal/vl53l0x" />
     </key>
   </component>
   <component name="RunDashboard">
@@ -179,7 +235,7 @@
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="6559000" />
+    <option name="totallyTimeSpent" value="11658000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="0" y="23" width="1440" height="877" extended-state="6" />
@@ -189,7 +245,7 @@
       <window_info id="Structure" order="1" side_tool="true" weight="0.25" />
       <window_info id="Favorites" order="2" side_tool="true" />
       <window_info anchor="bottom" id="Message" order="0" />
-      <window_info anchor="bottom" id="Find" order="1" />
+      <window_info anchor="bottom" id="Find" order="1" weight="0.3299363" />
       <window_info anchor="bottom" id="Run" order="2" />
       <window_info anchor="bottom" id="Debug" order="3" weight="0.4" />
       <window_info anchor="bottom" id="Cvs" order="4" weight="0.25" />
@@ -229,13 +285,6 @@
     <entry file="file://$PROJECT_DIR$/Libraries/rnrquad/readme.txt">
       <provider selected="true" editor-type-id="text-editor" />
     </entry>
-    <entry file="file://$PROJECT_DIR$/Libraries/rnrquad/keywords.txt">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="51">
-          <caret line="3" lean-forward="true" selection-start-line="3" selection-end-line="3" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/rnrquad.ino">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="68">
@@ -243,55 +292,13 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/Libraries/rnrquad/src/state.cpp">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="187">
-          <caret line="11" column="27" lean-forward="true" selection-start-line="11" selection-start-column="27" selection-end-line="11" selection-end-column="27" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/Libraries/rnrquad/src/drv_xn297_3wire.cpp">
       <provider selected="true" editor-type-id="text-editor" />
-    </entry>
-    <entry file="file://$PROJECT_DIR$/Libraries/rnrquad/src/quadRange.cpp">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="918">
-          <caret line="60" column="24" selection-start-line="60" selection-start-column="4" selection-end-line="60" selection-end-column="24" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/Libraries/rnrquad/src/thinking.cpp">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="340">
-          <caret line="20" column="19" lean-forward="true" selection-start-line="20" selection-start-column="19" selection-end-line="20" selection-end-column="19" />
-          <folding>
-            <element signature="e#14575#14995#0" expanded="true" />
-            <element signature="e#16197#24133#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/Libraries/rnrquad/src/cortex.ino" />
     <entry file="file://$PROJECT_DIR$/Libraries/rnrquad/examples/hover/hover.h" />
     <entry file="file://$PROJECT_DIR$/Libraries/rnrquad/rnrquad.h" />
     <entry file="file://$PROJECT_DIR$/Libraries/rnrquad/rnrquad.cpp" />
-    <entry file="file://$PROJECT_DIR$/Libraries/rnrquad/src/state.h">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="17">
-          <caret line="1" selection-start-line="1" selection-end-line="1" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/Libraries/rnrquad/src/rnrquad.cpp">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="306">
-          <caret line="18" column="1" lean-forward="true" selection-start-line="18" selection-start-column="1" selection-end-line="18" selection-end-column="1" />
-          <folding>
-            <element signature="e#0#20#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/Libraries/rnrquad/library.properties">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="153">
@@ -299,10 +306,143 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/Libraries/rnrquad/src/quadRange.cpp">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="187">
+          <caret line="11" column="20" lean-forward="true" selection-start-line="11" selection-start-column="20" selection-end-line="11" selection-end-column="20" />
+          <folding>
+            <element signature="e#1072#1242#0" expanded="true" />
+            <element signature="e#1696#2210#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Libraries/rnrquad/src/brainStemComm.cpp">
+      <provider selected="true" editor-type-id="text-editor" />
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Libraries/rnrquad/src/state.cpp">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-4516">
+          <caret line="11" column="27" lean-forward="true" selection-start-line="11" selection-start-column="27" selection-end-line="11" selection-end-column="27" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Libraries/rnrquad/keywords.txt">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="51">
+          <caret line="3" lean-forward="true" selection-start-line="3" selection-end-line="3" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Libraries/rnrquad/src/neoSupp.cpp">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="119">
+          <caret line="7" column="9" lean-forward="true" selection-start-line="7" selection-start-column="9" selection-end-line="7" selection-end-column="9" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Libraries/rnrquad/src/rnrquad.h">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="85">
+          <caret line="5" column="2" selection-start-line="5" selection-start-column="2" selection-end-line="5" selection-end-column="2" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Libraries/rnrquad/src/state.h">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="438">
+          <caret line="259" column="12" selection-start-line="259" selection-start-column="12" selection-end-line="259" selection-end-column="12" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Libraries/rnrquad/src/classes/src/ad.h">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="136">
+          <caret line="8" lean-forward="true" selection-start-line="8" selection-end-line="8" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Libraries/rnrquad/src/thinking.cpp">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-167">
+          <caret line="406" lean-forward="true" selection-start-line="406" selection-end-line="406" />
+          <folding>
+            <element signature="e#14575#14995#0" expanded="true" />
+            <element signature="e#16197#24133#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Libraries/rnrquad/src/classes/src/ControllerState.cpp">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="170">
+          <caret line="10" column="1" lean-forward="true" selection-start-line="10" selection-start-column="1" selection-end-line="10" selection-end-column="1" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Libraries/rnrquad/src/classes/src/SensorState.h">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="306">
+          <caret line="18" column="16" lean-forward="true" selection-start-line="18" selection-start-column="16" selection-end-line="18" selection-end-column="16" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Libraries/rnrquad/src/classes/src/SensorState.cpp">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="221">
+          <caret line="13" column="18" lean-forward="true" selection-start-line="13" selection-start-column="18" selection-end-line="13" selection-end-column="18" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Libraries/rnrquad/src/classes/src/RgbLed.h">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="255">
+          <caret line="15" column="2" lean-forward="true" selection-start-line="15" selection-start-column="2" selection-end-line="15" selection-end-column="2" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Libraries/rnrquad/src/classes/src/RgbLed.cpp">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="255">
+          <caret line="15" column="7" lean-forward="true" selection-start-line="15" selection-start-column="7" selection-end-line="15" selection-end-column="7" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Libraries/rnrquad/src/classes/src/Lidar.h">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="119">
+          <caret line="7" column="6" selection-start-line="7" selection-start-column="6" selection-end-line="7" selection-end-column="6" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Libraries/rnrquad/src/classes/src/Lidar.cpp">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="136">
+          <caret line="8" column="1" lean-forward="true" selection-start-line="8" selection-start-column="1" selection-end-line="8" selection-end-column="1" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Libraries/rnrquad/src/classes/src/ControllerState.h">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="187">
+          <caret line="11" column="30" lean-forward="true" selection-start-line="11" selection-start-column="30" selection-end-line="11" selection-end-column="30" />
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/Libraries/rnrquad/examples/hover/hover.ino">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="204">
-          <caret line="12" column="1" lean-forward="true" selection-start-line="12" selection-start-column="1" selection-end-line="12" selection-end-column="1" />
+        <state relative-caret-position="255">
+          <caret line="15" lean-forward="true" selection-start-line="15" selection-end-line="15" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Libraries/rnrquad/src/rnrquad.cpp">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="1462">
+          <caret line="86" column="27" selection-start-line="86" selection-start-column="27" selection-end-line="86" selection-end-column="27" />
+          <folding>
+            <element signature="e#0#20#0" expanded="true" />
+          </folding>
         </state>
       </provider>
     </entry>

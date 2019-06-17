@@ -1,3 +1,6 @@
-extern void baseSetup();
-
-extern void baseLoop();
+class rnrquad
+{
+public:
+    void baseSetup();
+    void baseLoop();
+};
