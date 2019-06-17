@@ -3,6 +3,7 @@
 //
 
 #include "hover.h"
+#include "rnrquad.h"
 
 void setup()
 {

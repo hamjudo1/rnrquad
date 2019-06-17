@@ -416,7 +416,7 @@ void pollThinking() {
     xFlowC = xFlowC * 0.8;
     yFlowC = yFlowC * 0.8;
   }
- 
+
 
   //
   /*  if ( loopTime > 10 && loopTime < 100 ) {
