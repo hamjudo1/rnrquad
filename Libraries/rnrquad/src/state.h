@@ -1,3 +1,5 @@
+#include "Arduino.h"
+
 typedef unsigned char uint8_t;
 
 #define WHITEBOARD_WIRING 0

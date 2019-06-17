@@ -1,8 +1,14 @@
 #include "rnrquad.h"
 #include "state.h"
 
-extern void baseSetup()
+void baseSetup()
 {
+    while(1)
+    {
+        Serial.println("horse");
+        delay(1000);
+    }
+
     pinMode(versionGPIO, INPUT_PULLUP);
     if ( digitalRead(versionGPIO) ) {
         whiteBoard = true;
@@ -38,7 +44,7 @@ extern void baseSetup()
     initTime = millis();
 }
 
-extern void baseLoop()
+void baseLoop()
 {
     while (1) {
         colorSingleDot(1, 60);
