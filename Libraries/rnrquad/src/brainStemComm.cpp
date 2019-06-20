@@ -87,8 +87,10 @@ int outQueue[256];
 int queueSize = 0;
 int queuePnt = 0;
 
-int queueBytes(uint8_t data[], int count) {
-  for (int c = 0; c < count; c++) {
+int queueBytes(uint8_t data[], int count)
+{
+  for (int c = 0; c < count; c++)
+  {
     outQueue[c] = data[c];
   }
   queuePnt = 0;
@@ -96,11 +98,14 @@ int queueBytes(uint8_t data[], int count) {
   stuffQueued = stuffQueued + count;
 }
 
-int getQueuedByte() {
-  if (queuePnt < queueSize) {
+int getQueuedByte()
+{
+  if (queuePnt < queueSize)
+  {
     stuffUnqueued++;
     return outQueue[queuePnt++];
-  } else {
+  } else
+  {
     return 0;
   }
 }
@@ -110,24 +115,30 @@ float colorAngle = 0.0;
 int countList[15] = {1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15};
 int inbound[16];
 int SPI_STATE = 'N'; // N for Normal, W for Write, R for Read
-void processSPIByte(int D) {
+void processSPIByte(int D)
+{
   static int lastCortexState = 0;
   // Just keep a circular buffer and overwrite old stuff.
-  if (singlePass && ivp > slaveLogSize) {
+  if (singlePass && ivp > slaveLogSize)
+  {
     return;
   }
-  if (D < 0) {
+  if (D < 0)
+  {
     pNos[ivp % slaveLogSize] = 128; // Log an error.
     dVals[ivp % slaveLogSize] = -D;
     ivp++;
     return;
-  } else {
+  } else
+  {
     dVals[ivp % slaveLogSize] = D;
     pNos[ivp % slaveLogSize] = packetPos;
   }
-  if (packetPos == 0) {
+  if (packetPos == 0)
+  {
     SPI_STATE = 'N';
-    switch (D) {
+    switch (D)
+    {
       case 0x07: // send our status register
         byteToSend = cortexState;
         /*
@@ -232,95 +243,119 @@ void processSPIByte(int D) {
       case 0xFF:
         break;
     }
-  } else if (SPI_STATE == 'R') {
+  } else if (SPI_STATE == 'R')
+  {
     inbound[packetPos - 1] = D;
-  } else if (SPI_STATE == 'H') {
+  } else if (SPI_STATE == 'H')
+  {
     inbound[packetPos - 1] = D;
   }
   packetPos++;
   ivp++;
 }
 
-void packetComplete() {
-  if (SPI_STATE == 'H') {
-    if (packetPos > 0) {
+void packetComplete()
+{
+  if (SPI_STATE == 'H')
+  {
+    if (packetPos > 0)
+    {
       int prevVB = voltageByte;
       voltageByte = inbound[0];
-      if (voltageByte != prevVB) {
+      if (voltageByte != prevVB)
+      {
         // Serial.print("Voltage: ");
         voltage = (float) voltageByte / 50.0;
         // Serial.println((float)voltageByte / 50.0, 2);
       }
-    } else {
+    } else
+    {
       //  voltageByte = 257; // Impossible data value.
       static int borkCnt = 0;
       borkCnt++;
-      if (borkCnt % 100 == 1) {
+      if (borkCnt % 100 == 1)
+      {
         Serial.print(borkCnt);
         Serial.println(" Borked");
       }
     }
     SPI_STATE = 'N';
-  } else if (SPI_STATE == 'R') {
-    if (inbound[0] == 135) {
+  } else if (SPI_STATE == 'R')
+  {
+    if (inbound[0] == 135)
+    {
       char cmdname[16];
       int ip = 1, vp = 0;
-      while (inbound[ip] && ip < packetPos - 1) {
+      while (inbound[ip] && ip < packetPos - 1)
+      {
         cmdname[vp++] = inbound[ip++];
       }
       cmdname[vp] = inbound[ip++];
       runCmd(cmdname);
-    } else if (inbound[0] == 134) {
+    } else if (inbound[0] == 134)
+    {
       char varname[16];
       int ip = 1, vp = 0;
-      while (inbound[ip] && ip < packetPos - 1) {
+      while (inbound[ip] && ip < packetPos - 1)
+      {
         varname[vp++] = inbound[ip++];
       }
       varname[vp] = inbound[ip++];
       float value = 0.0;
       unsigned char *fp = (unsigned char *) &value;
-      for (int i = 0; i < 4 && ip < (packetPos - 1); i++) {
+      for (int i = 0; i < 4 && ip < (packetPos - 1); i++)
+      {
         *fp++ = inbound[ip++];
       }
       silentSetVar(varname, value);
-    } else if (inbound[0] == 136) {
+    } else if (inbound[0] == 136)
+    {
       int ip = 1;
       A = 0.0;
       B = 0.0;
       C = 0.0;
       unsigned char *fp = (unsigned char *) &A;
-      for (int i = 0; i < 4 && ip < (packetPos - 1); i++) {
+      for (int i = 0; i < 4 && ip < (packetPos - 1); i++)
+      {
         *fp++ = inbound[ip++];
       }
       fp = (unsigned char *) &B;
-      for (int i = 0; i < 4 && ip < (packetPos - 1); i++) {
+      for (int i = 0; i < 4 && ip < (packetPos - 1); i++)
+      {
         *fp++ = inbound[ip++];
       }
       fp = (unsigned char *) &C;
-      for (int i = 0; i < 4 && ip < (packetPos - 1); i++) {
+      for (int i = 0; i < 4 && ip < (packetPos - 1); i++)
+      {
         *fp++ = inbound[ip++];
       }
-    } else if (inbound[0] == 137) {
+    } else if (inbound[0] == 137)
+    {
       int ip = 1;
       D = 0.0;
       E = 0.0;
       F = 0.0;
       unsigned char *fp = (unsigned char *) &D;
-      for (int i = 0; i < 4 && ip < (packetPos - 1); i++) {
+      for (int i = 0; i < 4 && ip < (packetPos - 1); i++)
+      {
         *fp++ = inbound[ip++];
       }
       fp = (unsigned char *) &E;
-      for (int i = 0; i < 4 && ip < (packetPos - 1); i++) {
+      for (int i = 0; i < 4 && ip < (packetPos - 1); i++)
+      {
         *fp++ = inbound[ip++];
       }
       fp = (unsigned char *) &F;
-      for (int i = 0; i < 4 && ip < (packetPos - 1); i++) {
+      for (int i = 0; i < 4 && ip < (packetPos - 1); i++)
+      {
         *fp++ = inbound[ip++];
       }
-    } else {
+    } else
+    {
       Serial.print(SPI_STATE);
       Serial.print(" brainstem says: ");
-      for (int i = 0; i < packetPos - 1; i++) {
+      for (int i = 0; i < packetPos - 1; i++)
+      {
         Serial.print(inbound[i]);
         Serial.print(" ");
       }
@@ -333,16 +368,20 @@ void packetComplete() {
 
 int lastShownIvp = 0;
 
-void dispIntVal() {
+void dispIntVal()
+{
   int iPoint = ivp - slaveLogSize;
 
-  if (iPoint < lastShownIvp) {
+  if (iPoint < lastShownIvp)
+  {
     iPoint = lastShownIvp;
   }
   int bCnt = 0;
-  if (radioInitialized) {
+  if (radioInitialized)
+  {
     Serial.print("Radio Status ");
-  } else {
+  } else
+  {
     Serial.print("Radio NOT initialized ");
   }
   Serial.print(XN297L_regs[0x0f], 16);
@@ -355,20 +394,26 @@ void dispIntVal() {
   Serial.print(slaveLogSize);
   Serial.println(" bytes ");
   int i;
-  for (i = iPoint; i < ivp; i++) {
-    if (pNos[i % slaveLogSize] == 0) {
+  for (i = iPoint; i < ivp; i++)
+  {
+    if (pNos[i % slaveLogSize] == 0)
+    {
       Serial.print(" | ");
-    } else if (pNos[i % slaveLogSize] == 128) {
+    } else if (pNos[i % slaveLogSize] == 128)
+    {
       Serial.print(" *:"); // Error
-    } else {
+    } else
+    {
       Serial.print(" ");
     }
-    if (dVals[i % slaveLogSize] < 16) {
+    if (dVals[i % slaveLogSize] < 16)
+    {
       Serial.print("0"); // Always print 2 digit hex
     }
     Serial.print(dVals[i % slaveLogSize], 16);
     bCnt++;
-    if (bCnt % 64 == 0) {
+    if (bCnt % 64 == 0)
+    {
       Serial.println();
     }
   }
@@ -376,7 +421,8 @@ void dispIntVal() {
 }
 
 
-void SERCOM1_Handler() {
+void SERCOM1_Handler()
+{
   // Serial.println("In SPI Interrupt");
   SPISlaveInterrupts++;
   boolean dataWritten = false;
@@ -385,7 +431,8 @@ void SERCOM1_Handler() {
 
   uint8_t interrupts = SERCOM1->SPI.INTFLAG.reg; //Read SPI interrupt register
 
-  if (interrupts & (1 << 7)) {
+  if (interrupts & (1 << 7))
+  {
     SERCOM1->SPI.INTFLAG.bit.ERROR = 1;
   }
   // Serial.println(interrupts);
@@ -397,7 +444,8 @@ void SERCOM1_Handler() {
   // Writing a one to this bit will clear the flag.
   if (interrupts & (1 << 3))  // End of SPI packet.
   {
-    if (!byteProcessed) {
+    if (!byteProcessed)
+    {
       byteProcessed = true;
     }
 
@@ -411,16 +459,19 @@ void SERCOM1_Handler() {
   // received in a transaction will be an address.
   // Writing a zero to this bit has no effect.
   // Writing a one to this bit has no effect.
-  if (interrupts & (1 << 2)) {
+  if (interrupts & (1 << 2))
+  {
     // Serial.println("SPI Data Received Complete Interrupt");
     data = SERCOM1->SPI.DATA.reg; //Read data register
 
 
     // SERCOM1->SPI.INTFLAG.bit.RXC = 1; //clear receive complete interrupt // Cleared by reading data.
-    if (!byteProcessed) {
+    if (!byteProcessed)
+    {
       processSPIByte(data);
       byteProcessed = true;
-    } else {
+    } else
+    {
       processSPIByte(-3);
     }
 
@@ -432,7 +483,8 @@ void SERCOM1_Handler() {
   // if the transaction was initiated with an address match.
   // Writing a zero to this bit has no effect.
   // Writing a one to this bit will clear the flag.
-  if (interrupts & (1 << 1)) {
+  if (interrupts & (1 << 1))
+  {
     //    Serial.println("SPI Data Transmit Complete Interrupt");
     // SERCOM1->SPI.INTFLAG.bit.TXC = 1; //clear transmit complete interrupt
     SERCOM1->SPI.DATA.reg = byteToSend;
@@ -445,24 +497,29 @@ void SERCOM1_Handler() {
   // This flag is cleared by writing new data to DATA.
   // This flag is set when DATA is empty and ready for new data to transmit.
   // Writing a zero to this bit has no effect.
-  if (interrupts & (1 << 0)) {
+  if (interrupts & (1 << 0))
+  {
     // Serial.println("SPI Data Register Empty Interrupt");
 
-    if (!dataWritten) {
+    if (!dataWritten)
+    {
       SERCOM1->SPI.DATA.reg = byteToSend;
       byteToSend = getQueuedByte();
-    } else {
+    } else
+    {
       SERCOM1->SPI.INTFLAG.bit.DRE = 1;
     }
 
   }
-  if (!byteProcessed) {
+  if (!byteProcessed)
+  {
     processSPIByte(-2);
     byteProcessed = true;
   }
 }
 
-void spiSlave_init() {
+void spiSlave_init()
+{
   //Configure SERCOM1 SPI PINS
   // PORTA.DIR.reg &= ~PORT_PA16; //Set PA16 as input (MOSI) (Arduino 11)
   // PORTA.DIR.reg &= ~PORT_PA17; //Set PA17 as input (SCK)  (Arduino 13)
@@ -535,27 +592,33 @@ void spiSlave_init() {
   while (SERCOM1->SPI.SYNCBUSY.bit.CTRLB); //wait until receiver is enabled
 }
 
-int spi_recvbyte() {
+int spi_recvbyte()
+{
   return SPI.transfer(0);
 }
 
-void spi_sendbyte(int b) {
+void spi_sendbyte(int b)
+{
   SPI.transfer(b);
 }
 
-void spi_csoff(void) {
+void spi_csoff(void)
+{
   SPI.endTransaction();
   digitalWrite(PIN_SPI_SS, HIGH);
 }
 
-void spi_cson(void) {
+void spi_cson(void)
+{
   digitalWrite(PIN_SPI_SS, LOW);
   SPI.beginTransaction(SPISettings(2000000, MSBFIRST, SPI_MODE0));
 }
 
-void setupComm() {
+void setupComm()
+{
   int cnt = 0;
-  for (int i = 0; i < 5; i++) {
+  for (int i = 0; i < 5; i++)
+  {
     colorSingleDot(i, 240);
   }
   colorSingleDot(0, 120);
@@ -605,10 +668,12 @@ void pollWatcher() {
 #endif
 unsigned long nextDebugPrint = 0;
 
-void pollComm() {
+void pollComm()
+{
 
 
-  if (XN297L_regs[0x0f] != 0xC6) {
+  if (XN297L_regs[0x0f] != 0xC6)
+  {
     radioDefault();
 
   }
@@ -618,15 +683,19 @@ void pollComm() {
 
   // Serial.println("Looping");
   unsigned long now = millis();
-  if (now > nextDebugPrint) {
+  if (now > nextDebugPrint)
+  {
     nextDebugPrint = now + 500;
-    if (showBrainStemLog) {
+    if (showBrainStemLog)
+    {
       dispIntVal();
     }
-    if (showPacketLog) {
+    if (showPacketLog)
+    {
       dispPacketLog();
     }
-    if (showXn297LLog) {
+    if (showXn297LLog)
+    {
       dispXn297LLog();
     }
 

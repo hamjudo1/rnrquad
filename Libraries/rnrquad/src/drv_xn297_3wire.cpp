@@ -14,14 +14,16 @@ int XN297L_goodPayloadIn = 0;
 int XN297L_goodPayloadOut = 0;
 int XN297L_goodBuffer = 0;
 
-extern void mosi_input(void) {
+extern void mosi_input(void)
+{
   return;  // Not needed on our hardware, changes the data direction bit in the quadcopter CPU.
 }
 
 int xn297_regs_written = 0;
 int xn297_regs_read = 0;
 
-void xn_writereg(int reg, int val) {
+void xn_writereg(int reg, int val)
+{
   xn297_regs_written++;
   reg = reg & 0x3F;
   reg = reg | 0x20;
@@ -31,19 +33,22 @@ void xn_writereg(int reg, int val) {
   spi_csoff();
 }
 
-void xn_writereg(int reg, uint8_t data[], uint8_t size) {
+void xn_writereg(int reg, uint8_t data[], uint8_t size)
+{
   xn297_regs_written++;
   reg = reg & 0x3F;
   reg = reg | 0x20;
   spi_cson();
   spi_sendbyte(reg);
-  for (uint8_t i = 0; i < size; i++) {
+  for (uint8_t i = 0; i < size; i++)
+  {
     spi_sendbyte(data[i]);
   }
   spi_csoff();
 }
 
-int xn_readreg(int reg) {
+int xn_readreg(int reg)
+{
   xn297_regs_read++;
   reg = reg & 0x1F;
   spi_cson();
@@ -57,7 +62,8 @@ int xn_readreg(int reg) {
 
 int statusValCount[256];
 
-void checkPacket() {
+void checkPacket()
+{
 
   int status = xn_readreg(XN_STATUS);
   statusValCount[status]++;
@@ -78,7 +84,8 @@ void checkPacket() {
   //RX packet received
   //return 1;
   //}
-  if ((status & B00001110) != B00001110) {
+  if ((status & B00001110) != B00001110)
+  {
     // rx fifo not empty
     //  digitalWrite(9,HIGH);
     // digitalWrite(9,LOW);
@@ -98,11 +105,13 @@ void checkPacket() {
   }
 }
 
-void xn297L_debug() {
+void xn297L_debug()
+{
 
 }
 
-int xn_command(int command) {
+int xn_command(int command)
+{
   spi_cson();
   spi_sendbyte(command);
   spi_csoff();
@@ -111,12 +120,14 @@ int xn_command(int command) {
 //
 
 
-void xn_readpayload(uint8_t *data, int size) {
+void xn_readpayload(uint8_t *data, int size)
+{
   int index = 0;
   spi_cson();
   spi_sendbyte(B01100001); // read rx payload
   mosi_input();
-  while (index < size) {
+  while (index < size)
+  {
     data[index] = spi_recvbyte();
     index++;
   }
@@ -124,11 +135,13 @@ void xn_readpayload(uint8_t *data, int size) {
 }
 
 
-void xn_writerxaddress(int *addr) {
+void xn_writerxaddress(int *addr)
+{
   int index = 0;
   spi_cson();
   spi_sendbyte(0x2a);
-  while (index < 5) {
+  while (index < 5)
+  {
     spi_sendbyte(addr[index]);
     index++;
   }
@@ -136,11 +149,13 @@ void xn_writerxaddress(int *addr) {
 }
 
 
-void xn_writetxaddress(int *addr) {
+void xn_writetxaddress(int *addr)
+{
   int index = 0;
   spi_cson();
   spi_sendbyte(0x10 | 0x20);
-  while (index < 5) {
+  while (index < 5)
+  {
     spi_sendbyte(addr[index]);
     index++;
   }
@@ -148,13 +163,15 @@ void xn_writetxaddress(int *addr) {
 }
 
 
-void xn_writepayload(int data[], int size) {
+void xn_writepayload(int data[], int size)
+{
   int index = 0;
   uint8_t csum = 0;
   spi_cson();
   spi_sendbyte(0xA0); // write tx payload
   size--; // calculate and send an accurate checksum.
-  while (index < size) {
+  while (index < size)
+  {
     csum = csum + data[index];
     spi_sendbyte(data[index]);
     index++;

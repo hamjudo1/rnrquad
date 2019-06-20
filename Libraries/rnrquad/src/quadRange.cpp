@@ -52,7 +52,8 @@ rangeConfigElem_t rangeConfig[] = {
 #endif
 boolean whiteboard_wiring = WHITEBOARD_WIRING;
 
-void tcaselect(uint8_t i) {
+void tcaselect(uint8_t i)
+{
   if (i > 7) return;
 
   Wire.beginTransmission(TCAADDR);
@@ -90,7 +91,8 @@ void J5test() {
 }
 #endif
 
-void testAsyncRangeFinder() {
+void testAsyncRangeFinder()
+{
   loxes[0].startRanging();
   unsigned long now;
   unsigned long startTime = millis();
@@ -101,7 +103,8 @@ void testAsyncRangeFinder() {
   int count = 0;
   float oldShowRanges = showRanges;
   showRanges = 1.0;
-  while (millis() < startTime + 1000) {
+  while (millis() < startTime + 1000)
+  {
 
     pollRangeFinders();
   }
@@ -116,21 +119,25 @@ void testAsyncRangeFinder() {
     Serial.println(count);*/
 }
 
-bool initRangeFinderWRetries(int i) {
+bool initRangeFinderWRetries(int i)
+{
   int retryCount = 0;
   float *errorP;
-  while (retryCount < 5) {
+  while (retryCount < 5)
+  {
     bool success = loxes[activeRangeFinderCnt].begin(1 + (i * 2), true);
     Serial.print(allNames[i]);
     Serial.print(" ");
     Serial.print(i);
-    if (success) {
+    if (success)
+    {
       Serial.println(" range finder started normally");
 
       return true;
     }
     retryCount++;
-    if (retryCount == 1) {
+    if (retryCount == 1)
+    {
       errorP = &(errorList[errorListIndex++]);
       addSym(errorP, "RETRIES", "Range Finder startup glitch", "1");
     }
@@ -145,50 +152,61 @@ bool initRangeFinderWRetries(int i) {
   return false;
 }
 
-void setupRangeFinders() {
+void setupRangeFinders()
+{
   // Setup I2C
   Wire.begin();
   int i, aPinNo;
-  for (i = 0; i < RFINDERS; i++) {
+  for (i = 0; i < RFINDERS; i++)
+  {
     rangesInM[i] = 0.0;
     lastR[i] = 0;
-    for (int k = 0; k < HISTDEPTH; k++) {
+    for (int k = 0; k < HISTDEPTH; k++)
+    {
       rangeHist[i][k] = 0.0;
     }
     rangeHistTotal[i] = 0.0;
     aPinNo = rangeConfig[i].j5Index;
     if (aPinNo >=
-        0) {                 // Always set the xshut pin to low output, even for disabled range finders. Or they block the bus.
+        0)
+    {                 // Always set the xshut pin to low output, even for disabled range finders. Or they block the bus.
       pinMode(aPinNo, OUTPUT);
       digitalWrite(aPinNo, LOW);
     }
   }
-  for (i = 0; i < RFINDERS; i++) {
+  for (i = 0; i < RFINDERS; i++)
+  {
     allNames[i] = rangeConfig[i].Name;
-    if (rangeConfig[i].enabled) {
+    if (rangeConfig[i].enabled)
+    {
       Serial.print("quadRange active count ");
       Serial.print(activeRangeFinderCnt);
       Serial.print(" i ");
       Serial.println(i);
       aPinNo = rangeConfig[i].j5Index;
-      if (aPinNo >= 0) {
+      if (aPinNo >= 0)
+      {
         Serial.print("Setting Arduino Pin ");
         Serial.print(aPinNo);
         Serial.print(" HIGH for ");
         Serial.println(allNames[i]);
         digitalWrite(aPinNo, HIGH);
-      } else {
+      } else
+      {
         Serial.println("Initializing the light sensor with a pullup resistor and pulldown removed.");
       }
-      if (initRangeFinderWRetries(i)) {
+      if (initRangeFinderWRetries(i))
+      {
         //Serial.print("quadRange "); Serial.println(__LINE__);
         loxes[activeRangeFinderCnt].startRanging();
         activeRF[activeRangeFinderCnt] = i;
         activeRangeFinderCnt++;
         //  setPixRule(&showRange, i, -1, (void*)&rangesInM[i]);
-      } else {
+      } else
+      {
         setPixRule(&shortRed, i, -1, NULL);
-        if (aPinNo >= 0) {
+        if (aPinNo >= 0)
+        {
           Serial.print("Setting Arduino Pin ");
           Serial.print(aPinNo);
           Serial.println(" LOW");
@@ -198,7 +216,8 @@ void setupRangeFinders() {
       addSym(&(rangesInM[i]), allNames[i], "range finder", "3N");
       Serial.print("quadRange ");
       Serial.println(__LINE__);
-    } else {
+    } else
+    {
       setPixRule(&longRed, i, -1, NULL);
       Serial.print("quadRange ");
       Serial.println(__LINE__);
@@ -209,12 +228,15 @@ void setupRangeFinders() {
   Serial.println(__LINE__);
 }
 
-void pollRangeFinders() {
+void pollRangeFinders()
+{
   int count = 0;
   unsigned long now = millis();
-  for (int i = 0; i < activeRangeFinderCnt; i++) {
+  for (int i = 0; i < activeRangeFinderCnt; i++)
+  {
     int loxIndex = activeRF[i];
-    if (loxes[i].updateRangeInMeters(&(rangesInM[loxIndex]))) {
+    if (loxes[i].updateRangeInMeters(&(rangesInM[loxIndex])))
+    {
       lastR[loxIndex] = (lastR[loxIndex] + 1) % HISTDEPTH;
       // We don't know when it completes finding a range, since we are polling,
       // but we know when we start. So log the start time. Sometime after it completes and
@@ -232,14 +254,17 @@ void pollRangeFinders() {
       float deltaDist = rangeHist[loxIndex][lastR[loxIndex]] - rangeHist[loxIndex][indplus4];
 
 
-      if (deltaTime > 0.001 && deltaTime < 5.0) {
+      if (deltaTime > 0.001 && deltaTime < 5.0)
+      {
 
         rangeVel[loxIndex] = -deltaDist / deltaTime;
-      } else {
+      } else
+      {
         rangeVel[loxIndex] = -100.0; // Our signal for invalid data is about to impact.
       }
 
-      if (showRanges) {
+      if (showRanges)
+      {
         count++;
         Serial.print(" ");
         Serial.print(allNames[loxIndex]);
@@ -247,49 +272,62 @@ void pollRangeFinders() {
         Serial.print(rangesInM[loxIndex], 3);
         //  Serial.print(", "); Serial.print(rangeHistTotal[loxIndex]/HISTDEPTH,3);
       }
-    } else {
-      if ((micros() - rangeHistTS[loxIndex][lastR[loxIndex]]) > 100000) {
+    } else
+    {
+      if ((micros() - rangeHistTS[loxIndex][lastR[loxIndex]]) > 100000)
+      {
         rangeVel[loxIndex] = -100.0; // really fast towards impact
       }
     }
   }
-  if (showRanges) {
-    if (count > 0) {
+  if (showRanges)
+  {
+    if (count > 0)
+    {
       Serial.print(" time:");
       Serial.println(now);
-    } else {
+    } else
+    {
       Serial.print("*");
     }
   }
 }
 
-void pollRangeFindersOld() {
+void pollRangeFindersOld()
+{
   VL53L0X_RangingMeasurementData_t measure;
-  for (int i = 0; i < activeRangeFinderCnt; i++) {
+  for (int i = 0; i < activeRangeFinderCnt; i++)
+  {
     int loxIndex = activeRF[i];
     loxes[i].getSingleRangingMeasurement(&measure, false);
     // lox->rangingTest(&measure, false); // pass in 'true' to get debug data printout!
-    if (showRanges) {
+    if (showRanges)
+    {
       Serial.print(i);
       Serial.print(" ");
       Serial.print(loxIndex);
       Serial.print(" ");
       Serial.print(allNames[loxIndex]);
     }
-    if (measure.RangeStatus != 4) {  // phase failures have incorrect data
+    if (measure.RangeStatus != 4)
+    {  // phase failures have incorrect data
       rangesInM[loxIndex] = measure.RangeMilliMeter * 0.001;
-      if (showRanges) {
+      if (showRanges)
+      {
         Serial.print(" ");
         Serial.print(measure.RangeMilliMeter);
       }
-    } else {
+    } else
+    {
       rangesInM[loxIndex] = 1.300;
-      if (showRanges) {
+      if (showRanges)
+      {
         Serial.print(F(" too far "));
       }
     }
   }
-  if (showRanges) {
+  if (showRanges)
+  {
     Serial.println();
   }
 }

@@ -97,7 +97,8 @@ extern "C" {
 
 /** @brief Defines the parameters of the Get Version Functions
  */
-typedef struct {
+typedef struct
+{
   uint32_t revision; /*!< revision number */
   uint8_t major;     /*!< major number */
   uint8_t minor;     /*!< minor number */
@@ -107,7 +108,8 @@ typedef struct {
 
 /** @brief Defines the parameters of the Get Device Info Functions
  */
-typedef struct {
+typedef struct
+{
   char Name[VL53L0X_MAX_STRING_LENGTH];
   /*!< Name of the Device e.g. Left_Distance */
   char Type[VL53L0X_MAX_STRING_LENGTH];
@@ -231,7 +233,8 @@ typedef uint8_t VL53L0X_PowerModes;
 
 /** @brief Defines all parameters for the device
  */
-typedef struct {
+typedef struct
+{
   VL53L0X_DeviceModes DeviceMode;
   /*!< Defines type of measurement to be done for the next measure */
   VL53L0X_HistogramModes HistogramMode;
@@ -292,7 +295,8 @@ typedef uint8_t VL53L0X_State;
 
 /** @brief Structure containing the Dmax computation parameters and data
  */
-typedef struct {
+typedef struct
+{
   int32_t AmbTuningWindowFactor_K;
   /*!<  internal algo tuning (*1000) */
   int32_t RetSignalAt0mm;
@@ -303,7 +307,8 @@ typedef struct {
  * @struct VL53L0X_RangeData_t
  * @brief Range measurement data.
  */
-typedef struct {
+typedef struct
+{
   uint32_t TimeStamp;    /*!< 32-bit time stamp. */
   uint32_t MeasurementTimeUsec;
   /*!< Give the Measurement time needed by the device to do the
@@ -349,7 +354,8 @@ typedef struct {
  * @struct VL53L0X_HistogramData_t
  * @brief Histogram measurement data.
  */
-typedef struct {
+typedef struct
+{
   /* Histogram Measurement data */
   uint32_t HistogramData[VL53L0X_HISTOGRAM_BUFFER_SIZE];
   /*!< Histogram data */
@@ -371,14 +377,16 @@ typedef struct {
  * @struct VL53L0X_SpadData_t
  * @brief Spad Configuration Data.
  */
-typedef struct {
+typedef struct
+{
   uint8_t RefSpadEnables[VL53L0X_REF_SPAD_BUFFER_SIZE];
   /*!< Reference Spad Enables */
   uint8_t RefGoodSpadMap[VL53L0X_REF_SPAD_BUFFER_SIZE];
   /*!< Reference Spad Good Spad Map */
 } VL53L0X_SpadData_t;
 
-typedef struct {
+typedef struct
+{
   FixPoint1616_t OscFrequencyMHz; /* Frequency used */
 
   uint16_t LastEncodedTimeout;
@@ -430,7 +438,8 @@ typedef struct {
  *
  * These must never access directly but only via macro
  */
-typedef struct {
+typedef struct
+{
   VL53L0X_DMaxData_t DMaxData;
   /*!< Dmax Data */
   int32_t Part2PartOffsetNVMMicroMeter;
@@ -522,7 +531,8 @@ typedef uint8_t VL53L0X_VcselPeriod;
  *	Defines the states of all the steps in the scheduler
  *	i.e. enabled/disabled.
  */
-typedef struct {
+typedef struct
+{
   uint8_t TccOn;     /*!<Reports if Target Centre Check On  */
   uint8_t MsrcOn;     /*!<Reports if MSRC On  */
   uint8_t DssOn;       /*!<Reports if DSS On  */

@@ -3,7 +3,8 @@
 //
 #include "Lidar.h"
 
-Lidar::Lidar() {
+Lidar::Lidar()
+{
   value = 0;
   timeStamp = 0;
 }

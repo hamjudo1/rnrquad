@@ -5,7 +5,8 @@
 #ifndef RNRQUAD_LIDAR_H
 #define RNRQUAD_LIDAR_H
 
-class Lidar {
+class Lidar
+{
 public:
   Lidar();
 

@@ -280,7 +280,8 @@ extern unsigned long lastHeartBeat;
 const int MAX_ERROR_REPORTS = 12;
 extern float errorList[MAX_ERROR_REPORTS];
 extern int errorListIndex;
-typedef struct rangeConfigElem {
+typedef struct rangeConfigElem
+{
   int8_t j5Index;
   boolean enabled;
   const char *Name;
@@ -345,7 +346,8 @@ extern int cortexState;
 // or permanent, but we shouldn't do anything dangerous.
 extern boolean stateIndicateHardwareFault;
 
-enum cortex_debug {
+enum cortex_debug
+{
   packet_in_fifo = 0,
   we_are_bound,
   radio_confused,
@@ -353,7 +355,8 @@ enum cortex_debug {
   cortex_loop,
 };
 
-typedef enum {
+typedef enum
+{
   RX_MODE_BIND,
   RX_MODE_NORMAL
 } rx_mode_t;

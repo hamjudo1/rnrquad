@@ -6,7 +6,8 @@
 #define RNRQUAD_RGBLED_H
 
 
-class RgbLed {
+class RgbLed
+{
 public:
   RgbLed();
 

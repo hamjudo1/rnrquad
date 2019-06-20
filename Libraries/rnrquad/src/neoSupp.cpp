@@ -6,7 +6,8 @@ const long minNeoUpdateDelay = 40; // Wait at least 75ms before updating neopixe
 const int NUMPHASES = 3;
 const int SUBPHASES = 5;
 
-class neoRule {
+class neoRule
+{
 public:
   uint32_t (*fun_ptr)(int pixNo, int phaseNo, void *options);
 
@@ -24,16 +25,20 @@ Adafruit_DotStar pixel = Adafruit_DotStar(
 neoRule rules[NUMPHASES][NUMPIXELS];
 #endif
 
-uint32_t filler(int pixNo, int phaseNo, void *options) {
-  if (phaseNo < 0) {
+uint32_t filler(int pixNo, int phaseNo, void *options)
+{
+  if (phaseNo < 0)
+  {
     Serial.print("filler");
-  } else {
+  } else
+  {
     float angle = (phaseNo * 360.0) / NUMPHASES + pixNo * 15;
     return hsvColor(angle, 1.0, 1.0);
   }
 }
 
-typedef struct frStruct {
+typedef struct frStruct
+{
   float *val;
   float minval;
   float maxval;
@@ -41,31 +46,39 @@ typedef struct frStruct {
   float maxC;
 };
 
-float mapf(float val, float in_min, float in_max, float out_min, float out_max) {
+float mapf(float val, float in_min, float in_max, float out_min, float out_max)
+{
   return (val - in_min) * (out_max - out_min) / (in_max - in_min) + out_min;
 }
 
-uint32_t fixedColor(int pixNo, int phaseNo, void *options) {
-  if (phaseNo < 0) {
+uint32_t fixedColor(int pixNo, int phaseNo, void *options)
+{
+  if (phaseNo < 0)
+  {
     Serial.print("fixedColor");
   }
   return *(uint32_t *) options;
 }
 
-void *permCopyColorAsVoid(uint32_t color) {
+void *permCopyColorAsVoid(uint32_t color)
+{
   uint32_t *permCopy = (uint32_t *) malloc(sizeof(uint32_t));
   *permCopy = color;
   return (void *) permCopy;
 }
 
-void setFixedColor(int pixNo, uint32_t color) {
+void setFixedColor(int pixNo, uint32_t color)
+{
   setPixRule(&fixedColor, pixNo, -1, permCopyColorAsVoid(color));
 }
 
-uint32_t showFloat(int pixNo, int phaseNo, void *options) {
-  if (phaseNo < 0) {
+uint32_t showFloat(int pixNo, int phaseNo, void *options)
+{
+  if (phaseNo < 0)
+  {
     Serial.print("showFloat");
-  } else {
+  } else
+  {
     frStruct *fs = (frStruct *) options;
     float color = mapf(*(fs->val), fs->minval, fs->maxval, fs->minC, fs->maxC);
     return hsvColor(color, 1.0, 1.0);
@@ -74,8 +87,10 @@ uint32_t showFloat(int pixNo, int phaseNo, void *options) {
 // floatRange() the specified pixel's color will change smoothly from minColor to maxColor
 // as *v changes from minv to maxv.
 
-void floatRange(int pixNo, float *v, float minv, float maxv, float minColor, float maxColor) {
-  if (pixNo < NUMPIXELS) {
+void floatRange(int pixNo, float *v, float minv, float maxv, float minColor, float maxColor)
+{
+  if (pixNo < NUMPIXELS)
+  {
     frStruct *fs = (frStruct *) malloc(sizeof(frStruct));
     fs->val = v;
     fs->minval = minv;
@@ -86,15 +101,20 @@ void floatRange(int pixNo, float *v, float minv, float maxv, float minColor, flo
   }
 }
 
-uint32_t showRange(int pixNo, int phaseNo, void *options) {
-  if (pixNo < NUMPIXELS) {
-    if (phaseNo < 0) {
+uint32_t showRange(int pixNo, int phaseNo, void *options)
+{
+  if (pixNo < NUMPIXELS)
+  {
+    if (phaseNo < 0)
+    {
       Serial.print("showRange");
-    } else {
+    } else
+    {
       float angle;
       float range = *(float *) options;
       int rangeStep = (int) (range * 5);
-      if (rangeStep > 5) {
+      if (rangeStep > 5)
+      {
         rangeStep = 5;
       }
       angle = rangeStep * 60;
@@ -124,7 +144,8 @@ Adafruit_NeoPixel pixel = Adafruit_NeoPixel(NUMPIXELS, J5X5, NEO_GRB + NEO_KHZ80
 // Note, this version is suboptimal to make it easier for me to explain. There
 // are better versions out there.
 //
-uint32_t hsvColor(float h, float s, float v) {  // h is 0.-360., s and v are 0 to 1.0
+uint32_t hsvColor(float h, float s, float v)
+{  // h is 0.-360., s and v are 0 to 1.0
   // h is Hue, s is Saturation, v is Value.
   float r = 0., g = 0., b = 0.;
   // 360 degree color wheel, fmod() stands for Floating point MODulo. It divides the first
@@ -132,7 +153,8 @@ uint32_t hsvColor(float h, float s, float v) {  // h is 0.-360., s and v are 0 t
   // the original.
 
   h = fmod(h, 360.0);
-  if (h < 0.0) { //
+  if (h < 0.0)
+  { //
     h = 360.0 - h;
   }
 
@@ -140,22 +162,28 @@ uint32_t hsvColor(float h, float s, float v) {  // h is 0.-360., s and v are 0 t
   float hPrime = fmod(h, 60.0) / 60.0;
   float x = c * hPrime;
 
-  if (h < 60.) {
+  if (h < 60.)
+  {
     r = c;
     g = x * c;
-  } else if (h < 120.) {
+  } else if (h < 120.)
+  {
     r = c - x * c;
     g = c;
-  } else if (h < 180) {
+  } else if (h < 180)
+  {
     g = c;
     b = x;
-  } else if (h < 240) {
+  } else if (h < 240)
+  {
     g = c - x;
     b = c;
-  } else if (h < 300) {
+  } else if (h < 300)
+  {
     r = x;
     b = c;
-  } else {
+  } else
+  {
     r = c;
     b = c - x;
   }
@@ -167,10 +195,12 @@ uint32_t hsvColor(float h, float s, float v) {  // h is 0.-360., s and v are 0 t
   return pixel.Color(int(r * brightness), int(g * brightness), int(b * brightness));
 }
 
-void setupNeoSupp() {
+void setupNeoSupp()
+{
   int r = 50, g = 200, b = 50;
   pixel.begin();
-  for (int n = 0; n < NUMPIXELS; n++) {
+  for (int n = 0; n < NUMPIXELS; n++)
+  {
     pixel.setPixelColor(n, pixel.Color(r, g, b));
     delay(200);
     pixel.show();
@@ -178,7 +208,8 @@ void setupNeoSupp() {
   r = 50;
   g = 50;
   b = 50;
-  for (int n = 0; n < NUMPIXELS; n++) {
+  for (int n = 0; n < NUMPIXELS; n++)
+  {
     pixel.setPixelColor(n, pixel.Color(r, g, b));
     delay(200);
     pixel.show();
@@ -192,8 +223,10 @@ void setupNeoSupp() {
 #else
   Serial.println(" Neopixels");
 #endif
-  for (int pixNo = 0; pixNo < NUMPIXELS; pixNo++) {
-    for (int phaseNo = 0; phaseNo < NUMPHASES; phaseNo++) {
+  for (int pixNo = 0; pixNo < NUMPIXELS; pixNo++)
+  {
+    for (int phaseNo = 0; phaseNo < NUMPHASES; phaseNo++)
+    {
       rules[phaseNo][pixNo].fun_ptr = &filler;
       rules[phaseNo][pixNo].opt = (void *) NULL;
     }
@@ -201,32 +234,44 @@ void setupNeoSupp() {
 #endif
 }
 
-uint32_t shortRed(int pixNo, int phaseNo, void *options) {
-  if (phaseNo == 0) {
+uint32_t shortRed(int pixNo, int phaseNo, void *options)
+{
+  if (phaseNo == 0)
+  {
     return pixel.Color(40, 0, 0);
-  } else if (phaseNo > 0) {
+  } else if (phaseNo > 0)
+  {
     return pixel.Color(0, 0, 0);
-  } else {
+  } else
+  {
     Serial.print("shortRed");
   }
 }
 
-uint32_t longRed(int pixNo, int phaseNo, void *options) {
-  if (phaseNo == 0) {
+uint32_t longRed(int pixNo, int phaseNo, void *options)
+{
+  if (phaseNo == 0)
+  {
     return pixel.Color(0, 0, 0);
-  } else {
+  } else
+  {
     return pixel.Color(30, 0, 0);
   }
 }
 
-void setPixRule(uint32_t (*fp)(int, int, void *), int pixNo, int phaseNo, void *options) {
-  if (pixNo < NUMPIXELS) {
-    if (phaseNo == -1) {
-      for (int i = 0; i < NUMPHASES; i++) {
+void setPixRule(uint32_t (*fp)(int, int, void *), int pixNo, int phaseNo, void *options)
+{
+  if (pixNo < NUMPIXELS)
+  {
+    if (phaseNo == -1)
+    {
+      for (int i = 0; i < NUMPHASES; i++)
+      {
         rules[i][pixNo].fun_ptr = fp;
         rules[i][pixNo].opt = options;
       }
-    } else {
+    } else
+    {
       rules[phaseNo][pixNo].fun_ptr = fp;
       rules[phaseNo][pixNo].opt = options;
     }
@@ -239,9 +284,11 @@ boolean everyOther = false;
 int pixelPhase = 0;
 int subPhase = 0;
 
-void NeoUpdate() {
+void NeoUpdate()
+{
 #if   NUMPIXELS > 0
-  if (false) {
+  if (false)
+  {
     unsigned long now = millis();
     // We switched from Neopixels to Dotstars.
     // The Neopixel code was extra complex because Neopixels need strict timing and disable interrupts.
@@ -252,11 +299,14 @@ void NeoUpdate() {
     nextNeoUpdate = now + minNeoUpdateDelay;
 #endif
     subPhase = (subPhase + 1) % SUBPHASES;
-    if (subPhase == 0) {
+    if (subPhase == 0)
+    {
       pixelPhase = (pixelPhase + 1) % NUMPHASES;
     }
-    for (int pixNo = 0; pixNo < NUMPIXELS; pixNo++) {
-      if (rules[pixelPhase][pixNo].fun_ptr != NULL) {
+    for (int pixNo = 0; pixNo < NUMPIXELS; pixNo++)
+    {
+      if (rules[pixelPhase][pixNo].fun_ptr != NULL)
+      {
         pixel.setPixelColor(pixNo, rules[pixelPhase][pixNo].fun_ptr(pixNo, pixelPhase, rules[pixelPhase][pixNo].opt));
       }
     }
@@ -267,15 +317,19 @@ void NeoUpdate() {
 
 }
 
-void colorSingleDotA(int dotNo, float angle) {
-  if (greenBoard && true) {
+void colorSingleDotA(int dotNo, float angle)
+{
+  if (greenBoard && true)
+  {
     pixel.setPixelColor(dotNo, hsvColor(angle, 1.0, 1.0));
     pixel.show();
   }
 }
 
-void colorSingleDot(int dotNo, float angle) {
-  if (greenBoard && true) {
+void colorSingleDot(int dotNo, float angle)
+{
+  if (greenBoard && true)
+  {
     //  Serial.print("dot");
     //  Serial.print(dotNo);
     //  Serial.print(" ");
@@ -285,7 +339,8 @@ void colorSingleDot(int dotNo, float angle) {
   }
 }
 
-void rgbSingleDot1(int dotNo, float r, float g, float b) {
+void rgbSingleDot1(int dotNo, float r, float g, float b)
+{
   r = constrain(r, 0.0, 1.0);
   g = constrain(g, 0.0, 1.0);
   b = constrain(b, 0.0, 1.0);
@@ -293,7 +348,8 @@ void rgbSingleDot1(int dotNo, float r, float g, float b) {
   pixel.show();
 }
 
-void pollNeoSupp() {
+void pollNeoSupp()
+{
 #if WHITEBOARD_WIRING == 1
   unsigned long now = millis();
   if ( now > nextNeoUpdate ) { // Set a flag
@@ -308,16 +364,19 @@ void pollNeoSupp() {
 #endif
 }
 
-void showSmallInt(int iVal) {
+void showSmallInt(int iVal)
+{
   int mod5 = iVal % 5;
   int div5 = iVal / 5;
   float color2 = div5 * 60;
   float color1 = color2 + 60;
   int dot = 0;
-  for (; dot < mod5; dot++) {
+  for (; dot < mod5; dot++)
+  {
     colorSingleDotA(dot, color1);
   }
-  for (; dot < 5; dot++) {
+  for (; dot < 5; dot++)
+  {
     colorSingleDotA(dot, color2);
   }
 }

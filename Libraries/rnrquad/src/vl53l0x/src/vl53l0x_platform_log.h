@@ -46,7 +46,8 @@ extern "C" {
 
 //#define VL53L0X_LOG_ENABLE 0
 
-enum {
+enum
+{
   TRACE_LEVEL_NONE,
   TRACE_LEVEL_ERRORS,
   TRACE_LEVEL_WARNING,
@@ -56,13 +57,15 @@ enum {
   TRACE_LEVEL_IGNORE
 };
 
-enum {
+enum
+{
   TRACE_FUNCTION_NONE = 0,
   TRACE_FUNCTION_I2C = 1,
   TRACE_FUNCTION_ALL = 0x7fffffff //all bits except sign
 };
 
-enum {
+enum
+{
   TRACE_MODULE_NONE = 0x0,
   TRACE_MODULE_API = 0x1,
   TRACE_MODULE_PLATFORM = 0x2,

@@ -3,7 +3,8 @@
 //
 #include "ControllerState.h"
 
-ControllerState::ControllerState() {
+ControllerState::ControllerState()
+{
   leftStickXPosition = 0;
   leftStickYPosition = 0;
   rightStickXPosition = 0;

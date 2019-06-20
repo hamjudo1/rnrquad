@@ -46,7 +46,8 @@
 
 VL53L0X_Error VL53L0X_check_part_used(VL53L0X_DEV Dev,
                                       uint8_t *Revision,
-                                      VL53L0X_DeviceInfo_t *pVL53L0X_DeviceInfo) {
+                                      VL53L0X_DeviceInfo_t *pVL53L0X_DeviceInfo)
+{
   VL53L0X_Error Status = VL53L0X_ERROR_NONE;
   uint8_t ModuleIdInt;
   char *ProductId_tmp;
@@ -55,13 +56,16 @@ VL53L0X_Error VL53L0X_check_part_used(VL53L0X_DEV Dev,
 
   Status = VL53L0X_get_info_from_device(Dev, 2);
 
-  if (Status == VL53L0X_ERROR_NONE) {
+  if (Status == VL53L0X_ERROR_NONE)
+  {
     ModuleIdInt = VL53L0X_GETDEVICESPECIFICPARAMETER(Dev, ModuleId);
 
-    if (ModuleIdInt == 0) {
+    if (ModuleIdInt == 0)
+    {
       *Revision = 0;
       VL53L0X_COPYSTRING(pVL53L0X_DeviceInfo->ProductId, "");
-    } else {
+    } else
+    {
       *Revision = VL53L0X_GETDEVICESPECIFICPARAMETER(Dev, Revision);
       ProductId_tmp = VL53L0X_GETDEVICESPECIFICPARAMETER(Dev,
                                                          ProductId);
@@ -75,23 +79,29 @@ VL53L0X_Error VL53L0X_check_part_used(VL53L0X_DEV Dev,
 
 
 VL53L0X_Error VL53L0X_get_device_info(VL53L0X_DEV Dev,
-                                      VL53L0X_DeviceInfo_t *pVL53L0X_DeviceInfo) {
+                                      VL53L0X_DeviceInfo_t *pVL53L0X_DeviceInfo)
+{
   VL53L0X_Error Status = VL53L0X_ERROR_NONE;
   uint8_t revision_id;
   uint8_t Revision;
 
   Status = VL53L0X_check_part_used(Dev, &Revision, pVL53L0X_DeviceInfo);
-  if (Status == VL53L0X_ERROR_NONE) {
-    if (Revision == 0) {
+  if (Status == VL53L0X_ERROR_NONE)
+  {
+    if (Revision == 0)
+    {
       VL53L0X_COPYSTRING(pVL53L0X_DeviceInfo->Name,
                          VL53L0X_STRING_DEVICE_INFO_NAME_TS0);
-    } else if ((Revision <= 34) && (Revision != 32)) {
+    } else if ((Revision <= 34) && (Revision != 32))
+    {
       VL53L0X_COPYSTRING(pVL53L0X_DeviceInfo->Name,
                          VL53L0X_STRING_DEVICE_INFO_NAME_TS1);
-    } else if (Revision < 39) {
+    } else if (Revision < 39)
+    {
       VL53L0X_COPYSTRING(pVL53L0X_DeviceInfo->Name,
                          VL53L0X_STRING_DEVICE_INFO_NAME_TS2);
-    } else {
+    } else
+    {
       VL53L0X_COPYSTRING(pVL53L0X_DeviceInfo->Name,
                          VL53L0X_STRING_DEVICE_INFO_NAME_ES1);
     }
@@ -101,11 +111,13 @@ VL53L0X_Error VL53L0X_get_device_info(VL53L0X_DEV Dev,
 
   }
 
-  if (Status == VL53L0X_ERROR_NONE) {
+  if (Status == VL53L0X_ERROR_NONE)
+  {
     Status = VL53L0X_RdByte(Dev, VL53L0X_REG_IDENTIFICATION_MODEL_ID,
                             &pVL53L0X_DeviceInfo->ProductType);
   }
-  if (Status == VL53L0X_ERROR_NONE) {
+  if (Status == VL53L0X_ERROR_NONE)
+  {
     Status = VL53L0X_RdByte(Dev,
                             VL53L0X_REG_IDENTIFICATION_REVISION_ID,
                             &revision_id);
@@ -119,12 +131,14 @@ VL53L0X_Error VL53L0X_get_device_info(VL53L0X_DEV Dev,
 
 
 VL53L0X_Error VL53L0X_get_device_error_string(VL53L0X_DeviceError ErrorCode,
-                                              char *pDeviceErrorString) {
+                                              char *pDeviceErrorString)
+{
   VL53L0X_Error Status = VL53L0X_ERROR_NONE;
 
   LOG_FUNCTION_START("");
 
-  switch (ErrorCode) {
+  switch (ErrorCode)
+  {
     case VL53L0X_DEVICEERROR_NONE:
       VL53L0X_COPYSTRING(pDeviceErrorString,
                          VL53L0X_STRING_DEVICEERROR_NONE);
@@ -197,12 +211,14 @@ VL53L0X_Error VL53L0X_get_device_error_string(VL53L0X_DeviceError ErrorCode,
 }
 
 VL53L0X_Error VL53L0X_get_range_status_string(uint8_t RangeStatus,
-                                              char *pRangeStatusString) {
+                                              char *pRangeStatusString)
+{
   VL53L0X_Error Status = VL53L0X_ERROR_NONE;
 
   LOG_FUNCTION_START("");
 
-  switch (RangeStatus) {
+  switch (RangeStatus)
+  {
     case 0:
       VL53L0X_COPYSTRING(pRangeStatusString,
                          VL53L0X_STRING_RANGESTATUS_RANGEVALID);
@@ -238,12 +254,14 @@ VL53L0X_Error VL53L0X_get_range_status_string(uint8_t RangeStatus,
 }
 
 VL53L0X_Error VL53L0X_get_pal_error_string(VL53L0X_Error PalErrorCode,
-                                           char *pPalErrorString) {
+                                           char *pPalErrorString)
+{
   VL53L0X_Error Status = VL53L0X_ERROR_NONE;
 
   LOG_FUNCTION_START("");
 
-  switch (PalErrorCode) {
+  switch (PalErrorCode)
+  {
     case VL53L0X_ERROR_NONE:
       VL53L0X_COPYSTRING(pPalErrorString,
                          VL53L0X_STRING_ERROR_NONE);
@@ -327,12 +345,14 @@ VL53L0X_Error VL53L0X_get_pal_error_string(VL53L0X_Error PalErrorCode,
 }
 
 VL53L0X_Error VL53L0X_get_pal_state_string(VL53L0X_State PalStateCode,
-                                           char *pPalStateString) {
+                                           char *pPalStateString)
+{
   VL53L0X_Error Status = VL53L0X_ERROR_NONE;
 
   LOG_FUNCTION_START("");
 
-  switch (PalStateCode) {
+  switch (PalStateCode)
+  {
     case VL53L0X_STATE_POWERDOWN:
       VL53L0X_COPYSTRING(pPalStateString,
                          VL53L0X_STRING_STATE_POWERDOWN);
@@ -373,11 +393,13 @@ VL53L0X_Error VL53L0X_get_pal_state_string(VL53L0X_State PalStateCode,
 
 VL53L0X_Error VL53L0X_get_sequence_steps_info(
     VL53L0X_SequenceStepId SequenceStepId,
-    char *pSequenceStepsString) {
+    char *pSequenceStepsString)
+{
   VL53L0X_Error Status = VL53L0X_ERROR_NONE;
   LOG_FUNCTION_START("");
 
-  switch (SequenceStepId) {
+  switch (SequenceStepId)
+  {
     case VL53L0X_SEQUENCESTEP_TCC:
       VL53L0X_COPYSTRING(pSequenceStepsString,
                          VL53L0X_STRING_SEQUENCESTEP_TCC);
@@ -410,12 +432,14 @@ VL53L0X_Error VL53L0X_get_sequence_steps_info(
 
 
 VL53L0X_Error VL53L0X_get_limit_check_info(VL53L0X_DEV Dev, uint16_t LimitCheckId,
-                                           char *pLimitCheckString) {
+                                           char *pLimitCheckString)
+{
   VL53L0X_Error Status = VL53L0X_ERROR_NONE;
 
   LOG_FUNCTION_START("");
 
-  switch (LimitCheckId) {
+  switch (LimitCheckId)
+  {
     case VL53L0X_CHECKENABLE_SIGMA_FINAL_RANGE:
       VL53L0X_COPYSTRING(pLimitCheckString,
                          VL53L0X_STRING_CHECKENABLE_SIGMA_FINAL_RANGE);

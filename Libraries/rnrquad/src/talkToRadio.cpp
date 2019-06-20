@@ -154,7 +154,8 @@ unsigned long lastrxtime;
 unsigned long failsafetime;
 unsigned long secondtimer;
 
-void nextchannel() {
+void nextchannel()
+{
   rf_chan++;
   rf_chan &= 3; // same as %4
   xn_writereg(0x25, rfchannel[rf_chan]);
@@ -163,15 +164,19 @@ void nextchannel() {
 
 #define DISABLE_EXPO
 
-float packettodata(int *data) {
+float packettodata(int *data)
+{
   return (((data[0] & 0x0003) * 256 + data[1]) - 512) * 0.001953125;
 }
 
-void datatopacket(float val, uint8_t *packet) {
+void datatopacket(float val, uint8_t *packet)
+{
   int newVal;
-  if (val < 0.0) {
+  if (val < 0.0)
+  {
     newVal = int(0.5 + (val / 0.001953125)); // Convert from -1.0 to 1.0 to -512 to 511;
-  } else {
+  } else
+  {
     newVal = int(0.5 + (val / 0.001953125)); // Convert from -1.0 to 1.0 to -512 to 511;
   }
   newVal = newVal + 512;  // Should be a number 0 to 1023
@@ -180,7 +185,8 @@ void datatopacket(float val, uint8_t *packet) {
   packet[0] = newVal / 256 | (packet[0] & 0xfc);
 }
 
-void throttletopacket(float val, uint8_t *packet) {
+void throttletopacket(float val, uint8_t *packet)
+{
   // reverse of:
   // rx[3] =
   //      ((rxdata[8] & 0x0003) * 256 +
@@ -193,24 +199,30 @@ void throttletopacket(float val, uint8_t *packet) {
   packet[0] = newVal / 256 | (packet[0] & 0xfc);
 }
 
-void updateChecksum(uint8_t packet[15]) {
+void updateChecksum(uint8_t packet[15])
+{
   int sum = 0;
-  for (int i = 0; i < 14; i++) {
+  for (int i = 0; i < 14; i++)
+  {
     sum += packet[i];
   }
   packet[14] = sum & 0xff;
 }
 
-bool verifyChecksum(uint8_t packet[15]) {
+bool verifyChecksum(uint8_t packet[15])
+{
   int sum = 0;
-  for (int i = 0; i < 14; i++) {
+  for (int i = 0; i < 14; i++)
+  {
     sum += packet[i];
   }
   return packet[14] == (sum & 0xff);
 }
 
-void replaceRx(float newrx[4], uint8_t oldPacket[15], uint8_t newPacket[15]) {
-  for (int i = 0; i < 14; i++) {
+void replaceRx(float newrx[4], uint8_t oldPacket[15], uint8_t newPacket[15])
+{
+  for (int i = 0; i < 14; i++)
+  {
     newPacket[i] = oldPacket[i]; // Last byte is checksum, which we will calculate at the end.
   }
 
@@ -223,13 +235,17 @@ void replaceRx(float newrx[4], uint8_t oldPacket[15], uint8_t newPacket[15]) {
 bool auxChanged = false;
 char trims[4];
 
-static int decodepacket(void) {
-  if (rxdata[0] == 165) {
+static int decodepacket(void)
+{
+  if (rxdata[0] == 165)
+  {
     int sum = 0;
-    for (int i = 0; i < 14; i++) {
+    for (int i = 0; i < 14; i++)
+    {
       sum += rxdata[i];
     }
-    if ((sum & 0xFF) == rxdata[14]) {
+    if ((sum & 0xFF) == rxdata[14])
+    {
       rx[0] = packettodata(&rxdata[4]);
       rx[1] = packettodata(&rxdata[6]);
       rx[2] = packettodata(&rxdata[10]);
@@ -257,7 +273,8 @@ static int decodepacket(void) {
 
 
       for (int i = 0; i < 2; i++)
-        if (trims[i] != lasttrim[i]) {
+        if (trims[i] != lasttrim[i])
+        {
           aux[CH_PIT_TRIM + i] = trims[i] > lasttrim[i]; // 6, 7, 8
           lasttrim[i] = trims[i];
         }
@@ -283,24 +300,30 @@ static int decodepacket(void) {
       aux[CH_12] = (rxdata[2] & 0x40) ? 1 : 0;
       aux[CH_13] = (rxdata[1] & 0x02) ? 1 : 0;
       auxChanged = false;
-      for (int i = 0; i < AUXNUMBER - 2; i++) {
+      for (int i = 0; i < AUXNUMBER - 2; i++)
+      {
         auxchange[i] = 0;
-        if (lastaux[i] != aux[i]) {
+        if (lastaux[i] != aux[i])
+        {
           auxchange[i] = 1;
           auxChanged = true;
-          if (i == 8) {
+          if (i == 8)
+          {
             buttonPressed(8);
           }
-          if (i == 7) {
+          if (i == 7)
+          {
             buttonPressed(7);
           }
         }
         lastaux[i] = aux[i];
       }
-      if (auxchange[1]) {
+      if (auxchange[1])
+      {
         leftTrimChanged(aux[1]);
       }
-      if (showPacketLog && auxChanged) {
+      if (showPacketLog && auxChanged)
+      {
         dispPacketLog();
       }
 
@@ -312,11 +335,14 @@ static int decodepacket(void) {
 }
 
 
-void processPacket(uint8_t inbData[15]) {
-  for (int i = 0; i < 15; i++) {
+void processPacket(uint8_t inbData[15])
+{
+  for (int i = 0; i < 15; i++)
+  {
     rxdata[i] = inbData[i];
   }
-  if (rxdata[0] == 123) {
+  if (rxdata[0] == 123)
+  {
 //    rxdata[1] = rxdata[1] + 1; // Prove we are alive and responding to the right packet.
 //    updateChecksum(rxdata);
 //    writePacket(rxdata, 15);
@@ -325,7 +351,8 @@ void processPacket(uint8_t inbData[15]) {
 
     return;
   }
-  if (rxmode == RX_MODE_BIND) { // rx startup , bind mode
+  if (rxmode == RX_MODE_BIND)
+  { // rx startup , bind mode
     if (rxdata[0] == 0xa4) // 0xa4 is normal, 0xa3 is with telemetry
     { // bind packet
       rfchannel[0] = rxdata[6];
@@ -335,7 +362,8 @@ void processPacket(uint8_t inbData[15]) {
 
       uint8_t rxaddr[6] = {0x2a,};
 
-      for (int i = 1; i < 6; i++) {
+      for (int i = 1; i < 6; i++)
+      {
         rxaddr[i] = rxdata[i];
       }
       // write new rx address
@@ -349,16 +377,19 @@ void processPacket(uint8_t inbData[15]) {
       rxmode = RX_MODE_NORMAL;
       // cortexDebug(we_are_bound);
       cortexState |= STATE_BOUND;
-    } else {
+    } else
+    {
       // cortexDebug(radio_confused);
     }
-  } else {
+  } else
+  {
     unsigned long temptime = micros();
 
 
     boolean pass = decodepacket();
 
-    if (pass) {
+    if (pass)
+    {
       cortexState |= STATE_GOT_PACKET;
       unreadPacket = true;
       packetrx++;
@@ -372,16 +403,19 @@ void processPacket(uint8_t inbData[15]) {
       failsafe = 0;
       if (!telemetry_send)
         nextchannel();
-    } else {
+    } else
+    {
       // RX failure warning goes here.
     }
   }
 }
 
 
-void writeregs(uint8_t data[], uint8_t size) {
+void writeregs(uint8_t data[], uint8_t size)
+{
   spi_cson();
-  for (uint8_t i = 0; i < size; i++) {
+  for (uint8_t i = 0; i < size; i++)
+  {
     spi_sendbyte(data[i]);
   }
   spi_csoff();
@@ -391,7 +425,8 @@ void writeregs(uint8_t data[], uint8_t size) {
 // Logic analyzer says
 // | 39 01 | 2A 00 00 00 00 00 | 21 00 | 22 01 | 26 39 | 31 0F | 24 00 | 23 03 | E2 | 25 00 | 3D 38 | FD 00 | 20 8F | 0F C6 | 07 4E | 07 4E
 
-int radioDefault(void) {
+int radioDefault(void)
+{
 
   // Gauss filter amplitude - lowest
   static uint8_t demodcal[2] = {0x39, B00000001};
@@ -424,7 +459,8 @@ int radioDefault(void) {
   return rxcheck;
 }
 
-void writePacket(int txdata[], uint8_t size) {
+void writePacket(int txdata[], uint8_t size)
+{
   xn_writereg(0, XN_TO_TX);
   xn_command(FLUSH_TX);
   delayMicroseconds(100);

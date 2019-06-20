@@ -5,7 +5,8 @@
 #include "Lidar.h"
 #include "SensorState.h"
 
-SensorState::SensorState() {
+SensorState::SensorState()
+{
   batteryVoltage = 0;
 
   // Flow sensor

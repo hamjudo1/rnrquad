@@ -64,7 +64,8 @@ float takeOffs = 0;
 unsigned long timeOfLastExecution = 0;
 int launchPhase = 0;
 
-class simplePID {
+class simplePID
+{
 public:
   float PIDintegral;
   float PIDderivative;
@@ -83,14 +84,16 @@ public:
   void setLogging(bool On);
 };
 
-void simplePID::tstep(float dt) {
+void simplePID::tstep(float dt)
+{
   PIDintegral += *PIDerror * dt; //multiply error by time interval since last reading
   PIDderivative = (*PIDerror - prevError) / dt; //divide rise over run - dY/dt
   prevError = *PIDerror;
   *PIDoutput = (*KP) * (*PIDerror) + (*KI) * PIDintegral + (*KD) * PIDderivative;
 }
 
-void simplePID::begin(char *prefix, float *pError, float *pOutput, float *pKP, float *pKI, float *pKD) {
+void simplePID::begin(char *prefix, float *pError, float *pOutput, float *pKP, float *pKI, float *pKD)
+{
   PIDerror = pError;
   PIDoutput = pOutput;
   KP = pKP;
@@ -110,13 +113,15 @@ void simplePID::begin(char *prefix, float *pError, float *pOutput, float *pKP, f
 
 simplePID lrPID, udPID, fbPID;
 
-void pidInit() {
+void pidInit()
+{
   lrPID.begin("lr", &lrError, &lrOutput, &lrKP, &lrKI, &lrKD);
   udPID.begin("ud", &udError, &udOutput, &udKP, &udKI, &udKD);
   fbPID.begin("fb", &fbError, &fbOutput, &fbKP, &fbKI, &fbKD);
 }
 
-void pidLoop() {
+void pidLoop()
+{
   unsigned long now = millis();
   unsigned long dtInMilliSec = now - timeOfLastExecution;
   long timeOfLastExecution = now;
@@ -151,8 +156,10 @@ float undervoltCount = 0.0;
 int noFlowNoise = 0;
 extern int activeRangeFinderCnt;
 
-void setupThinking() {
-  for (int k = 0; k < 5; k++) {
+void setupThinking()
+{
+  for (int k = 0; k < 5; k++)
+  {
     takeOffPowerActual[k] = 0;
   }
   addSym(&undervoltCount, "uvc", "under voltage Event count", "0N");
@@ -195,7 +202,8 @@ void setupThinking() {
 
   // addSym((float*)&inp, "input", "PID - Input", "0L");
   // addSym((float*)&outp, "output", "PID - Output", "4L");
-  for (int i = 0; i < 10; i++) {
+  for (int i = 0; i < 10; i++)
+  {
     char *sym = (char *) calloc(strlen("el0") + 1, 1);
     char *desc = (char *) calloc(strlen("FLAG enable logging during state 0") + 1, 1);
     sprintf(sym, "el%d", i);
@@ -220,50 +228,65 @@ void setupThinking() {
 
 long onPlatformStartTime = 0;
 
-void offPlatform() {
+void offPlatform()
+{
   onPlatformStartTime = 0;
 }
 
-boolean onPlatform() {
+boolean onPlatform()
+{
   long now = millis();
   // if ( rangesInM[DOWNRANGE] > 0.060 && rangesInM[DOWNRANGE] < 0.120 ) {
-  if (rangesInM[DOWNRANGE] < 0.50) {
-    if (onPlatformStartTime > 0) {
-      if (onPlatformStartTime + 1000 < now) {
+  if (rangesInM[DOWNRANGE] < 0.50)
+  {
+    if (onPlatformStartTime > 0)
+    {
+      if (onPlatformStartTime + 1000 < now)
+      {
         return true;
       }
-    } else {
+    } else
+    {
       onPlatformStartTime = now;
     }
-  } else {
+  } else
+  {
     onPlatformStartTime = 0;
   }
   return false;
 }
 
-void translate() {
-  if (rangesInM[FRONTRANGE] > 0.3) {
+void translate()
+{
+  if (rangesInM[FRONTRANGE] > 0.3)
+  {
     fbSpeed += 0.002;
-  } else if (rangesInM[FRONTRANGE] < 0.2) {
+  } else if (rangesInM[FRONTRANGE] < 0.2)
+  {
     fbSpeed -= 0.002;
   }
-  if (rangesInM[LEFTRANGE] > 0.3) {
+  if (rangesInM[LEFTRANGE] > 0.3)
+  {
     lrSpeed += 0.002;
 
-  } else if (rangesInM[LEFTRANGE] < 0.2) {
+  } else if (rangesInM[LEFTRANGE] < 0.2)
+  {
     lrSpeed -= 0.002;
   }
 }
 
 extern float tokenVal;
 
-void keyboardThrottle() {
-  if (tokenVal >= 0.0) {
+void keyboardThrottle()
+{
+  if (tokenVal >= 0.0)
+  {
     ktMode = true;
     overrideGrams = tokenVal;
     Serial.print("overriding Throttle to ");
     Serial.println(overrideGrams, 1);
-  } else {
+  } else
+  {
     Serial.println("Leaving throttle override mode");
     ktMode = false;
   }
@@ -273,17 +296,21 @@ float maxAltitudeSeen = 0.0;
 float event = 0.0;
 float estoprange = 1.0;
 
-boolean okayToFly() {
+boolean okayToFly()
+{
   static boolean throttleDownSinceLastEvent = false;
-  if (rx[3] < 0.1) {
+  if (rx[3] < 0.1)
+  {
     throttleDownSinceLastEvent = true;
     maxAltitudeSeen = 0.0;
     notokay = 1.0; // + event;
     return false;
-  } else if (!throttleDownSinceLastEvent) {
+  } else if (!throttleDownSinceLastEvent)
+  {
     notokay = 2.0; // + event;
     return false;
-  } else if (voltage < 3.1) {
+  } else if (voltage < 3.1)
+  {
     undervoltCount++;
     notokay = 3.0; // + event;
     throttleDownSinceLastEvent = false;
@@ -305,11 +332,14 @@ boolean okayToFly() {
   return true;
 }
 
-float gramsToThrottle(float g) {
+float gramsToThrottle(float g)
+{
   grams = g;
-  if (!okayToFly()) {
+  if (!okayToFly())
+  {
     return 0.0;
-  } else {
+  } else
+  {
     //return mapf(g, 27.0, 33.0, 0.45, 0.6);
     return g / 80.0; // Multiplied by 20 for each motor in the brainstem.
   }
@@ -321,16 +351,20 @@ float gramsToThrottle(float g) {
 //  *PIDoutput = (*KP) * (*PIDerror) + (*KI) * PIDintegral + (*KD) * PIDderivative;
 long lastTimeMicros = 0;
 
-void udMotion(float dt, float newRx[4]) {
+void udMotion(float dt, float newRx[4])
+{
   float tf0, tf1;
   float dv = rangeVel[DOWNRANGE];
   float altitudeSeen = rangesInM[DOWNRANGE];
-  if (altitudeSeen == 0) {
+  if (altitudeSeen == 0)
+  {
     altitudeSeen = 1.3;
   }
-  if (trim1 > 0.5 && trim1 < 30) {
+  if (trim1 > 0.5 && trim1 < 30)
+  {
     tf1 = (15.5 - trim1) / 10.0;
-  } else {
+  } else
+  {
     tf1 = 0.0;
   }
   udTarget = constrain(udTargetUntrim + tf1, 0.0, 1.0);
@@ -342,9 +376,11 @@ void udMotion(float dt, float newRx[4]) {
   udDerivative = constrain(udDerivative, -0.20, 0.20);
   udPrevError = udError;
   udKP = udKPuntrim; // + (trim0 - 15.5);
-  if (trim0 > 0.5 && trim0 < 30) {
+  if (trim0 > 0.5 && trim0 < 30)
+  {
     tf0 = (trim0 - 15.5) / 50.0;
-  } else {
+  } else
+  {
     tf0 = 0.0;
   }
   udBase = udBaseUntrim + tf0;
@@ -355,7 +391,8 @@ void udMotion(float dt, float newRx[4]) {
 
 float lastLrError;
 
-void lrMotion(float dt) {
+void lrMotion(float dt)
+{
   float lDist = constrain(rangesInM[LEFTRANGE], 0.0, 0.6);
   float rDist = constrain(rangesInM[RIGHTRANGE], 0.0, 0.6);
   lrError = (rDist - lDist);
@@ -366,7 +403,8 @@ void lrMotion(float dt) {
 
 }
 
-void fbMotion(float dt) {
+void fbMotion(float dt)
+{
   float fDist = constrain(rangesInM[FRONTRANGE], 0.0, 1.0);
 
   fbError = (fDist - 0.50);
@@ -377,7 +415,8 @@ void fbMotion(float dt) {
 
 }
 
-void motion(float newRx[4]) {
+void motion(float newRx[4])
+{
   long nowMicros = micros();
   float dt = (nowMicros - lastTimeMicros) / 1000000.0;
   lastTimeMicros = nowMicros;
@@ -413,7 +452,8 @@ float rateOfClimb = 0.0;
 
 float prevAltitude = 0.0;
 
-float removeDeadzone(float val) {
+float removeDeadzone(float val)
+{
   /*if (val > 0.01) {
     val += 0.1;
     } else if ( val < -0.01) {
@@ -424,7 +464,8 @@ float removeDeadzone(float val) {
 
 unsigned long prevLoop = 0;
 
-void pollThinking() {
+void pollThinking()
+{
   float newRx[4];
   static float xFlow = 0.0, yFlow = 0.0, qFlow = 0.0;
 
@@ -433,10 +474,12 @@ void pollThinking() {
   unsigned long now = millis();
   unsigned long loopTime = now - prevLoop;
   prevLoop = now;
-  if (sampCnt > 0) {
+  if (sampCnt > 0)
+  {
     xFlowC = xFlow * (rangesInM[DOWNRANGE] - 0.025);
     yFlowC = yFlow * (rangesInM[DOWNRANGE] - 0.025);
-  } else {
+  } else
+  {
     xFlowC = xFlowC * 0.8;
     yFlowC = yFlowC * 0.8;
   }
@@ -457,19 +500,24 @@ void pollThinking() {
   /* Serial.print(dw, 3);
     Serial.print(", ");
     Serial.println(rateOfClimb, 5); */
-  for (int i = 0; i < 4; i++) {
+  for (int i = 0; i < 4; i++)
+  {
     newRx[i] = rx[i];
   }
   motion(newRx);
   throttle = newRx[3];
-  if (okayToFly()) {
+  if (okayToFly())
+  {
 
 
-    if (fabs(rx[0]) < 0.1 && fabs(rx[1]) < 0.1) {
+    if (fabs(rx[0]) < 0.1 && fabs(rx[1]) < 0.1)
+    {
       // xFlow Positive is traveling backwards, yFlow Positive is moving Left
 
-      if (rangesInM[DOWNRANGE] > 0.15) {
-        if (sampCnt > 0) {
+      if (rangesInM[DOWNRANGE] > 0.15)
+      {
+        if (sampCnt > 0)
+        {
           newRx[1] = constrain(removeDeadzone(yFlowC * 0.05), -0.3, +0.3); // newRx Positive is forward thrust
           newRx[0] = constrain(removeDeadzone(-xFlowC * 0.05), -0.3, +0.3); // Negative is left
         }
@@ -507,27 +555,37 @@ void pollThinking() {
     //  Serial.println(millis());
     //  }
 
-  } else { // under voltage or something
-    if (notokay == 3.0 || notokay == 2.0) { // active undervoltage
-      if (millis() % 666 > 222) {
+  } else
+  { // under voltage or something
+    if (notokay == 3.0 || notokay == 2.0)
+    { // active undervoltage
+      if (millis() % 666 > 222)
+      {
         rgbSingleDot1(2, 0.0, 0.0, 1.0);
-      } else {
+      } else
+      {
         rgbSingleDot1(2, 0.0, 1.0, 0.0);
       }
     }
 
     newRx[3] = 0;
   }
-  if (notokay < 1.5) {
-    if (millis() % 333 > 222) {
+  if (notokay < 1.5)
+  {
+    if (millis() % 333 > 222)
+    {
       rgbSingleDot1(2, 0.0, 0.0, 0.0);
-    } else {
+    } else
+    {
 
-      if (rangesInM[DOWNRANGE] > 0.6) {
+      if (rangesInM[DOWNRANGE] > 0.6)
+      {
         rgbSingleDot1(2, 0.0, 0.0, 0.5);
-      } else if (rangesInM[DOWNRANGE] > 0.1) {
+      } else if (rangesInM[DOWNRANGE] > 0.1)
+      {
         rgbSingleDot1(2, 0.0, 0.5, 0.0);
-      } else {
+      } else
+      {
         rgbSingleDot1(2, 0.5, 0.0, 0.0);
       }
     }
@@ -535,15 +593,20 @@ void pollThinking() {
   }
   replaceRx(newRx, XN297L_payloadIn[XN297L_goodPayloadIn], XN297L_payloadOut[!XN297L_goodPayloadOut]);
   updateChecksum(XN297L_payloadOut[!XN297L_goodPayloadOut]);
-  if (millis() % 666 > 555) {
+  if (millis() % 666 > 555)
+  {
     rgbSingleDot1(3, 0.0, 0.0, 0.0);
-  } else {
+  } else
+  {
 
-    if (noFlowNoise < 2) {
+    if (noFlowNoise < 2)
+    {
       rgbSingleDot1(3, 0.0, 0.5, 0.0);
-    } else if (noFlowNoise < 10) {
+    } else if (noFlowNoise < 10)
+    {
       rgbSingleDot1(3, 0.5, 0.5, 0.0);
-    } else {
+    } else
+    {
       rgbSingleDot1(3, 0.7, 0.7, 0.7);
     }
   }

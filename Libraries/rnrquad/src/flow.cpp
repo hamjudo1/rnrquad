@@ -8,12 +8,14 @@ float newestQFlow = 0.0, newestTFlow = 0.0;
 long sercom5timeStamp = 0;
 Uart flowSerial(&sercom5, 6, 20, SERCOM_RX_PAD_2,
                 UART_TX_PAD_0); // Create the new UART instance assigning it by arduino pin numbers
-void SERCOM5_Handler() {
+void SERCOM5_Handler()
+{
   flowSerial.IrqHandler();
   sercom5timeStamp = micros();
 }
 
-void setupFlow() {
+void setupFlow()
+{
   // The Feather M0 is derived from the Arduino Zero. The Zero uses
   // SERCOM5 to talk to the second USB port. The Feather M0 doesn't
   // have that hardware, but the drivers still know about it. When
@@ -36,19 +38,25 @@ float xSum = 0.0, ySum = 0.0, qSum = 0;
 unsigned long lastSample = 0;
 unsigned long lastAveTime = 0;
 
-int getAveFlow(float &xFlow, float &yFlow, float &qFlow) {
+int getAveFlow(float &xFlow, float &yFlow, float &qFlow)
+{
   long age = micros() - lastSample;
-  if (newestXFlow == 0.0 && newestYFlow == 0.0) {
+  if (newestXFlow == 0.0 && newestYFlow == 0.0)
+  {
     noFlowNoise++;
-  } else {
+  } else
+  {
     noFlowNoise = 0;
   }
-  if (age > 50000 || newestQFlow < 71) { // 50k microseconds, ie 50milliseconds.)
-    if (age > 50000) {
+  if (age > 50000 || newestQFlow < 71)
+  { // 50k microseconds, ie 50milliseconds.)
+    if (age > 50000)
+    {
       //for (int n = 3; n < 5; n++) {
       rgbSingleDot1(4, 1.0, 1.0, 1.0);
       //}
-    } else {
+    } else
+    {
       //for (int n = 3; n < 5; n++) {
       rgbSingleDot1(4, 1.0, 0.0, 0.0);
       //}
@@ -59,7 +67,8 @@ int getAveFlow(float &xFlow, float &yFlow, float &qFlow) {
   xFlow = 0.5 * xFlow + 0.5 * newestXFlow;
   yFlow = 0.5 * yFlow + 0.5 * newestYFlow;
   qFlow = newestQFlow;
-  for (int n = 3; n < 5; n++) {
+  for (int n = 3; n < 5; n++)
+  {
     float flowSquared = xFlow * xFlow + yFlow * yFlow;
     colorSingleDot(n, 120 + (flowSquared / 20.0));
     //  rgbSingleDot1(n, 0.1, 0.1, 0.1);
@@ -67,7 +76,8 @@ int getAveFlow(float &xFlow, float &yFlow, float &qFlow) {
   return 1;
 }
 
-void processFlowPacket(int dx, int dy, int q, int t) {
+void processFlowPacket(int dx, int dy, int q, int t)
+{
   lastSample = sercom5timeStamp;
   newestXFlow = dx; // Assumes flow sensor time is more stable than
   // measuring character timing. Will have to verify.
@@ -79,16 +89,19 @@ void processFlowPacket(int dx, int dy, int q, int t) {
 
 }
 
-int getAveFlowComplex(float &xFlow, float &yFlow, float &qFlow) {
+int getAveFlowComplex(float &xFlow, float &yFlow, float &qFlow)
+{
   long sc = sampleCount;
-  if (sc != 0 && lastAveTime != 0) {
+  if (sc != 0 && lastAveTime != 0)
+  {
     sampleCount = 0;
     static unsigned long lastStart = 0;
     lastStart = lastAveTime;
 
     static unsigned long duration = 0;
     duration = lastSample - lastStart;
-    if (duration > 0) {
+    if (duration > 0)
+    {
       xFlow = (1000000.0 * xSum) / duration;
       yFlow = (1000000.0 * ySum) / duration;
       qFlow = 0.05 * (float) qSum / (float) sc;
@@ -104,8 +117,10 @@ int getAveFlowComplex(float &xFlow, float &yFlow, float &qFlow) {
     xSum = 0;
     ySum = 0;
     qSum = 0;
-  } else {
-    for (int n = 0; n < 5; n++) {
+  } else
+  {
+    for (int n = 0; n < 5; n++)
+    {
       rgbSingleDot1(n, 1.0, 1.0, 1.0);
     }
     xFlow = 0.0;
@@ -116,7 +131,8 @@ int getAveFlowComplex(float &xFlow, float &yFlow, float &qFlow) {
   return sc;
 }
 
-void processFlowPacketComplex(int dx, int dy, int q, int t) {
+void processFlowPacketComplex(int dx, int dy, int q, int t)
+{
 
   static unsigned long deltaT = 0;
   static unsigned long lag = 0;
@@ -124,23 +140,28 @@ void processFlowPacketComplex(int dx, int dy, int q, int t) {
   static unsigned long ts = 0;
   ts = sercom5timeStamp;
   now = micros();
-  if (lastSample != 0) {
+  if (lastSample != 0)
+  {
     deltaT = ts - lastSample;
-    if (deltaT < smallDelta) {
+    if (deltaT < smallDelta)
+    {
       smallDelta = deltaT;
     }
-    if (deltaT > bigDelta) {
+    if (deltaT > bigDelta)
+    {
       bigDelta = deltaT;
     }
     lag = now - ts;
-    if (lag > worstLag) {
+    if (lag > worstLag)
+    {
       worstLag = lag;
     }
     totLag += lag;
   }
   lastSample = ts;
   sampleCount++;
-  if (q > 70) {
+  if (q > 70)
+  {
     // Serial.print(".");
 
     //colorSingleDot(0, (q - 70) * 30);
@@ -158,7 +179,8 @@ void processFlowPacketComplex(int dx, int dy, int q, int t) {
     //  Serial.print(", ");
     //   Serial.print(ySpeed);
     //   Serial.println(")");
-  } else {
+  } else
+  {
     xSum = 0;
     qSum += (q - 64);
     ySum = 0;
@@ -207,7 +229,8 @@ void processFlowPacketComplex(int dx, int dy, int q, int t) {
   }
 }
 
-void pollFlow() {
+void pollFlow()
+{
   static int flowIndex = 0;
   static int xFlow = 0;
   static int yFlow = 0;
@@ -215,14 +238,18 @@ void pollFlow() {
   static int qFlow = 0;
   static int iter = 0;
 
-  while (flowSerial.available() > 0) {
+  while (flowSerial.available() > 0)
+  {
     int c = flowSerial.read();
-    if (c < 0) {
+    if (c < 0)
+    {
       c = c + 256;
     }
-    switch (flowIndex) {
+    switch (flowIndex)
+    {
       case 0:
-        if (c != 0xFE) {
+        if (c != 0xFE)
+        {
           flowIndex = -1;
         }
         break;
@@ -234,7 +261,8 @@ void pollFlow() {
         break;
       case 3:
         xFlow += c * 256;
-        if (xFlow > 32767) {
+        if (xFlow > 32767)
+        {
           xFlow -= 65536;
         }
         break;
@@ -243,13 +271,15 @@ void pollFlow() {
         break;
       case 5:
         yFlow += c * 256;
-        if (yFlow > 32767) {
+        if (yFlow > 32767)
+        {
           yFlow -= 65536;
         }
         break;
       case 6:
         tFlow = c; // this is not Time.
-        if (tFlow > 127) {
+        if (tFlow > 127)
+        {
           tFlow = 256 - tFlow;
         }
         break;
@@ -259,7 +289,8 @@ void pollFlow() {
         // 80ish is very high contrast.
         break;
       case 8:
-        if (c == 0xAA) {
+        if (c == 0xAA)
+        {
           processFlowPacket(xFlow, yFlow, qFlow, tFlow);
         }
         flowIndex = -1;

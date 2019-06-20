@@ -55,7 +55,8 @@ extern "C" {
  * @brief    Generic PAL device type that does link between API and platform abstraction layer
  *
  */
-typedef struct {
+typedef struct
+{
   VL53L0X_DevData_t Data;               /*!< embed ST Ewok Dev  data as "Data"*/
 
   /*!< user specific field */

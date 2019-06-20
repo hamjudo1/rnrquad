@@ -18,11 +18,14 @@ long thinkTime = 0, thinkStart = 0;
 long nextDebugPacket = 1000;
 long iter = 0;
 
-void baseSetup() {
+void baseSetup()
+{
   pinMode(versionGPIO, INPUT_PULLUP);
-  if (digitalRead(versionGPIO)) {
+  if (digitalRead(versionGPIO))
+  {
     whiteBoard = true;
-  } else {
+  } else
+  {
     greenBoard = true;
   }
   // pinMode(simpleLED, OUTPUT);
@@ -32,15 +35,18 @@ void baseSetup() {
   setupDebug();
   setupNeoSupp();
   setupFlow();
-  for (int i = 0; i < 5; i++) {
+  for (int i = 0; i < 5; i++)
+  {
     colorSingleDot(i, 240);
   }
   colorSingleDot(1, 120.0);
   setupSerial();
   colorSingleDot(2, 120.0);
-  if (normalComm) {
+  if (normalComm)
+  {
     setupComm();
-  } else {
+  } else
+  {
     //  We have a bypass mode to test the quadcopter hardware with the unmodified code.
     // This will only work if all of the directly connected SPI bus lines are
     // left as inputs. The slave bus to the cortex is always configured that way, so
@@ -54,8 +60,10 @@ void baseSetup() {
   initTime = millis();
 }
 
-void baseLoop() {
-  while (1) {
+void baseLoop()
+{
+  while (1)
+  {
     colorSingleDot(1, 60);
     debugStart = millis();
     pollDebug();
@@ -81,14 +89,18 @@ void baseLoop() {
     pollThinking();
     colorSingleDot(1, 360);
     thinkTime = thinkTime + millis() - thinkStart;
-    if (micros() - lastHeartBeat > 50000) {
+    if (micros() - lastHeartBeat > 50000)
+    {
 
-      if (thinkStart % 666 > 222) {
+      if (thinkStart % 666 > 222)
+      {
         rgbSingleDot1(0, 1.0, 0.0, 0.0);
-      } else {
+      } else
+      {
         rgbSingleDot1(0, 0.0, 1.0, 0.0);
       }
-    } else {
+    } else
+    {
       colorSingleDot(0, iter++);
     }
   }
@@ -97,38 +109,47 @@ void baseLoop() {
 /**
  * Gets current values of all sensors
  */
-SensorState getSensorState() {
+SensorState getSensorState()
+{
   //TODO
 }
 
 /**
  * Gets current controller input values
  */
-ControllerState getControllerState() {
+ControllerState getControllerState()
+{
   //TODO
 }
 
 /**
  * Sets output controller values
  */
-void setControllerState() {
+void setControllerState()
+{
   //TODO
 }
 
 boolean waitForConnection = true;
 
-void setupSerial() {
+void setupSerial()
+{
   Serial.begin(115200);
-  if (waitForConnection) {
-    for (int i = 4; i > 0; i--) {
+  if (waitForConnection)
+  {
+    for (int i = 4; i > 0; i--)
+    {
       Serial.print(i);
       delay(1000);
     }
-    if (whiteBoard) {
+    if (whiteBoard)
+    {
       Serial.println("whiteBoard");
-    } else if (greenBoard) {
+    } else if (greenBoard)
+    {
       Serial.println("greenBoard");
-    } else {
+    } else
+    {
       Serial.println("mystery board");
     }
   }

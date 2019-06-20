@@ -5,7 +5,8 @@
 #ifndef RNRQUAD_CONTROLLERSTATE_H
 #define RNRQUAD_CONTROLLERSTATE_H
 
-class ControllerState {
+class ControllerState
+{
 public:
   ControllerState();
 

@@ -5,7 +5,8 @@
 #ifndef RNRQUAD_SENSORSTATE_H
 #define RNRQUAD_SENSORSTATE_H
 
-class SensorState {
+class SensorState
+{
 public:
   SensorState();
 
