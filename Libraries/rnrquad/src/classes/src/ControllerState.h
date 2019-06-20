@@ -7,11 +7,12 @@
 
 class ControllerState {
 public:
-    ControllerState();
-    float leftStickYPosition;
-    float leftStickXPosition;
-    float rightStickXPosition;
-    float rightStickYPosition;
+  ControllerState();
+
+  float leftStickYPosition;
+  float leftStickXPosition;
+  float rightStickXPosition;
+  float rightStickYPosition;
 };
 
 #endif

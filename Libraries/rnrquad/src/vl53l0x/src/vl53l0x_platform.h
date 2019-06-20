@@ -43,7 +43,7 @@ extern "C" {
  *
  * @brief All end user OS/platform/application porting
  */
- 
+
 /**
  * @defgroup VL53L0X_platform_group VL53L0 Platform Functions
  * @brief    VL53L0 Platform Functions
@@ -56,12 +56,12 @@ extern "C" {
  *
  */
 typedef struct {
-    VL53L0X_DevData_t Data;               /*!< embed ST Ewok Dev  data as "Data"*/
+  VL53L0X_DevData_t Data;               /*!< embed ST Ewok Dev  data as "Data"*/
 
-    /*!< user specific field */
-    uint8_t   I2cDevAddr;                /*!< i2c device address user specific field */
-    uint8_t   comms_type;                /*!< Type of comms : VL53L0X_COMMS_I2C or VL53L0X_COMMS_SPI */
-    uint16_t  comms_speed_khz;           /*!< Comms speed [kHz] : typically 400kHz for I2C           */
+  /*!< user specific field */
+  uint8_t I2cDevAddr;                /*!< i2c device address user specific field */
+  uint8_t comms_type;                /*!< Type of comms : VL53L0X_COMMS_I2C or VL53L0X_COMMS_SPI */
+  uint16_t comms_speed_khz;           /*!< Comms speed [kHz] : typically 400kHz for I2C           */
 
 } VL53L0X_Dev_t;
 
@@ -70,7 +70,7 @@ typedef struct {
  * @brief   Declare the device Handle as a pointer of the structure @a VL53L0X_Dev_t.
  *
  */
-typedef VL53L0X_Dev_t* VL53L0X_DEV;
+typedef VL53L0X_Dev_t *VL53L0X_DEV;
 
 /**
  * @def PALDevDataGet
@@ -214,7 +214,7 @@ VL53L0X_Error VL53L0X_UpdateByte(VL53L0X_DEV Dev, uint8_t index, uint8_t AndData
 
 /** @} end of VL53L0X_registerAccess_group */
 
-    
+
 /**
  * @brief execute delay in all polling API call
  *

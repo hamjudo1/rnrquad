@@ -5,32 +5,33 @@
 #ifndef RNRQUAD_SENSORSTATE_H
 #define RNRQUAD_SENSORSTATE_H
 
-class SensorState
-{
+class SensorState {
 public:
-    SensorState();
-    float batteryVoltage;
+  SensorState();
 
-    // Flow sensor
-    float flowX;
-    float flowY;
-    float flowQ;
+  float batteryVoltage;
 
-    // Gyro sensor
-    float gyroX;
-    float gyroY;
-    float gyroZ;
+  // Flow sensor
+  float flowX;
+  float flowY;
+  float flowQ;
 
-    // Accelerometer
-    float accelX;
-    float accelY;
-    float accelZ;
+  // Gyro sensor
+  float gyroX;
+  float gyroY;
+  float gyroZ;
 
-    // Lidars
-    Lidar lidarFront;
-    Lidar lidarTop;
-    Lidar lidarLeft;
-    Lidar lidarRight;
-    Lidar lidarBottom;
+  // Accelerometer
+  float accelX;
+  float accelY;
+  float accelZ;
+
+  // Lidars
+  Lidar lidarFront;
+  Lidar lidarTop;
+  Lidar lidarLeft;
+  Lidar lidarRight;
+  Lidar lidarBottom;
 };
+
 #endif

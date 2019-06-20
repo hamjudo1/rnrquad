@@ -3,12 +3,10 @@
 //
 
 
-void setup()
-{
-    baseSetup();
+void setup() {
+  baseSetup();
 }
 
-void loop()
-{
-    baseLoop();
+void loop() {
+  baseLoop();
 }

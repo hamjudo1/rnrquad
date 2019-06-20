@@ -47,26 +47,26 @@ extern "C" {
 //#define VL53L0X_LOG_ENABLE 0
 
 enum {
-    TRACE_LEVEL_NONE,
-    TRACE_LEVEL_ERRORS,
-    TRACE_LEVEL_WARNING,
-    TRACE_LEVEL_INFO,
-    TRACE_LEVEL_DEBUG,
-    TRACE_LEVEL_ALL,
-    TRACE_LEVEL_IGNORE
+  TRACE_LEVEL_NONE,
+  TRACE_LEVEL_ERRORS,
+  TRACE_LEVEL_WARNING,
+  TRACE_LEVEL_INFO,
+  TRACE_LEVEL_DEBUG,
+  TRACE_LEVEL_ALL,
+  TRACE_LEVEL_IGNORE
 };
 
 enum {
-    TRACE_FUNCTION_NONE = 0,
-    TRACE_FUNCTION_I2C  = 1,
-    TRACE_FUNCTION_ALL  = 0x7fffffff //all bits except sign
+  TRACE_FUNCTION_NONE = 0,
+  TRACE_FUNCTION_I2C = 1,
+  TRACE_FUNCTION_ALL = 0x7fffffff //all bits except sign
 };
 
 enum {
-    TRACE_MODULE_NONE              = 0x0,
-    TRACE_MODULE_API               = 0x1,
-    TRACE_MODULE_PLATFORM          = 0x2,
-    TRACE_MODULE_ALL               = 0x7fffffff //all bits except sign
+  TRACE_MODULE_NONE = 0x0,
+  TRACE_MODULE_API = 0x1,
+  TRACE_MODULE_PLATFORM = 0x2,
+  TRACE_MODULE_ALL = 0x7fffffff //all bits except sign
 };
 
 
@@ -100,10 +100,10 @@ void trace_print_module_function(uint32_t module, uint32_t level, uint32_t funct
 //#define VL53L0X_ErrLog( fmt, ...)  fprintf(stderr, "VL53L0X_ErrLog %s" fmt "\n", __func__, ##__VA_ARGS__)
 
 #else /* VL53L0X_LOG_ENABLE no logging */
-    #define VL53L0X_ErrLog(...) (void)0
-    #define _LOG_FUNCTION_START(module, fmt, ... ) (void)0
-    #define _LOG_FUNCTION_END(module, status, ... ) (void)0
-    #define _LOG_FUNCTION_END_FMT(module, status, fmt, ... ) (void)0
+#define VL53L0X_ErrLog(...) (void)0
+#define _LOG_FUNCTION_START(module, fmt, ...) (void)0
+#define _LOG_FUNCTION_END(module, status, ...) (void)0
+#define _LOG_FUNCTION_END_FMT(module, status, fmt, ...) (void)0
 #endif /* else */
 
 #define VL53L0X_COPYSTRING(str, ...) strcpy(str, ##__VA_ARGS__)

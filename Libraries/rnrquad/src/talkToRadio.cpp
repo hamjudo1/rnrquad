@@ -1,6 +1,8 @@
 
 #include "state.h"
+
 extern void xn_writereg(int reg, int val);
+
 rx_mode_t rxmode = RX_MODE_BIND;
 int rxdata[15];
 int telemetry_send = 0;
@@ -46,7 +48,7 @@ int rf_chan = 0;
 #define YAW 2
 
 // this should be precalculated by the compiler as it's a constant
-#define FILTERCALC( sampleperiod, filtertime) (1.0f - ( 6.0f*(float)sampleperiod) / ( 3.0f *(float)sampleperiod + (float)filtertime))
+#define FILTERCALC(sampleperiod, filtertime) (1.0f - ( 6.0f*(float)sampleperiod) / ( 3.0f *(float)sampleperiod + (float)filtertime))
 
 
 #define RXMODE_BIND 0
@@ -152,91 +154,89 @@ unsigned long lastrxtime;
 unsigned long failsafetime;
 unsigned long secondtimer;
 
-void nextchannel()
-{
+void nextchannel() {
   rf_chan++;
   rf_chan &= 3; // same as %4
   xn_writereg(0x25, rfchannel[rf_chan]);
 }
 
 
-
 #define DISABLE_EXPO
-float packettodata(int *data)
-{
+
+float packettodata(int *data) {
   return (((data[0] & 0x0003) * 256 + data[1]) - 512) * 0.001953125;
 }
 
-void datatopacket(float val, uint8_t* packet) {
+void datatopacket(float val, uint8_t *packet) {
   int newVal;
-  if ( val < 0.0 ) {
-    newVal = int( 0.5 + ( val / 0.001953125)); // Convert from -1.0 to 1.0 to -512 to 511;
+  if (val < 0.0) {
+    newVal = int(0.5 + (val / 0.001953125)); // Convert from -1.0 to 1.0 to -512 to 511;
   } else {
-    newVal = int( 0.5 + ( val / 0.001953125)); // Convert from -1.0 to 1.0 to -512 to 511;
+    newVal = int(0.5 + (val / 0.001953125)); // Convert from -1.0 to 1.0 to -512 to 511;
   }
   newVal = newVal + 512;  // Should be a number 0 to 1023
   newVal = constrain(newVal, 0, 1023); // Really is a number 0 to 1023.
   packet[1] = newVal & 0xff;
   packet[0] = newVal / 256 | (packet[0] & 0xfc);
 }
-void throttletopacket(float val, uint8_t* packet) {
+
+void throttletopacket(float val, uint8_t *packet) {
   // reverse of:
   // rx[3] =
   //      ((rxdata[8] & 0x0003) * 256 +
   //       rxdata[9]) * 0.000976562f;
-  int newVal = int( 0.5 + ( val / 0.000976562f)); // Convert from 0.0 to 1.0 to 0 to 511;
+  int newVal = int(0.5 + (val / 0.000976562f)); // Convert from 0.0 to 1.0 to 0 to 511;
   int byte0 = 0, byte1 = 0;
 
   newVal = constrain(newVal, 0, 1023); // Really is a number 0 to 1023.
   packet[1] = newVal & 0xff;
   packet[0] = newVal / 256 | (packet[0] & 0xfc);
 }
-void updateChecksum(uint8_t packet[15] ) {
+
+void updateChecksum(uint8_t packet[15]) {
   int sum = 0;
-  for (int i = 0; i < 14; i++)
-  {
+  for (int i = 0; i < 14; i++) {
     sum += packet[i];
   }
   packet[14] = sum & 0xff;
 }
+
 bool verifyChecksum(uint8_t packet[15]) {
   int sum = 0;
-  for (int i = 0; i < 14; i++)
-  {
+  for (int i = 0; i < 14; i++) {
     sum += packet[i];
   }
   return packet[14] == (sum & 0xff);
 }
-void replaceRx(float newrx[4], uint8_t oldPacket[15], uint8_t newPacket[15] ) {
+
+void replaceRx(float newrx[4], uint8_t oldPacket[15], uint8_t newPacket[15]) {
   for (int i = 0; i < 14; i++) {
     newPacket[i] = oldPacket[i]; // Last byte is checksum, which we will calculate at the end.
   }
 
-  datatopacket(newrx[0], &newPacket[4] );
-  datatopacket(newrx[1], &newPacket[6] );
-  datatopacket(newrx[2], &newPacket[10] );
-  throttletopacket(newrx[3], &newPacket[8] );
+  datatopacket(newrx[0], &newPacket[4]);
+  datatopacket(newrx[1], &newPacket[6]);
+  datatopacket(newrx[2], &newPacket[10]);
+  throttletopacket(newrx[3], &newPacket[8]);
 }
+
 bool auxChanged = false;
 char trims[4];
-static int decodepacket(void)
-{
-  if (rxdata[0] == 165)
-  {
+
+static int decodepacket(void) {
+  if (rxdata[0] == 165) {
     int sum = 0;
-    for (int i = 0; i < 14; i++)
-    {
+    for (int i = 0; i < 14; i++) {
       sum += rxdata[i];
     }
-    if ((sum & 0xFF) == rxdata[14])
-    {
+    if ((sum & 0xFF) == rxdata[14]) {
       rx[0] = packettodata(&rxdata[4]);
       rx[1] = packettodata(&rxdata[6]);
       rx[2] = packettodata(&rxdata[10]);
       // throttle
       rx[3] =
-        ((rxdata[8] & 0x0003) * 256 +
-         rxdata[9]) * 0.000976562f;
+          ((rxdata[8] & 0x0003) * 256 +
+           rxdata[9]) * 0.000976562f;
 
 #ifndef DISABLE_EXPO
       rx[0] = rcexpo(rx[0], EXPO_XY);
@@ -249,16 +249,15 @@ static int decodepacket(void)
       //#ifdef USE_STOCK_TX
 
       trims[0] = rxdata[6] >> 2;
-      trim0 = (float)trims[0] * 0.5;
+      trim0 = (float) trims[0] * 0.5;
       trims[1] = rxdata[4] >> 2;
-      trim1 = trim1offset + (float)trims[1] * 0.5;
+      trim1 = trim1offset + (float) trims[1] * 0.5;
       trims[2] = rxdata[8] >> 2;
       trims[3] = rxdata[10] >> 2;
 
 
       for (int i = 0; i < 2; i++)
-        if (trims[i] != lasttrim[i])
-        {
+        if (trims[i] != lasttrim[i]) {
           aux[CH_PIT_TRIM + i] = trims[i] > lasttrim[i]; // 6, 7, 8
           lasttrim[i] = trims[i];
         }
@@ -284,25 +283,24 @@ static int decodepacket(void)
       aux[CH_12] = (rxdata[2] & 0x40) ? 1 : 0;
       aux[CH_13] = (rxdata[1] & 0x02) ? 1 : 0;
       auxChanged = false;
-      for (int i = 0; i < AUXNUMBER - 2; i++)
-      {
+      for (int i = 0; i < AUXNUMBER - 2; i++) {
         auxchange[i] = 0;
         if (lastaux[i] != aux[i]) {
           auxchange[i] = 1;
           auxChanged = true;
-          if ( i == 8 ) {
+          if (i == 8) {
             buttonPressed(8);
           }
-          if ( i == 7 ) {
+          if (i == 7) {
             buttonPressed(7);
           }
         }
         lastaux[i] = aux[i];
       }
-      if ( auxchange[1] ) {
+      if (auxchange[1]) {
         leftTrimChanged(aux[1]);
       }
-      if ( showPacketLog && auxChanged ) {
+      if (showPacketLog && auxChanged) {
         dispPacketLog();
       }
 
@@ -315,10 +313,10 @@ static int decodepacket(void)
 
 
 void processPacket(uint8_t inbData[15]) {
-  for ( int i = 0; i < 15; i++) {
+  for (int i = 0; i < 15; i++) {
     rxdata[i] = inbData[i];
   }
-  if ( rxdata[0] == 123 ) {
+  if (rxdata[0] == 123) {
 //    rxdata[1] = rxdata[1] + 1; // Prove we are alive and responding to the right packet.
 //    updateChecksum(rxdata);
 //    writePacket(rxdata, 15);
@@ -327,8 +325,7 @@ void processPacket(uint8_t inbData[15]) {
 
     return;
   }
-  if (rxmode == RX_MODE_BIND)
-  { // rx startup , bind mode
+  if (rxmode == RX_MODE_BIND) { // rx startup , bind mode
     if (rxdata[0] == 0xa4) // 0xa4 is normal, 0xa3 is with telemetry
     { // bind packet
       rfchannel[0] = rxdata[6];
@@ -336,18 +333,17 @@ void processPacket(uint8_t inbData[15]) {
       rfchannel[2] = rxdata[8];
       rfchannel[3] = rxdata[9];
 
-      uint8_t rxaddr[6] = { 0x2a ,  };
+      uint8_t rxaddr[6] = {0x2a,};
 
-      for ( int i = 1 ; i < 6; i++)
-      {
+      for (int i = 1; i < 6; i++) {
         rxaddr[i] = rxdata[i];
       }
       // write new rx address
-      writeregs( rxaddr , sizeof(rxaddr) );
+      writeregs(rxaddr, sizeof(rxaddr));
       rxaddr[0] = 0x30; // tx register ( write ) number
 
       // write new tx address
-      writeregs( rxaddr , sizeof(rxaddr) );
+      writeregs(rxaddr, sizeof(rxaddr));
 
       xn_writereg(0x25, rfchannel[rf_chan]);    // Set channel frequency
       rxmode = RX_MODE_NORMAL;
@@ -362,8 +358,7 @@ void processPacket(uint8_t inbData[15]) {
 
     boolean pass = decodepacket();
 
-    if (pass)
-    {
+    if (pass) {
       cortexState |= STATE_GOT_PACKET;
       unreadPacket = true;
       packetrx++;
@@ -377,19 +372,16 @@ void processPacket(uint8_t inbData[15]) {
       failsafe = 0;
       if (!telemetry_send)
         nextchannel();
-    }
-    else {
+    } else {
       // RX failure warning goes here.
     }
   }
 }
 
 
-void writeregs(uint8_t data[], uint8_t size)
-{
+void writeregs(uint8_t data[], uint8_t size) {
   spi_cson();
-  for (uint8_t i = 0; i < size; i++)
-  {
+  for (uint8_t i = 0; i < size; i++) {
     spi_sendbyte(data[i]);
   }
   spi_csoff();
@@ -402,12 +394,12 @@ void writeregs(uint8_t data[], uint8_t size)
 int radioDefault(void) {
 
   // Gauss filter amplitude - lowest
-  static uint8_t demodcal[2] = { 0x39 , B00000001 };
-  writeregs( demodcal , sizeof(demodcal) );
+  static uint8_t demodcal[2] = {0x39, B00000001};
+  writeregs(demodcal, sizeof(demodcal));
 
 
-  static uint8_t rxaddr[6] = { 0x2a , 0 , 0 , 0 , 0 , 0  };
-  writeregs( rxaddr , sizeof(rxaddr) );
+  static uint8_t rxaddr[6] = {0x2a, 0, 0, 0, 0, 0};
+  writeregs(rxaddr, sizeof(rxaddr));
 
   xn_writereg(EN_AA, 0);      // aa disabled | 21 00 |
   xn_writereg(EN_RXADDR, 1);  // pipe 0 only  | 22 01 |

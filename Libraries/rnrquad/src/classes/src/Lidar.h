@@ -5,12 +5,12 @@
 #ifndef RNRQUAD_LIDAR_H
 #define RNRQUAD_LIDAR_H
 
-class Lidar
-{
+class Lidar {
 public:
-    Lidar();
-    float timeStamp; // Time of last Measurement
-    float value;
+  Lidar();
+
+  float timeStamp; // Time of last Measurement
+  float value;
 };
 
 #endif

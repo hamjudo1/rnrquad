@@ -41,12 +41,12 @@ float tState;
 int lCnt = 0;
 float errorList[MAX_ERROR_REPORTS]; // these are to hold codes associated with errors
 int errorListIndex = 0;
-float A=0.0;
-float B=0.0;
-float C=0.0;
-float D=0.0;
-float E=0.0;
-float F=0.0;
+float A = 0.0;
+float B = 0.0;
+float C = 0.0;
+float D = 0.0;
+float E = 0.0;
+float F = 0.0;
 
 void showUsageTime() {
   long totTime = debugTime + commTime + neoTime + rangeTime + thinkTime;
@@ -70,18 +70,19 @@ void showUsageTime() {
 void pollDebug() {
   lCnt++;
   // digitalWrite(simpleLED, lCnt % 2);
-  if ( lCnt % 40 == 0 ) {
-    if ( showUsageLog ) {
+  if (lCnt % 40 == 0) {
+    if (showUsageLog) {
       showUsageTime();
     }
   }
   pollWatch();
   pollBlink();
-  while (Serial.available() ) {
+  while (Serial.available()) {
     int c = Serial.read();
     processChar(c);
   }
 }
+
 void sysStatus() {
   Serial.print("Uptime ");
   Serial.print(millis());
@@ -103,7 +104,7 @@ void sysStatus() {
   Serial.println(xn297_regs_read);
   Serial.print("Status values seen ");
   for (int i = 0; i < 256; i++) {
-    if ( statusValCount[i] ) {
+    if (statusValCount[i]) {
       Serial.print(i);
       Serial.print(":");
       Serial.print(statusValCount[i]);
@@ -114,21 +115,22 @@ void sysStatus() {
   Serial.print("Status check count ");
   Serial.println(stem_status_check_count);
 
-  if ( radioInitialized ) {
+  if (radioInitialized) {
     Serial.println("Radio initialized");
   } else {
     Serial.println("Radio NOT initialized");
   }
 }
+
 void oldPollDebug() {
-  if  ( Serial.available() ) {
+  if (Serial.available()) {
     int letter = Serial.read();
-    if ( letter >= 32 && letter <= 126 ) {
+    if (letter >= 32 && letter <= 126) {
       mode = letter;
-      if ( mode == 'r' ) {
+      if (mode == 'r') {
         Serial.println("Restarting the radio.");
         radioDefault(); // reset the radio
-      } else if ( mode == 's' ) {  // Status
+      } else if (mode == 's') {  // Status
         Serial.print("Uptime ");
         Serial.print(millis());
         Serial.print(" Longest quiet time: ");
@@ -139,75 +141,76 @@ void oldPollDebug() {
         Serial.print(stuffQueued);
         Serial.print(", unqueued: ");
         Serial.println(stuffUnqueued);
-        if ( radioInitialized ) {
+        if (radioInitialized) {
           Serial.println("Radio initialized");
         } else {
           Serial.println("Radio NOT initialized");
         }
-      } else if ( mode == 'u' ) { // Update Neo Pixels
+      } else if (mode == 'u') { // Update Neo Pixels
         Serial.println("Updating NeoPixels.");
         quietTime();
-      } else if ( mode == 'i' ) { // Init
+      } else if (mode == 'i') { // Init
         Serial.println("Initializing slave SPI");
         spiSlave_init();
-      } else if ( mode == 'a' ) {
+      } else if (mode == 'a') {
         byPassManipulation = false;
         Serial.println("thinking on");
-      } else if ( mode == 'A' ) {
+      } else if (mode == 'A') {
         byPassManipulation = true;
         Serial.println("thinking off");
-      } else if ( mode == 'c' ) {
+      } else if (mode == 'c') {
         showPID = false;
         Serial.println("stop print PID data");
-      } else if ( mode == 'C' ) {
+      } else if (mode == 'C') {
         showPID = true;
         Serial.println("print PID data");
-      } else if ( mode == 'b' ) {
+      } else if (mode == 'b') {
         Serial.println("Turning off brainstem log listing");
         showBrainStemLog = false;
-      } else if ( mode == 'B' ) {
+      } else if (mode == 'B') {
         Serial.println("Turning on brainstem log listing");
         showBrainStemLog = true;
-      } else if ( mode == 'x' ) {
+      } else if (mode == 'x') {
         Serial.println("Turning off xn297L log listing");
         showXn297LLog = false;
-      } else if ( mode == 'X' ) {
+      } else if (mode == 'X') {
         Serial.println("Turning on xn297L log listing");
         showXn297LLog = true;
-      } else if ( mode == 'p' ) {
+      } else if (mode == 'p') {
         Serial.println("Turning off packet log listing");
         showPacketLog = false;
-      } else if ( mode == 'P' ) {
+      } else if (mode == 'P') {
         Serial.println("Turning on packet log listing");
         showPacketLog = true;
-      } else if ( mode == 'd' ) {
+      } else if (mode == 'd') {
         Serial.println("Turning off distance listing");
         showRanges = false;
-      } else if ( mode == 'D' ) {
+      } else if (mode == 'D') {
         Serial.println("Turning on Distance listing");
         showRanges = true;
-      } else if ( mode == 'v' ) {
+      } else if (mode == 'v') {
         Serial.println("Turning off verbosity");
         showVerbose = false;
-      } else if ( mode == 'V' ) {
+      } else if (mode == 'V') {
         Serial.println("Turning on verbosity");
         showVerbose = true;
-      } else  if ( letter >= '0' && letter <= '9' ) {
-        inputNum = inputNum * 10 + (letter - '0' );
-      } else  if ( mode == ',' ) {
+      } else if (letter >= '0' && letter <= '9') {
+        inputNum = inputNum * 10 + (letter - '0');
+      } else if (mode == ',') {
         userNum = inputNum;
         inputNum = 0;
-      } else  if ( mode == '*' ) {
-        if ( inputNum > 0 ) {
+      } else if (mode == '*') {
+        if (inputNum > 0) {
           Serial.print("You asked to blink pin ");
           Serial.println(inputNum);
           blinkIt(inputNum);
           inputNum = 0;
 
         } else {
-          Serial.println("To blink an LED on a pin, enter a 1 or 2 digit number followed by *, for example 23* to blink an LED on pin 23");
+          Serial.println(
+              "To blink an LED on a pin, enter a 1 or 2 digit number followed by *, for example 23* to blink an LED on pin 23");
         }
-      } else  if ( mode == '%' ) {
+      } else if (mode == '%') {
         showUsageTime();
       } else {
         Serial.println("We are alive!");
@@ -215,10 +218,12 @@ void oldPollDebug() {
     }
   }
 }
+
 int blinkingPin = 0;
+
 void blinkIt(int pinNo) {
 
-  if (blinkingPin != 0 ) {
+  if (blinkingPin != 0) {
     pinMode(blinkingPin, INPUT);
   }
   blinkingPin = pinNo;
@@ -227,11 +232,13 @@ void blinkIt(int pinNo) {
   Serial.print("Trying to blink ");
   Serial.println(blinkingPin);
 }
+
 void pollBlink() {
-  if ( blinkingPin > 0 ) {
+  if (blinkingPin > 0) {
     digitalWrite(blinkingPin, (millis() % 200 < 100));
   }
 }
+
 void leftTrimChanged(int trimVal) {
   static int leftTrimPresses = 0;
   leftTrimPresses++;
@@ -264,37 +271,41 @@ void leftTrimChanged(int trimVal) {
       break;
   }
 }
+
 void dispPacketLog() {
   Serial.print("Packets ");
   Serial.print(packetrx);
   Serial.print("rx array: ");
-  for ( int rxN = 0; rxN < 4; rxN++ ) {
+  for (int rxN = 0; rxN < 4; rxN++) {
     Serial.print(rx[rxN]);
-    if ( rxN < 3 ) {
+    if (rxN < 3) {
       Serial.print(", ");
     }
   }
 
   Serial.print(" aux array: ");
   for (int aN = 0; aN < AUXNUMBER; aN++) {
-    Serial.print((int)aux[aN]);
+    Serial.print((int) aux[aN]);
   }
   Serial.print(" trims array: ");
-  for (int i = 0; i < 4 ; i++ ) {
-    Serial.print((int)trims[i]);
+  for (int i = 0; i < 4; i++) {
+    Serial.print((int) trims[i]);
     Serial.print(" ");
   }
   Serial.println();
-  for ( int b = 0; b < 15; b++) {
+  for (int b = 0; b < 15; b++) {
     Serial.print(rxdata[b]);
     Serial.print(" ");
   }
   Serial.println();
 }
+
 void dispXn297LLog() {
   Serial.println("Please make dispXn297LLog() into a real function");
 }
+
 int sampleData[15] = {1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15};
+
 void writePacketTest() {
   for (int i = 0; i < 20; i++) {
     int before = xn_readreg(FIFO_STATUS);
@@ -302,12 +313,13 @@ void writePacketTest() {
     int after = xn_readreg(FIFO_STATUS);
   }
 }
+
 void freeRam() {
-  unsigned char* blocks[32];
+  unsigned char *blocks[32];
   int i, allocCnt;
   for (i = 0; i < 32; i++) {
-    unsigned char* block = (unsigned char *)malloc(1024);
-    if ( block == (unsigned char *)NULL ) {
+    unsigned char *block = (unsigned char *) malloc(1024);
+    if (block == (unsigned char *) NULL) {
       for (int j = 0; j < i; j++) {
         free(blocks[j]);
       }
@@ -319,7 +331,9 @@ void freeRam() {
   }
   Serial.println("We cannot get here, but we did. Does this processor have more RAM?");
 }
+
 float vbattfilt, vbatt_com, GEstG0, GEstG1, GEstG2, sample1;
+
 void setupDebug() {
   mode = 0;
   addSym(&A, "A", "A from stem", "6N");
@@ -331,7 +345,7 @@ void setupDebug() {
   addSym(&showBrainStemLog, "blog", "FLAG showBrainStemLog", "F");
   addSym(&showPacketLog, "xlog", "FLAG showPacketLog", "F");
   addSym(&showRanges, "slog", "FLAG showRanges (rangefinder data)", "F");
-  addSym(&showPID, "plog", "FLAG showPID", "F" );
+  addSym(&showPID, "plog", "FLAG showPID", "F");
   addSym(&showVerbose, "vlog", "FLAG showVerbose", "F");
   addSym(&showLogLog, "llog", "FLAG showLogLog", "F");
   addSym(&showUsageLog, "ulog", "FLAG showUsageLog", "F");
@@ -353,24 +367,25 @@ void setupDebug() {
 void quietTime() {
   unsigned long startTime, stopTime, deltaTime;
   startTime = micros();
-  if ( readyToUpdateNeoPixels ) {
+  if (readyToUpdateNeoPixels) {
     NeoUpdate();
   }
   //  writePacket(sampleData, 15);
   stopTime = micros();
-  if ( stopTime < startTime ) {
+  if (stopTime < startTime) {
     // clock rolled over.
     stopTime = stopTime + 1000000;
     startTime = startTime + 1000000;
   }
   deltaTime = stopTime - startTime;
-  if ( deltaTime > 1000 ) {
+  if (deltaTime > 1000) {
     tookTooLongCount++;
   }
-  if ( deltaTime > longestQuietTime ) {
+  if (deltaTime > longestQuietTime) {
     longestQuietTime = deltaTime;
   }
 }
+
 #if NOTUSED
 void cortexDebug(enum cortex_debug debug_event) {
   switch (debug_event) {
@@ -392,7 +407,8 @@ void cortexDebug(enum cortex_debug debug_event) {
   }
 }
 #endif
-void cortexDebugRange(enum cortex_debug  debug_event, int rangeFinderIndex, int rangeInMM) {
+
+void cortexDebugRange(enum cortex_debug debug_event, int rangeFinderIndex, int rangeInMM) {
 
 }
 

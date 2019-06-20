@@ -118,7 +118,9 @@ typedef unsigned char uint8_t;
 #endif
 
 #ifdef USE_DOTSTAR
+
 #include <Adafruit_DotStar.h>
+
 #else
 #include <Adafruit_NeoPixel.h>
 #endif
@@ -126,26 +128,31 @@ const int simpleLED = 6;
 extern const long minNeoUpdateDelay; // Wait at least 75ms before updating neopixel array.
 extern const int NUMPIXELS;
 // J5X1  Arduino9 (up)
-extern const int J5X1 ;
-extern const char *J5X1name ;
+extern const int J5X1;
+extern const char *J5X1name;
 // J5X2  Arduino8 (right)
 extern const int J5X2;
 extern const char *J5X2name;
 // J5X3  (Down)
-extern const int J5X3 ;
-extern const char *J5X3name ;
+extern const int J5X3;
+extern const char *J5X3name;
 // J5X4  (left)
-extern const int J5X4 ;
-extern const char *J5X4name ;
+extern const int J5X4;
+extern const char *J5X4name;
 // j5X5 (front)
-extern const int J5X5 ;
-extern const char *J5X5name ;
+extern const int J5X5;
+extern const char *J5X5name;
 
 extern void pollComm();
+
 extern void setupComm();
+
 extern void setupSerial();
+
 extern int radioDefault(void);
+
 extern void xn297L_debug(void);
+
 extern int XN297L_regs[32];  // brainstem only looks at 0x07, 0x0F, 0x17
 extern int XN297L_goodPayloadIn; // 2 payload buffers, read one from xn297L while sending the other to the brainstem
 extern int XN297L_goodPayloadOut;
@@ -155,42 +162,70 @@ extern uint8_t XN297L_payloadOut[2][15];// 15 bytes from the remote.
 // From H8mini_blue_board/Silverware/src/xn297.h
 
 extern void xn_writereg(int reg, int val);
+
 extern void xn_writereg(int reg, uint8_t data[], uint8_t size);
+
 extern int xn_readreg(int reg);
-extern void xn_readpayload( uint8_t *data , int size );
+
+extern void xn_readpayload(uint8_t *data, int size);
+
 extern int xn_command(int command);
-extern int spi_recvbyte( void);
-extern void spi_sendbyte( int b);
+
+extern int spi_recvbyte(void);
+
+extern void spi_sendbyte(int b);
+
 extern void spi_cson(void); // start of packet stuff.
 extern void spi_csoff(void); // end of packet
 extern void writeregs(uint8_t data[], uint8_t size);
+
 extern void processPacket(uint8_t rxdata[15]);
+
 extern void checkPacket(void);
 
 extern void setupFlow();
+
 extern void pollFlow();
+
 extern uint32_t showRange(int pixNo, int phaseNo, void *options);
+
 extern void setFixedColor(int pixNo, uint32_t color);
-extern void floatRange(int pixNo, float*v, float minv, float maxv, float minColor, float maxColor);
+
+extern void floatRange(int pixNo, float *v, float minv, float maxv, float minColor, float maxColor);
+
 extern uint32_t filler(int pixNo, int phaseNo, void *options);
+
 extern uint32_t shortRed(int pixNo, int phaseNo, void *options);
+
 extern uint32_t longRed(int pixNo, int phaseNo, void *options);
-extern uint32_t hsvColor(float h,float s,float v);
-extern void setPixRule(uint32_t (*fp)(int, int, void *), int pixNo, int phaseNo,void *options);
-extern char* dupString(char* origString);// create a copy of a string in malloc'ed memory.
+
+extern uint32_t hsvColor(float h, float s, float v);
+
+extern void setPixRule(uint32_t (*fp)(int, int, void *), int pixNo, int phaseNo, void *options);
+
+extern char *dupString(char *origString);// create a copy of a string in malloc'ed memory.
 extern char *catString3(char *origString1, char *origString2, char *origString3);
+
 extern char *catString2(char *origString1, char *origString2);
+
 extern void setupNeoSupp();
+
 extern void pollNeoSupp();
+
 extern void showSmallInt(int iVal);
+
 extern void buttonPressed(int buttonNo);
-extern void colorSingleDot(int dotNo,float angle);
+
+extern void colorSingleDot(int dotNo, float angle);
+
 extern void rgbSingleDot1(int dotNo, float r, float g, float b);
+
 extern void NeoUpdate();
-extern long longestQuietTime  ;
-extern int tookTooLongCount ;
-extern boolean readyToUpdateNeoPixels  ;
-extern unsigned long nextNeoUpdate ;
+
+extern long longestQuietTime;
+extern int tookTooLongCount;
+extern boolean readyToUpdateNeoPixels;
+extern unsigned long nextNeoUpdate;
 extern int statusValCount[256];
 extern int stuffQueued;
 extern int stuffUnqueued;
@@ -207,7 +242,7 @@ extern float voltage;
 extern boolean radioInitialized;
 extern float showBrainStemLog;
 extern float showXn297LLog;
-extern float showPacketLog; 
+extern float showPacketLog;
 extern float showRanges;
 extern float showPID;
 extern float showLogLog;
@@ -216,7 +251,7 @@ extern float estoprange; // E-Stop on range finder within 10 CM.
 extern float byPassManipulation;
 extern boolean unreadPacket; // We have read a packet from the XN297L, but it hasn't been sent to the brainstem yet.
 extern boolean unprocessedPacket;
-extern boolean whiteBoard ;
+extern boolean whiteBoard;
 extern boolean greenBoard;
 extern float A, B, C, D, E, F; // variables from brainstem
 //Decoded packet state.
@@ -237,7 +272,7 @@ extern char aux[AUXNUMBER];
 extern char lastaux[AUXNUMBER];
 extern char auxchange[AUXNUMBER];
 extern int rxdata[15];
-extern  char trims[4];
+extern char trims[4];
 extern float trim1;
 extern float trim1offset;
 extern float trim0;
@@ -251,21 +286,36 @@ typedef struct rangeConfigElem {
   const char *Name;
   int rangeInMM;
 } rangeConfigElem_t;
+
 void initTable();
+
 void logSyms();
-void addSym(float *v, const char *n, const char* d, char *opt);
-void addSym(float *v, const char *n,  const char* d);
+
+void addSym(float *v, const char *n, const char *d, char *opt);
+
+void addSym(float *v, const char *n, const char *d);
+
 void silentSetVar(char *varName, float val);
+
 boolean runCmd(char *n);
+
 // Given a symbol name, return the pointer to variable.
 float *getSymPtr(char *name);
+
 void processChar(int c);
+
 void setupSymtable();
+
 void writePacket(int data[], uint8_t size);
+
 extern int getAveFlow(float &xFlow, float &yFlow, float &qFlow);
+
 extern void setupThinking();
+
 extern void pollThinking();
+
 extern void keyboardThrottle();
+
 extern float tState;
 const int DOWNRANGE = 1;
 const int FRONTRANGE = 0;
@@ -283,20 +333,20 @@ extern long thinkTime, thinkStart;
 #define STATE_WANT_IMU_DATA     0x08
 #define STATE_WANT_BATTERY_DATA 0x10
 #define STATE_MUST_BE_ZERO      0x80 // If this isn't zero, the SPI bus is stuck high.
-     // If the bus is briefly stuck high, that means the cortex CPU is rebooting or
-     // a test probe is touching multiple pins.
-     // If this is permanent you have proof that the hardware was hand assembled
-     // with care, but not precision.
-     // 
+// If the bus is briefly stuck high, that means the cortex CPU is rebooting or
+// a test probe is touching multiple pins.
+// If this is permanent you have proof that the hardware was hand assembled
+// with care, but not precision.
+//
 extern int cortexState;
 // When connecting test equipment to the SPI bus,
 // it is easy to accidentally pull the bus high. When that
 // happens, every bit is stuck at 1. That might be temporary
 // or permanent, but we shouldn't do anything dangerous.
-extern boolean stateIndicateHardwareFault; 
+extern boolean stateIndicateHardwareFault;
 
 enum cortex_debug {
-  packet_in_fifo=0,
+  packet_in_fifo = 0,
   we_are_bound,
   radio_confused,
   range_display,
@@ -304,34 +354,54 @@ enum cortex_debug {
 };
 
 typedef enum {
-    RX_MODE_BIND,
-    RX_MODE_NORMAL
+  RX_MODE_BIND,
+  RX_MODE_NORMAL
 } rx_mode_t;
 extern rx_mode_t rxmode;
 
 //typedef enum cortex_debug corex_debug_t;
-extern void cortexDebugRange(enum cortex_debug  debug_event, int rangeFinderIndex, int rangeInMM);
+extern void cortexDebugRange(enum cortex_debug debug_event, int rangeFinderIndex, int rangeInMM);
+
 extern void cortexDebug(enum cortex_debug debug_event);
+
 extern void pollDebug();
+
 extern void pollWatch();
+
 extern void setupDebug();
+
 extern void quietTime();
+
 extern void dispXn297LLog();
+
 extern void dispPacketLog();
+
 extern void leftTrimChanged(int trimVal);
+
 extern void pollRangeFinders();
+
 extern void setupRangeFinders();
+
 extern void pollBlink();
+
 extern void blinkIt(int pinNo);
-extern void replaceRx(float newrx[4], uint8_t oldPacket[15], uint8_t newPacket[15] ); 
+
+extern void replaceRx(float newrx[4], uint8_t oldPacket[15], uint8_t newPacket[15]);
+
 extern void updateChecksum(uint8_t packet[15]);
-extern void xn_writepayload( int data[] , int size );
-extern void addCmd(void (*cmd_ptr)(void), const char *n, const char* d, char *opt);
-extern int xn_readreg( int reg);
+
+extern void xn_writepayload(int data[], int size);
+
+extern void addCmd(void (*cmd_ptr)(void), const char *n, const char *d, char *opt);
+
+extern int xn_readreg(int reg);
+
 extern float mapf(float val, float in_min, float in_max, float out_min, float out_max);
 
-extern int spi_recvbyte( void);
-extern void spi_sendbyte( int b);
+extern int spi_recvbyte(void);
+
+extern void spi_sendbyte(int b);
+
 extern void spi_cson(void); // start of packet stuff.
 extern void spi_csoff(void); // end of packet
 extern void spiSlave_init(); // initialize SPI slave (connection to brain stem)

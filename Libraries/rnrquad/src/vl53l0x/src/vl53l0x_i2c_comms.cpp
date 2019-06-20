@@ -14,8 +14,8 @@ int VL53L0X_write_multi(uint8_t deviceAddress, uint8_t index, uint8_t *pdata, ui
 #ifdef I2C_DEBUG
   Serial.print("\tWriting "); Serial.print(count); Serial.print(" to addr 0x"); Serial.print(index, HEX); Serial.print(": ");
 #endif
-  while(count--) {
-    Wire.write((uint8_t)pdata[0]);
+  while (count--) {
+    Wire.write((uint8_t) pdata[0]);
 #ifdef I2C_DEBUG
     Serial.print("0x"); Serial.print(pdata[0], HEX); Serial.print(", ");
 #endif
@@ -32,7 +32,7 @@ int VL53L0X_read_multi(uint8_t deviceAddress, uint8_t index, uint8_t *pdata, uin
   Wire.beginTransmission(deviceAddress);
   Wire.write(index);
   Wire.endTransmission();
-  Wire.requestFrom(deviceAddress, (byte)count);
+  Wire.requestFrom(deviceAddress, (byte) count);
 #ifdef I2C_DEBUG
   Serial.print("\tReading "); Serial.print(count); Serial.print(" from addr 0x"); Serial.print(index, HEX); Serial.print(": ");
 #endif
