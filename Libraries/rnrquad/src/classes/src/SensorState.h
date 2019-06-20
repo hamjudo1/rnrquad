@@ -8,6 +8,7 @@
 class SensorState
 {
 public:
+    SensorState();
     float batteryVoltage;
 
     // Flow sensor

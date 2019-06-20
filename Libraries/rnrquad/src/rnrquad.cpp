@@ -16,7 +16,8 @@ long rangeTime = 0, rangeStart = 0;
 long thinkTime = 0, thinkStart = 0;
 long nextDebugPacket = 1000;
 long iter = 0;
-void rnrquad::baseSetup()
+
+void baseSetup()
 {
     pinMode(versionGPIO, INPUT_PULLUP);
     if ( digitalRead(versionGPIO) ) {
@@ -53,7 +54,7 @@ void rnrquad::baseSetup()
     initTime = millis();
 }
 
-void rnrquad::baseLoop()
+void baseLoop()
 {
     while (1) {
         colorSingleDot(1, 60);
@@ -92,6 +93,30 @@ void rnrquad::baseLoop()
             colorSingleDot(0, iter++);
         }
     }
+}
+
+/**
+ * Gets current values of all sensors
+ */
+SensorState getSensorState()
+{
+    //TODO
+}
+
+/**
+ * Gets current controller input values
+ */
+ControllerState getControllerState()
+{
+    //TODO
+}
+
+/**
+ * Sets output controller values
+ */
+void setControllerState()
+{
+    //TODO
 }
 
 boolean waitForConnection = true;

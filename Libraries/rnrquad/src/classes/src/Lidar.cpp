@@ -1,9 +1,10 @@
 //
 // Created by Florian VanKampen on 2019-06-17.
 //
+#include "Lidar.h"
 
-Lidar::Lidar (float _timeStamp, float _value)
+Lidar::Lidar ()
 {
-    value = _value;
-    timeStamp = _timeStamp;
+    value = 0;
+    timeStamp = 0;
 }

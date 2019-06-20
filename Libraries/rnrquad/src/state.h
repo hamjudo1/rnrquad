@@ -1,4 +1,11 @@
+#ifndef RNRQUAD_STATE_H
+#define RNRQUAD_STATE_H
+
 #include "Arduino.h"
+#include "classes/src/ControllerState.h"
+#include "classes/src/Lidar.h"
+#include "classes/src/RgbLed.h"
+#include "classes/src/SensorState.h"
 
 typedef unsigned char uint8_t;
 
@@ -328,3 +335,5 @@ extern void spi_sendbyte( int b);
 extern void spi_cson(void); // start of packet stuff.
 extern void spi_csoff(void); // end of packet
 extern void spiSlave_init(); // initialize SPI slave (connection to brain stem)
+
+#endif

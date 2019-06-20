@@ -8,6 +8,7 @@
 class Lidar
 {
 public:
+    Lidar();
     float timeStamp; // Time of last Measurement
     float value;
 };

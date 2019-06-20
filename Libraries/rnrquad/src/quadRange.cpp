@@ -143,18 +143,7 @@ bool initRangeFinderWRetries(int i) {
   return false;
 }
 void setupRangeFinders() {
-  if ( whiteBoard  && ! whiteboard_wiring ) {
-    while ( true ) {
-      Serial.println("whiteboard loaded with greenboard software config.");
-      delay(1000);
-    }
-  } else if ( greenBoard && whiteboard_wiring ) {
-    while ( true ) {
-      Serial.println("greenboard loaded with whiteboard software config.");
-      delay(1000);
-    }
-  }
-  // J5test();
+  // Setup I2C
   Wire.begin();
   int i, aPinNo;
   for (i = 0; i < RFINDERS; i++) {

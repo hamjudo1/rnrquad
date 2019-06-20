@@ -8,6 +8,7 @@
 
 class RgbLed {
 public:
+    RgbLed();
     float red;
     float green;
     float blue;

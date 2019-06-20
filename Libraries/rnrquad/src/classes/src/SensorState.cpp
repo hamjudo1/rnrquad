@@ -3,6 +3,7 @@
 //
 
 #include "Lidar.h"
+#include "SensorState.h"
 
 SensorState::SensorState()
     {
@@ -24,9 +25,9 @@ SensorState::SensorState()
         accelZ = 0;
 
         // Lidars
-        lidarFront = new Lidar();
-        lidarTop = new Lidar();
-        lidarLeft = new Lidar();
-        lidarRight = new Lidar();
-        lidarBottom = new Lidar();
+        lidarFront = Lidar();
+        lidarTop = Lidar();
+        lidarLeft = Lidar();
+        lidarRight = Lidar();
+        lidarBottom = Lidar();
     };
