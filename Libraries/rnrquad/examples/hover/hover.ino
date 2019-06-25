@@ -69,53 +69,6 @@ float takeOffs = 0;
 unsigned long timeOfLastExecution = 0;
 int launchPhase = 0;
 
-class simplePID
-{
-public:
-  float PIDintegral;
-  float PIDderivative;
-  float prevError;
-  float *PIDoutput;
-  float *PIDerror;
-  float *KD;
-  float *KI;
-  float *KP;
-  char *prefix;
-
-  void begin(char *prefix, float *pError, float *pOutput, float *pKP, float *pKI, float *pKD);
-
-  void tstep(float dt);
-
-  void setLogging(bool On);
-};
-
-void simplePID::tstep(float dt)
-{
-  PIDintegral += *PIDerror * dt; //multiply error by time interval since last reading
-  PIDderivative = (*PIDerror - prevError) / dt; //divide rise over run - dY/dt
-  prevError = *PIDerror;
-  *PIDoutput = (*KP) * (*PIDerror) + (*KI) * PIDintegral + (*KD) * PIDderivative;
-}
-
-void simplePID::begin(char *prefix, float *pError, float *pOutput, float *pKP, float *pKI, float *pKD)
-{
-  PIDerror = pError;
-  PIDoutput = pOutput;
-  KP = pKP;
-  KI = pKI;
-  KD = pKD;
-  addSym(PIDerror, catString2(prefix, "_error"), "PID error", "3L");
-  addSym(PIDoutput, catString2(prefix, "_output"), "PID output", "3L");
-  addSym(&PIDintegral, catString2(prefix, "_integral"), "PID integral", "3L");
-  addSym(&PIDderivative, catString2(prefix, "_derivative"), "PID derivative", "3L");
-  addSym(KP, catString2(prefix, "_KP"), "PID KP", "3L");
-  addSym(KI, catString2(prefix, "_KI"), "PID KI", "3L");
-  addSym(KD, catString2(prefix, "_KD"), "PID KD", "3L");
-  PIDintegral = 0.0;
-  PIDderivative = 0.0;
-  prevError = 0.0;
-}
-
 float throttleHigh = 0;
 float flightState = 6.0;
 float grams = 0.0;
@@ -128,6 +81,16 @@ int noFlowNoise = 0;
 extern int activeRangeFinderCnt;
 
 extern float tokenVal;
+
+// Left - Right, Up - Down, Front - Back PID loops
+simplePID lrPID, udPID, fbPID;
+
+void pidInit()
+{
+  lrPID.begin("lr", &lrError, &lrOutput, &lrKP, &lrKI, &lrKD);
+  udPID.begin("ud", &udError, &udOutput, &udKP, &udKI, &udKD);
+  fbPID.begin("fb", &fbError, &fbOutput, &fbKP, &fbKI, &fbKD);
+}
 
 bool okayToFly()
 {
