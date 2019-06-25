@@ -318,10 +318,6 @@ static int decodepacket(void)
         }
         lastaux[i] = aux[i];
       }
-      if (auxchange[1])
-      {
-        leftTrimChanged(aux[1]);
-      }
       if (showPacketLog && auxChanged)
       {
         dispPacketLog();

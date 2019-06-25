@@ -2,10 +2,10 @@
 #define RNRQUAD_STATE_H
 
 #include "Arduino.h"
-#include "classes/src/ControllerState.h"
-#include "classes/src/Lidar.h"
-#include "classes/src/RgbLed.h"
-#include "classes/src/SensorState.h"
+#include "objects/src/ControllerState.h"
+#include "objects/src/Lidar.h"
+#include "objects/src/RgbLed.h"
+#include "objects/src/SensorState.h"
 
 typedef unsigned char uint8_t;
 
@@ -125,8 +125,7 @@ typedef unsigned char uint8_t;
 #include <Adafruit_NeoPixel.h>
 #endif
 const int simpleLED = 6;
-extern const long minNeoUpdateDelay; // Wait at least 75ms before updating neopixel array.
-extern const int NUMPIXELS;
+const int NUMPIXELS = 5;
 // J5X1  Arduino9 (up)
 extern const int J5X1;
 extern const char *J5X1name;
@@ -187,21 +186,11 @@ extern void setupFlow();
 
 extern void pollFlow();
 
-extern uint32_t showRange(int pixNo, int phaseNo, void *options);
-
-extern void setFixedColor(int pixNo, uint32_t color);
-
-extern void floatRange(int pixNo, float *v, float minv, float maxv, float minColor, float maxColor);
-
-extern uint32_t filler(int pixNo, int phaseNo, void *options);
-
 extern uint32_t shortRed(int pixNo, int phaseNo, void *options);
 
 extern uint32_t longRed(int pixNo, int phaseNo, void *options);
 
 extern uint32_t hsvColor(float h, float s, float v);
-
-extern void setPixRule(uint32_t (*fp)(int, int, void *), int pixNo, int phaseNo, void *options);
 
 extern char *dupString(char *origString);// create a copy of a string in malloc'ed memory.
 extern char *catString3(char *origString1, char *origString2, char *origString3);
@@ -209,8 +198,6 @@ extern char *catString3(char *origString1, char *origString2, char *origString3)
 extern char *catString2(char *origString1, char *origString2);
 
 extern void setupNeoSupp();
-
-extern void pollNeoSupp();
 
 extern void showSmallInt(int iVal);
 
@@ -222,7 +209,15 @@ extern void rgbSingleDot1(int dotNo, float r, float g, float b);
 
 extern void NeoUpdate();
 
-extern long longestQuietTime;
+extern float showUsageLog;
+extern void sysStatus();
+extern void freeRam();
+extern void showUsageTime();
+extern void stripW(char *);
+
+
+
+
 extern int tookTooLongCount;
 extern boolean readyToUpdateNeoPixels;
 extern unsigned long nextNeoUpdate;
@@ -247,7 +242,6 @@ extern float showRanges;
 extern float showPID;
 extern float showLogLog;
 extern float showVerbose;
-extern float estoprange; // E-Stop on range finder within 10 CM.
 extern float byPassManipulation;
 extern boolean unreadPacket; // We have read a packet from the XN297L, but it hasn't been sent to the brainstem yet.
 extern boolean unprocessedPacket;
@@ -362,9 +356,6 @@ typedef enum
 } rx_mode_t;
 extern rx_mode_t rxmode;
 
-//typedef enum cortex_debug corex_debug_t;
-extern void cortexDebugRange(enum cortex_debug debug_event, int rangeFinderIndex, int rangeInMM);
-
 extern void cortexDebug(enum cortex_debug debug_event);
 
 extern void pollDebug();
@@ -373,21 +364,13 @@ extern void pollWatch();
 
 extern void setupDebug();
 
-extern void quietTime();
-
 extern void dispXn297LLog();
 
 extern void dispPacketLog();
 
-extern void leftTrimChanged(int trimVal);
-
 extern void pollRangeFinders();
 
 extern void setupRangeFinders();
-
-extern void pollBlink();
-
-extern void blinkIt(int pinNo);
 
 extern void replaceRx(float newrx[4], uint8_t oldPacket[15], uint8_t newPacket[15]);
 

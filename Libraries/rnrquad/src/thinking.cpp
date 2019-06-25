@@ -745,7 +745,7 @@ void pollThinkingOld() {
 
              // Check for valid connection from remote
              throttle = rx[3];
-             // Check that downward rangefinder is working
+             // Check that downward lidar is working
              if ( rangesInM[DOWNRANGE] > 0.100 && rangesInM[DOWNRANGE]  < 0.200 ) {
                tState = 2;
              } else {

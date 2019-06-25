@@ -647,7 +647,6 @@ void pollWatcher() {
   for ( ; i < 8; i++ ) {
     pixel.setPixelColor(i, pixel.Color(0, 00, 10));
   }
-  pollNeoSupp();
   if ( ivp > slaveLogSize ) {
     dispIntVal();
 
@@ -658,7 +657,6 @@ void pollWatcher() {
         pixel.setPixelColor(n, hsvColor((float)n * 45.0 + loopCnt, 1.0, 1.0));
       }
       loopCnt = loopCnt + 0.1;
-      pollNeoSupp();
       delay(20);
 
     }

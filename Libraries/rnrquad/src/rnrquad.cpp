@@ -77,7 +77,6 @@ void baseLoop()
     // if ( ! byPassManipulation ) {
     neoStart = millis();
     commTime = commTime + neoStart - commStart;
-    pollNeoSupp();
     colorSingleDot(1, 240);
     rangeStart = millis();
     // neoTime = neoTime + rangeStart - neoStart;

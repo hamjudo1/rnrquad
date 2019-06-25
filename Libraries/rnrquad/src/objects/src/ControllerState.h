@@ -14,6 +14,9 @@ public:
   float leftStickXPosition;
   float rightStickXPosition;
   float rightStickYPosition;
+  float leftTrigger;
+  float rightTrigger;
+  // TODO buttons
 };
 
 #endif

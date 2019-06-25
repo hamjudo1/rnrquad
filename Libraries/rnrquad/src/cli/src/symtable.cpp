@@ -4,7 +4,7 @@
 // option string. If an entry has an "L" in the option string, the variable will be logged
 // at each timestep.
 #include <Arduino.h>
-#include "state.h"
+#include "../../state.h"
 
 typedef struct entry
 {
@@ -40,54 +40,6 @@ float dataLog[LOGSIZE];
 uint8_t tagLog[LOGSIZE];
 float watchTime = 0.5;
 int lp = 0;
-// allocate space for a copy of a string.
-// These strings should be freed with free() if
-// they aren't intended to be permanent.
-
-char *dupString(char *origString)
-{
-  char *newString = (char *) malloc(strlen(origString) + 1);
-  strcpy(newString, origString);
-  return newString;
-}
-
-char *catString3(char *origString1, char *origString2, char *origString3)
-{
-  int newLen = 1 + strlen(origString1) + strlen(origString2) + strlen(origString3);
-  char *newString = (char *) malloc(newLen);
-  char *n = newString;
-  for (; *origString1; origString1++)
-  {
-    *n++ = *origString1;
-  }
-  for (; *origString2; origString2++)
-  {
-    *n++ = *origString2;
-  }
-  for (; *origString3; origString3++)
-  {
-    *n++ = *origString3;
-  }
-  *n = '\0';
-  return newString;
-}
-
-char *catString2(char *origString1, char *origString2)
-{
-  int newLen = 1 + strlen(origString1) + strlen(origString2);
-  char *newString = (char *) malloc(newLen);
-  char *n = newString;
-  for (; *origString1; origString1++)
-  {
-    *n++ = *origString1;
-  }
-  for (; *origString2; origString2++)
-  {
-    *n++ = *origString2;
-  }
-  *n = '\0';
-  return newString;
-}
 
 void displayVariable(float val, int trailingDigits)
 {
@@ -161,44 +113,6 @@ void logSyms()
     Serial.print(" ");
     Serial.println(now);
   }
-}
-
-// strip whitespace in place, (space, tab, linefeed, CR), from beginning and end of a null terminated string.
-void stripW(char *s)
-{
-  char *r, *w, *l; // r: read position, w: write position, l: last non-whitespace in string.
-  r = s;
-  while (*r == '\t' || *r == '\r' || *r == ' ' || *r == '\n')
-  {
-    r++;
-  }
-  l = r;
-  if (r == s)
-  { // nothing stripped from front of string.
-    while (*r)
-    {
-      if (!(*r == '\t' || *r == '\r' || *r == ' ' || *r == '\n'))
-      {
-        l = r + 1;
-      }
-      r++;
-    }
-  } else
-  { // leading whitespace removed, must shift characters.
-    w = s;
-    l = w;
-    while (*r)
-    {
-      *w = *r;  // Copy each character
-      if (!(*r == '\t' || *r == '\r' || *r == ' ' || *r == '\n'))
-      {
-        l = w + 1;
-      }
-      r++;
-      w++;
-    }
-  }
-  *l = '\0';
 }
 
 // dump logged data as a CSV file
