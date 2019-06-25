@@ -55,7 +55,6 @@ void baseSetup()
   }
   setupRangeFinders();
   colorSingleDot(3, 120.0);
-  setupThinking();
   colorSingleDot(4, 120.0);
   initTime = millis();
 }
@@ -85,7 +84,6 @@ void baseLoop()
     thinkStart = millis();
     rangeTime = rangeTime + thinkStart - rangeStart;
     pollFlow();
-    pollThinking();
     colorSingleDot(1, 360);
     thinkTime = thinkTime + millis() - thinkStart;
     if (micros() - lastHeartBeat > 50000)

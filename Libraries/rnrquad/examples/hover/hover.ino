@@ -3,14 +3,17 @@
 //
 
 #include <rnrquad.h>
+#include "Hover.h"
 
 
 void setup()
 {
   baseSetup();
+  setupThinking();
 }
 
 void loop()
 {
   baseLoop();
+  pollThinking();
 }
