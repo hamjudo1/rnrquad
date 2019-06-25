@@ -3,7 +3,6 @@
 //
 
 #include <rnrquad.h>
-#include "Hover.h"
 
 //Specify the links and initial tuning parameters
 float throttle = 0.0;
@@ -53,11 +52,6 @@ float lrPrevError = 0.0;
 float lrDerivative = 0.0;
 float fbDerivative = 0.0;
 float takeOffPower = 0.55;
-float takeOffPowerActual[5];
-for (int k = 0; k < 5; k++)
-{
-takeOffPowerActual[k] = 0;
-}
 float minThrottle = 0.3;
 float maxThrottle = 0.9;
 float dt = 0.0;

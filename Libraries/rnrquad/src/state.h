@@ -6,6 +6,7 @@
 #include "objects/src/Lidar.h"
 #include "objects/src/RgbLed.h"
 #include "objects/src/SensorState.h"
+#include "objects/src/PID.h"
 
 typedef unsigned char uint8_t;
 
