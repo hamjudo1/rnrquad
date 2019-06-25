@@ -10,19 +10,9 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="aa7f0cee-55a1-4b17-9938-597613779834" name="Default Changelist" comment="">
-      <change afterPath="$PROJECT_DIR$/Libraries/rnrquad/src/PID.cpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Libraries/rnrquad/examples/hover/Hover.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/Libraries/rnrquad/examples/hover/Hover.cpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Libraries/rnrquad/src/brainStemComm.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/Libraries/rnrquad/src/brainStemComm.cpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Libraries/rnrquad/src/cli/src/state.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/Libraries/rnrquad/src/cli/src/state.cpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Libraries/rnrquad/src/cli/src/symtable.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/Libraries/rnrquad/src/cli/src/symtable.cpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Libraries/rnrquad/src/led/src/led.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/Libraries/rnrquad/src/led/src/led.cpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Libraries/rnrquad/src/rcTransciever.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/Libraries/rnrquad/src/rcTransciever.cpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Libraries/rnrquad/src/rnrquad.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/Libraries/rnrquad/src/rnrquad.cpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Libraries/rnrquad/src/state.h" beforeDir="false" afterPath="$PROJECT_DIR$/Libraries/rnrquad/src/state.h" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Libraries/rnrquad/src/talkToRadio.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/Libraries/rnrquad/src/talkToRadio.cpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Libraries/rnrquad/src/vl53l0x/src/Adafruit_VL53L0X.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/Libraries/rnrquad/src/vl53l0x/src/Adafruit_VL53L0X.cpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Libraries/rnrquad/src/vl53l0x/src/Adafruit_VL53L0X.h" beforeDir="false" afterPath="$PROJECT_DIR$/Libraries/rnrquad/src/vl53l0x/src/Adafruit_VL53L0X.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Libraries/rnrquad/examples/hover/Hover.cpp" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Libraries/rnrquad/examples/hover/Hover.h" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Libraries/rnrquad/examples/hover/Hover.ino" beforeDir="false" afterPath="$PROJECT_DIR$/Libraries/rnrquad/examples/hover/Hover.ino" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -36,10 +26,10 @@
   <component name="FileEditorManager">
     <leaf>
       <file pinned="false" current-in-tab="true">
-        <entry file="file://$PROJECT_DIR$/Libraries/rnrquad/examples/hover/Hover.cpp">
+        <entry file="file://$PROJECT_DIR$/Libraries/rnrquad/examples/hover/Hover.ino">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="355">
-              <caret line="141" column="35" selection-start-line="141" selection-start-column="35" selection-end-line="141" selection-end-column="35" />
+            <state relative-caret-position="153">
+              <caret line="9" column="20" lean-forward="true" selection-start-line="9" selection-start-column="20" selection-end-line="9" selection-end-column="20" />
             </state>
           </provider>
         </entry>
@@ -90,7 +80,6 @@
   <component name="IdeDocumentHistory">
     <option name="CHANGED_PATHS">
       <list>
-        <option value="$PROJECT_DIR$/Libraries/rnrquad/src/rt.h" />
         <option value="$PROJECT_DIR$/Libraries/rnrquad/examples/hover.cpp" />
         <option value="$PROJECT_DIR$/Libraries/rnrquad/examples/hover.ino" />
         <option value="$PROJECT_DIR$/Libraries/rnrquad/keywords.txt" />
@@ -141,6 +130,7 @@
         <option value="$PROJECT_DIR$/Libraries/rnrquad/src/cli/src/symtable.cpp" />
         <option value="$PROJECT_DIR$/Libraries/rnrquad/src/PID.cpp" />
         <option value="$PROJECT_DIR$/Libraries/rnrquad/examples/hover/Hover.cpp" />
+        <option value="$PROJECT_DIR$/Libraries/rnrquad/examples/hover/Hover.ino" />
       </list>
     </option>
   </component>
@@ -258,11 +248,10 @@
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="36879000" />
+    <option name="totallyTimeSpent" value="37307000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="0" y="23" width="1440" height="877" extended-state="6" />
-    <editor active="true" />
     <layout>
       <window_info active="true" content_ui="combo" id="Project" order="0" visible="true" weight="0.19670959" />
       <window_info id="Structure" order="1" side_tool="true" weight="0.25" />
@@ -533,13 +522,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/Libraries/rnrquad/examples/hover/Hover.h">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="187">
-          <caret line="11" column="6" lean-forward="true" selection-start-line="11" selection-start-column="6" selection-end-line="11" selection-end-column="6" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/Libraries/rnrquad/src/cli/src/symtable.cpp">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="427">
@@ -551,13 +533,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="261">
           <caret line="311" selection-start-line="311" selection-end-line="311" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/Libraries/rnrquad/examples/hover/hover.ino">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="153">
-          <caret line="9" column="1" lean-forward="true" selection-start-line="9" selection-start-column="1" selection-end-line="9" selection-end-column="1" />
         </state>
       </provider>
     </entry>
@@ -575,10 +550,20 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/Libraries/rnrquad/examples/hover/Hover.cpp">
+    <entry file="file://$PROJECT_DIR$/Libraries/rnrquad/examples/hover/Hover.h">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="355">
-          <caret line="141" column="35" selection-start-line="141" selection-start-column="35" selection-end-line="141" selection-end-column="35" />
+        <state relative-caret-position="187">
+          <caret line="11" column="6" lean-forward="true" selection-start-line="11" selection-start-column="6" selection-end-line="11" selection-end-column="6" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Libraries/rnrquad/examples/hover/Hover.cpp">
+      <provider selected="true" editor-type-id="text-editor" />
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Libraries/rnrquad/examples/hover/Hover.ino">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="153">
+          <caret line="9" column="20" lean-forward="true" selection-start-line="9" selection-start-column="20" selection-end-line="9" selection-end-column="20" />
         </state>
       </provider>
     </entry>
