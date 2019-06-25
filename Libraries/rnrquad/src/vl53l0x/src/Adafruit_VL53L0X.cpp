@@ -8,7 +8,7 @@
 #define STR(x)        STR_HELPER(x)
 
 
-boolean Adafruit_VL53L0X::begin(uint8_t i2c_addr, boolean debug)
+bool Adafruit_VL53L0X::begin(uint8_t i2c_addr, bool debug)
 {
   int32_t status_int;
   int32_t init_done = 0;
@@ -170,7 +170,7 @@ boolean Adafruit_VL53L0X::begin(uint8_t i2c_addr, boolean debug)
   }
 }
 
-boolean Adafruit_VL53L0X::setAddress(uint8_t newAddr)
+bool Adafruit_VL53L0X::setAddress(uint8_t newAddr)
 {
   newAddr &= 0x7F;
 
@@ -213,7 +213,7 @@ VL53L0X_Error Adafruit_VL53L0X::startRanging()
   return Status;
 }
 
-boolean Adafruit_VL53L0X::checkRangeReady()
+bool Adafruit_VL53L0X::checkRangeReady()
 {
   VL53L0X_Error Status = VL53L0X_ERROR_NONE;
   uint8_t mReady;
@@ -227,12 +227,12 @@ boolean Adafruit_VL53L0X::checkRangeReady()
       Serial.println("Status borked in call to VL53L0X_GetMeasurementDataReady()");
     }
   }
-  return (boolean) mReady;
+  return (bool) mReady;
 }
 
-boolean Adafruit_VL53L0X::updateRangeInMeters(float *range)
+bool Adafruit_VL53L0X::updateRangeInMeters(float *range)
 {
-  boolean success = false;
+  bool success = false;
   VL53L0X_RangingMeasurementData_t measure;
   if (checkRangeReady())
   {
@@ -308,7 +308,7 @@ float Adafruit_VL53L0X::getRangeInMeters()
 }
 
 VL53L0X_Error
-Adafruit_VL53L0X::getSingleRangingMeasurement(VL53L0X_RangingMeasurementData_t *RangingMeasurementData, boolean debug)
+Adafruit_VL53L0X::getSingleRangingMeasurement(VL53L0X_RangingMeasurementData_t *RangingMeasurementData, bool debug)
 {
   VL53L0X_Error Status = VL53L0X_ERROR_NONE;
   FixPoint1616_t LimitCheckCurrent;

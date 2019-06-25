@@ -108,7 +108,7 @@ uint32_t longRed(int pixNo, int phaseNo, void *options)
 
 const int rxLEDOffset = 0;
 extern float colorAngle;
-boolean everyOther = false;
+bool everyOther = false;
 int pixelPhase = 0;
 int subPhase = 0;
 

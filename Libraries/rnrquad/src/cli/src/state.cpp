@@ -1,9 +1,9 @@
 #include "../../state.h"
 
-boolean radioInitialized = false;
+bool radioInitialized = false;
 int mode;
 int tookTooLongCount = 0;
-boolean readyToUpdateNeoPixels = false;
+bool readyToUpdateNeoPixels = false;
 unsigned long nextNeoUpdate = 0;
 unsigned long lastHeartBeat = 0;
 int stuffQueued = 0;
@@ -19,10 +19,10 @@ float showPacketLog = 0.0;
 float showXn297LLog = 0.0;
 float showUsageLog = 0.0;
 float showLogLog = 0;
-boolean unreadPacket = false;
-boolean unprocessedPacket = false;
-boolean whiteBoard = false;
-boolean greenBoard = false;
+bool unreadPacket = false;
+bool unprocessedPacket = false;
+bool whiteBoard = false;
+bool greenBoard = false;
 float showRanges = 0.0;
 float showPID = 0.0;
 float showVerbose = 0.0;

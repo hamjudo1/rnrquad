@@ -2,7 +2,7 @@
 #include "state.h"
 
 
-const boolean normalComm = true;
+const bool normalComm = true;
 
 const int versionGPIO = 4; // grounded on greenboard.
 long initTime = 0;
@@ -127,7 +127,7 @@ void setControllerState()
   //TODO
 }
 
-boolean waitForConnection = true;
+bool waitForConnection = true;
 
 void setupSerial()
 {

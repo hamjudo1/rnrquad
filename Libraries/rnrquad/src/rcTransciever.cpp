@@ -3,7 +3,7 @@
 // The M0 has hardware for 4 wire SPI, which we convert to 3 wire by adding a resistor
 // and ignoring the bytes we read back as we send, and by sending 0 bytes when we are receiving.
 //
-#include <SPI.h>  // just to get definition of boolean
+#include <SPI.h>  // just to get definition of bool
 
 #include "state.h"
 

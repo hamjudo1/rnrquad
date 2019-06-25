@@ -103,33 +103,13 @@ void simplePID::begin(char *prefix, float *pError, float *pOutput, float *pKP, f
   addSym(PIDerror, catString2(prefix, "_error"), "PID error", "3L");
   addSym(PIDoutput, catString2(prefix, "_output"), "PID output", "3L");
   addSym(&PIDintegral, catString2(prefix, "_integral"), "PID integral", "3L");
-  addSym(&PIDderivative, catString2(prefix, "_output"), "PID derivative", "3L");
+  addSym(&PIDderivative, catString2(prefix, "_derivative"), "PID derivative", "3L");
   addSym(KP, catString2(prefix, "_KP"), "PID KP", "3L");
   addSym(KI, catString2(prefix, "_KI"), "PID KI", "3L");
   addSym(KD, catString2(prefix, "_KD"), "PID KD", "3L");
   PIDintegral = 0.0;
   PIDderivative = 0.0;
   prevError = 0.0;
-}
-
-simplePID lrPID, udPID, fbPID;
-
-void pidInit()
-{
-  lrPID.begin("lr", &lrError, &lrOutput, &lrKP, &lrKI, &lrKD);
-  udPID.begin("ud", &udError, &udOutput, &udKP, &udKI, &udKD);
-  fbPID.begin("fb", &fbError, &fbOutput, &fbKP, &fbKI, &fbKD);
-}
-
-void pidLoop()
-{
-  unsigned long now = millis();
-  unsigned long dtInMilliSec = now - timeOfLastExecution;
-  long timeOfLastExecution = now;
-  dt = (float) (dtInMilliSec) / 1000.0; // Lets use seconds, to help maintain sanity.
-  lrPID.tstep(dt);
-  udPID.tstep(dt);
-  fbPID.tstep(dt);
 }
 
 float throttleHigh = 0;
@@ -189,63 +169,14 @@ void hover::setupThinking()
   fbTarget = rangesInM[FRONTRANGE];
 }
 
-long onPlatformStartTime = 0;
-
-void offPlatform()
-{
-  onPlatformStartTime = 0;
-}
-
-bool onPlatform()
-{
-  long now = millis();
-  // if ( rangesInM[DOWNRANGE] > 0.060 && rangesInM[DOWNRANGE] < 0.120 ) {
-  if (rangesInM[DOWNRANGE] < 0.50)
-  {
-    if (onPlatformStartTime > 0)
-    {
-      if (onPlatformStartTime + 1000 < now)
-      {
-        return true;
-      }
-    } else
-    {
-      onPlatformStartTime = now;
-    }
-  } else
-  {
-    onPlatformStartTime = 0;
-  }
-  return false;
-}
-
 extern float tokenVal;
-
-void keyboardThrottle()
-{
-  if (tokenVal >= 0.0)
-  {
-    ktMode = true;
-    overrideGrams = tokenVal;
-    Serial.print("overriding Throttle to ");
-    Serial.println(overrideGrams, 1);
-  } else
-  {
-    Serial.println("Leaving throttle override mode");
-    ktMode = false;
-  }
-}
-
-float maxAltitudeSeen = 0.0;
-float event = 0.0;
 
 bool okayToFly()
 {
-  static boolean throttleDownSinceLastEvent = false;
+  static bool throttleDownSinceLastEvent = false;
   if (rx[3] < 0.1)
   {
     throttleDownSinceLastEvent = true;
-    maxAltitudeSeen = 0.0;
     notokay = 1.0; // + event;
     return false;
   } else if (!throttleDownSinceLastEvent)
@@ -259,7 +190,6 @@ bool okayToFly()
     throttleDownSinceLastEvent = false;
     return false;
   }
-  event = 0.0;
   notokay = 0;
   return true;
 }
@@ -321,17 +251,12 @@ int lastTenths = 0;
 long lastTime = 0;
 long stateChangeTime = 0;
 unsigned long nextLogTime = 0;
-boolean sawAtLeastOnePacket = false;
+bool sawAtLeastOnePacket = false;
 long lastPacketTime = 0;
 unsigned long testStart = 0;
 float rateOfClimb = 0.0;
 
 float prevAltitude = 0.0;
-
-float removeDeadzone(float val)
-{
-  return val;
-}
 
 unsigned long prevLoop = 0;
 
@@ -373,8 +298,8 @@ void Hover::pollThinking()
       {
         if (sampCnt > 0)
         {
-          newRx[1] = constrain(removeDeadzone(yFlowC * 0.05), -0.3, +0.3); // newRx Positive is forward thrust
-          newRx[0] = constrain(removeDeadzone(-xFlowC * 0.05), -0.3, +0.3); // Negative is left
+          newRx[1] = constrain(yFlowC * 0.05, -0.3, +0.3); // newRx Positive is forward thrust
+          newRx[0] = constrain(-xFlowC * 0.05, -0.3, +0.3); // Negative is left
         }
       }
 

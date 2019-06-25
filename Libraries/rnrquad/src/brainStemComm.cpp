@@ -57,31 +57,31 @@ char *regList[] = {"CONFIG", "EN_AA", "EN_RXADDR", "SETUP_AW", "SETUP_RETR", "RF
 #include <SPI.h>
 
 const int PIN_SPI_SS = mySPI_SS;
-boolean talk = true;
-boolean pTalk = true;
+bool talk = true;
+bool pTalk = true;
 int talkMax = 100;
 int talki = 0;
 int packetPrint = 500;
 int outByte = 255;
 int lastCmd = -1;
-boolean waitForRead = false;
-boolean waitForWrite = false;
-boolean waitForCmd = false;
+bool waitForRead = false;
+bool waitForWrite = false;
+bool waitForCmd = false;
 const int slaveLogSize = 1024;
 
 uint8_t dVals[slaveLogSize];
 uint8_t pNos[slaveLogSize];
 int ivp = 0;
 int packetStart = 0;
-boolean showIt = false;
-boolean skipIt = false;
+bool showIt = false;
+bool skipIt = false;
 
 int lastSaved = -1;
 int lastShown = -1;
 int cheatCnt = 0;
 int byteToSend = 0;
 int packetPos = 0;
-boolean singlePass = false;
+bool singlePass = false;
 
 int outQueue[256];
 int queueSize = 0;
@@ -425,8 +425,8 @@ void SERCOM1_Handler()
 {
   // Serial.println("In SPI Interrupt");
   SPISlaveInterrupts++;
-  boolean dataWritten = false;
-  boolean byteProcessed = false; // Should be true by the end of the function.
+  bool dataWritten = false;
+  bool byteProcessed = false; // Should be true by the end of the function.
   uint8_t data = 0;
 
   uint8_t interrupts = SERCOM1->SPI.INTFLAG.reg; //Read SPI interrupt register

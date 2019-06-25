@@ -14,7 +14,7 @@ typedef struct entry
   const char *description;
   const char *options;
   entry *next;
-  int8_t trailingDigits; // 0+ number of trailing digit: -1 boolean (on/off)
+  int8_t trailingDigits; // 0+ number of trailing digit: -1 bool (on/off)
   uint8_t logging; // 0: never logged, 1: logged now, 2: logged, but not now.
   uint8_t tag;
 };
@@ -332,7 +332,7 @@ cmdEntry *getCmdEntry(char *name)
   return (cmdEntry *) NULL;
 }
 
-boolean runCmd(char *name)
+bool runCmd(char *name)
 {
   cmdEntry *p = getCmdEntry(name);
   if (p != (cmdEntry *) NULL && p->fun_ptr != NULL)
@@ -556,8 +556,8 @@ void processChar(int c)
   static int vp = 0;
 
   static float dp = 0.1;
-  static boolean negative = false;
-  static boolean gotVal = false;
+  static bool negative = false;
+  static bool gotVal = false;
   float *varPt;
   if (c == '\n' || c == '\r' || c == ';')
   {
@@ -690,7 +690,6 @@ void setupSymtable()
   addCmd(&watch, "w", "Periodically print a variable w less typing", NULL);
   addCmd(&unwatch, "unwatch", "remove variable from watch list", NULL);
   addCmd(&clearWatch, "clear", "empty the watch list", NULL);
-  addCmd(&keyboardThrottle, "ot", "override Throttle control", NULL);
 }
 /*
 

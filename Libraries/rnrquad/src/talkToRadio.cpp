@@ -382,7 +382,7 @@ void processPacket(uint8_t inbData[15])
     unsigned long temptime = micros();
 
 
-    boolean pass = decodepacket();
+    bool pass = decodepacket();
 
     if (pass)
     {

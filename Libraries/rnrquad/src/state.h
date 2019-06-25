@@ -219,7 +219,7 @@ extern void stripW(char *);
 
 
 extern int tookTooLongCount;
-extern boolean readyToUpdateNeoPixels;
+extern bool readyToUpdateNeoPixels;
 extern unsigned long nextNeoUpdate;
 extern int statusValCount[256];
 extern int stuffQueued;
@@ -234,7 +234,7 @@ extern int xn297_regs_read;
 extern int voltageByte;
 extern int noFlowNoise;
 extern float voltage;
-extern boolean radioInitialized;
+extern bool radioInitialized;
 extern float showBrainStemLog;
 extern float showXn297LLog;
 extern float showPacketLog;
@@ -243,10 +243,10 @@ extern float showPID;
 extern float showLogLog;
 extern float showVerbose;
 extern float byPassManipulation;
-extern boolean unreadPacket; // We have read a packet from the XN297L, but it hasn't been sent to the brainstem yet.
-extern boolean unprocessedPacket;
-extern boolean whiteBoard;
-extern boolean greenBoard;
+extern bool unreadPacket; // We have read a packet from the XN297L, but it hasn't been sent to the brainstem yet.
+extern bool unprocessedPacket;
+extern bool whiteBoard;
+extern bool greenBoard;
 extern float A, B, C, D, E, F; // variables from brainstem
 //Decoded packet state.
 #define AUXNUMBER 16
@@ -277,7 +277,7 @@ extern int errorListIndex;
 typedef struct rangeConfigElem
 {
   int8_t j5Index;
-  boolean enabled;
+  bool enabled;
   const char *Name;
   int rangeInMM;
 } rangeConfigElem_t;
@@ -292,7 +292,7 @@ void addSym(float *v, const char *n, const char *d);
 
 void silentSetVar(char *varName, float val);
 
-boolean runCmd(char *n);
+bool runCmd(char *n);
 
 // Given a symbol name, return the pointer to variable.
 float *getSymPtr(char *name);
@@ -308,8 +308,6 @@ extern int getAveFlow(float &xFlow, float &yFlow, float &qFlow);
 extern void setupThinking();
 
 extern void pollThinking();
-
-extern void keyboardThrottle();
 
 extern float tState;
 const int DOWNRANGE = 1;
@@ -338,7 +336,7 @@ extern int cortexState;
 // it is easy to accidentally pull the bus high. When that
 // happens, every bit is stuck at 1. That might be temporary
 // or permanent, but we shouldn't do anything dangerous.
-extern boolean stateIndicateHardwareFault;
+extern bool stateIndicateHardwareFault;
 
 enum cortex_debug
 {
