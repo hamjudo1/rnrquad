@@ -10,8 +10,6 @@
 
 typedef unsigned char uint8_t;
 
-#define WHITEBOARD_WIRING 0
-
 #define XN_CONFIG      0x00  // This was just "CONFIG" in H8mini_blue_board/Silverware
 #define EN_AA       0x01
 #define EN_RXADDR   0x02
@@ -111,20 +109,10 @@ typedef unsigned char uint8_t;
 
 #define NOP           0
 
-#if WHITEBOARD_WIRING == 1
-// The whiteboard doesn't have an LED on pin 6, known as "simpleLED". But driving
-// pin 6 doesn't hurt anything.
-#else
 #define USE_DOTSTAR
-#endif
-
-#ifdef USE_DOTSTAR
 
 #include <Adafruit_DotStar.h>
 
-#else
-#include <Adafruit_NeoPixel.h>
-#endif
 const int simpleLED = 6;
 const int NUMPIXELS = 5;
 // J5X1  Arduino9 (up)
@@ -150,8 +138,6 @@ extern void setupComm();
 extern void setupSerial();
 
 extern int radioDefault(void);
-
-extern void xn297L_debug(void);
 
 extern int XN297L_regs[32];  // brainstem only looks at 0x07, 0x0F, 0x17
 extern int XN297L_goodPayloadIn; // 2 payload buffers, read one from xn297L while sending the other to the brainstem
@@ -246,8 +232,6 @@ extern float showVerbose;
 extern float byPassManipulation;
 extern bool unreadPacket; // We have read a packet from the XN297L, but it hasn't been sent to the brainstem yet.
 extern bool unprocessedPacket;
-extern bool whiteBoard;
-extern bool greenBoard;
 extern float A, B, C, D, E, F; // variables from brainstem
 //Decoded packet state.
 #define AUXNUMBER 16
@@ -301,8 +285,6 @@ float *getSymPtr(char *name);
 void processChar(int c);
 
 void setupSymtable();
-
-void writePacket(int data[], uint8_t size);
 
 extern int getAveFlow(float &xFlow, float &yFlow, float &qFlow);
 

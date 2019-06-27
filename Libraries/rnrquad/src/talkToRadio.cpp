@@ -54,15 +54,6 @@ int rf_chan = 0;
 #define RXMODE_BIND 0
 #define RXMODE_NORMAL (!RXMODE_BIND)
 
-/*
-  #define CH_ON 4
-  #define CH_OFF 5
-  #define CH_FLIP 0
-  #define CH_EXPERT 1
-  #define CH_HEADFREE 2
-  #define CH_RTH 3
-*/
-
 // defines for bayang protocol radio
 #define CH_ON (AUXNUMBER - 2) // 14
 #define CH_OFF (AUXNUMBER - 1) // 15
@@ -187,10 +178,6 @@ void datatopacket(float val, uint8_t *packet)
 
 void throttletopacket(float val, uint8_t *packet)
 {
-  // reverse of:
-  // rx[3] =
-  //      ((rxdata[8] & 0x0003) * 256 +
-  //       rxdata[9]) * 0.000976562f;
   int newVal = int(0.5 + (val / 0.000976562f)); // Convert from 0.0 to 1.0 to 0 to 511;
   int byte0 = 0, byte1 = 0;
 
@@ -260,10 +247,6 @@ static int decodepacket(void)
       rx[2] = rcexpo(rx[2], EXPO_YAW);
 #endif
 
-
-
-      //#ifdef USE_STOCK_TX
-
       trims[0] = rxdata[6] >> 2;
       trim0 = (float) trims[0] * 0.5;
       trims[1] = rxdata[4] >> 2;
@@ -278,15 +261,12 @@ static int decodepacket(void)
           aux[CH_PIT_TRIM + i] = trims[i] > lasttrim[i]; // 6, 7, 8
           lasttrim[i] = trims[i];
         }
-      // #else
       aux[CH_INV] = (rxdata[3] & 0x80) ? 1 : 0;   // inverted flag 6
 
       aux[CH_VID] = (rxdata[2] & 0x10) ? 1 : 0;   // 7
 
       aux[CH_PIC] = (rxdata[2] & 0x20) ? 1 : 0;  // 8
       aux[CH_9] = (rxdata[2] & 0x40) ? 1 : 0;          // 9
-
-      // #endif
 
       aux[CH_TO] = (rxdata[3] & 0x20) ? 1 : 0;   // take off flag  11
 
@@ -339,18 +319,17 @@ void processPacket(uint8_t inbData[15])
   }
   if (rxdata[0] == 123)
   {
-//    rxdata[1] = rxdata[1] + 1; // Prove we are alive and responding to the right packet.
-//    updateChecksum(rxdata);
-//    writePacket(rxdata, 15);
     Serial.print("123 packet received ");
     Serial.println(rxdata[1]);
 
     return;
   }
   if (rxmode == RX_MODE_BIND)
-  { // rx startup , bind mode
+  {
+    // rx startup , bind mode
     if (rxdata[0] == 0xa4) // 0xa4 is normal, 0xa3 is with telemetry
-    { // bind packet
+    {
+      // bind packet
       rfchannel[0] = rxdata[6];
       rfchannel[1] = rxdata[7];
       rfchannel[2] = rxdata[8];
@@ -423,7 +402,6 @@ void writeregs(uint8_t data[], uint8_t size)
 
 int radioDefault(void)
 {
-
   // Gauss filter amplitude - lowest
   static uint8_t demodcal[2] = {0x39, B00000001};
   writeregs(demodcal, sizeof(demodcal));
@@ -454,14 +432,3 @@ int radioDefault(void)
   Serial.println(rxcheck);
   return rxcheck;
 }
-
-void writePacket(int txdata[], uint8_t size)
-{
-  xn_writereg(0, XN_TO_TX);
-  xn_command(FLUSH_TX);
-  delayMicroseconds(100);
-  xn_writepayload(txdata, size);
-  delayMicroseconds(100);
-  xn_writereg(0, XN_TO_RX);
-}
-

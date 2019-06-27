@@ -8,13 +8,6 @@
 float throttle = 0.0;
 float notokay = 0.0;
 float enableLogging[10] = {0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
-bool ktMode = false;
-float fbSpeed = 0.0;
-float fbBase = 0.00;
-float lrBase = 0.10;
-float lrSpeed = 0;
-float overrideGrams = 0.0;
-float launchHeight;
 float enableLoggingNoComm = 0.0;
 float lrTarget = 0;
 float csum = 0;
@@ -44,11 +37,8 @@ float lrOutput = 0.0;
 float PIDderivative = 0.0;
 float PIDintegral = 0.0;
 
-float PIDtarget = 0.0;
 float udPrevError = 0.0;
-float fbPrevError = 0.0;
 float udDerivative = 0.0;
-float lrPrevError = 0.0;
 float lrDerivative = 0.0;
 float fbDerivative = 0.0;
 float takeOffPower = 0.55;
@@ -284,6 +274,7 @@ void loop()
 
     newRx[3] = 0;
   }
+
   if (notokay < 1.5)
   {
     if (millis() % 333 > 222)
@@ -303,8 +294,8 @@ void loop()
         rgbSingleDot1(2, 0.5, 0.0, 0.0);
       }
     }
-
   }
+
   replaceRx(newRx, XN297L_payloadIn[XN297L_goodPayloadIn], XN297L_payloadOut[!XN297L_goodPayloadOut]);
   updateChecksum(XN297L_payloadOut[!XN297L_goodPayloadOut]);
   if (millis() % 666 > 555)

@@ -1,3 +1,10 @@
-# KEYWORD1 classes
-# KEYWORD2 functions
+# <classname> KEYWORD1
+# <functionname> KEYWORD2
 
+Fly KEYWORD1
+
+baseSetup KEYWORD2
+baseLoop KEYWORD2
+getSensorState KEYWORD2
+getControllerState KEYWORD2
+setControllerState KEYWORD2

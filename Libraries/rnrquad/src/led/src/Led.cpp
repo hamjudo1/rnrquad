@@ -114,20 +114,14 @@ int subPhase = 0;
 
 void colorSingleDotA(int dotNo, float angle)
 {
-  if (greenBoard && true)
-  {
-    pixel.setPixelColor(dotNo, hsvColor(angle, 1.0, 1.0));
-    pixel.show();
-  }
+  pixel.setPixelColor(dotNo, hsvColor(angle, 1.0, 1.0));
+  pixel.show();
 }
 
 void colorSingleDot(int dotNo, float angle)
 {
-  if (greenBoard && true)
-  {
-    pixel.setPixelColor(dotNo, hsvColor(angle, 1.0, 1.0));
-    pixel.show();
-  }
+  pixel.setPixelColor(dotNo, hsvColor(angle, 1.0, 1.0));
+  pixel.show();
 }
 
 void rgbSingleDot1(int dotNo, float r, float g, float b)

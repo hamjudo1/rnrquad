@@ -14,11 +14,6 @@ int XN297L_goodPayloadIn = 0;
 int XN297L_goodPayloadOut = 0;
 int XN297L_goodBuffer = 0;
 
-extern void mosi_input(void)
-{
-  return;  // Not needed on our hardware, changes the data direction bit in the quadcopter CPU.
-}
-
 int xn297_regs_written = 0;
 int xn297_regs_read = 0;
 
@@ -53,7 +48,6 @@ int xn_readreg(int reg)
   reg = reg & 0x1F;
   spi_cson();
   spi_sendbyte(reg);
-  mosi_input();
   int val = spi_recvbyte();
   spi_csoff();
   XN297L_regs[reg] = val;
@@ -64,50 +58,18 @@ int statusValCount[256];
 
 void checkPacket()
 {
-
   int status = xn_readreg(XN_STATUS);
   statusValCount[status]++;
-#if 0
-  static int lastStatus = 256;
-  if ( status != lastStatus ) {
-    lastStatus = status;
-    Serial.print("checkPacket, status ");
-    Serial.println(status, 2);
-  }
-#endif
   uint8_t outbound[15];
 
-  // if (status & (1 << MASK_RX_DR))
-  // { // rx clear bit
-  // this is not working well
-  // xn_writereg( STATUS , (1<<MASK_RX_DR) );
-  //RX packet received
-  //return 1;
-  //}
   if ((status & B00001110) != B00001110)
   {
-    // rx fifo not empty
-    //  digitalWrite(9,HIGH);
-    // digitalWrite(9,LOW);
-    // cortexDebug(we_are_bound);
-
     xn_readpayload(XN297L_payloadIn[!XN297L_goodPayloadIn], 15);
-    /*  for (int i = 0; i < 15; i++) {
-        Serial.print(XN297L_payloadIn[!XN297L_goodPayloadIn][i]);
-        Serial.print(" ");
-      }
-      Serial.println(); */
-
     xn_writereg(XN_STATUS, B00001110); // Clear status.
 
     XN297L_goodPayloadIn = !XN297L_goodPayloadIn;
     processPacket(XN297L_payloadIn[XN297L_goodPayloadIn]);
   }
-}
-
-void xn297L_debug()
-{
-
 }
 
 int xn_command(int command)
@@ -117,7 +79,6 @@ int xn_command(int command)
   spi_csoff();
   return 0;
 }
-//
 
 
 void xn_readpayload(uint8_t *data, int size)
@@ -125,7 +86,6 @@ void xn_readpayload(uint8_t *data, int size)
   int index = 0;
   spi_cson();
   spi_sendbyte(B01100001); // read rx payload
-  mosi_input();
   while (index < size)
   {
     data[index] = spi_recvbyte();

@@ -1,25 +1,3 @@
-// started with examples from https://learn.adafruit.com/using-atsamd21-sercom-to-add-more-spi-i2c-serial-ports/creating-a-new-spi
-// but changed much.
-// master to radio (xn297L) slave
-// Sercom2
-// DOPO 0x2 SPI_PAD_3_SCK1
-// DIPO 0x0 SERCOM_RX_PAD_0
-
-// SS    XN297L pin1 pad2 pin23 pa14 sercom 2.2
-// CLK XN297L pin2  pad1  pin22 pa13 sercom 2.1
-// MISO XN297L (pin3 direct) pad0 pin21 pa12 Sercom 2.0
-// MOSI XN297L (Pin3 resistor) pad3  pin24 pa15 Sercom 2.3
-/*
-  Quad MISO CPU pin 28 Port PA19 Arduino Pin 12.
-  Quad MOSI CPU pin 25 Port PA16 Arduino Pin 11.
-  Quad SS CPU pin 27 Port PA18 Arduino Pin 10.
-  Quad CLK CPU pin 26 Port PA17 Arduino Pin 13.
-
-  Radio MOSI CPU pin 19 Port PB10 Arduino Pin 23.
-  Radio MISO CPU pin 21 Port PA12 Arduino Pin 22.
-  Radio CLK CPU pin 20 Port PB11 Arduino Pin 24.
-  Radio SS CPU pin 24 Port PA15 Arduino Pin 5.
-*/
 // #include <SERCOM.h>
 #include <SPI.h>
 
@@ -34,54 +12,37 @@ const int mySPI_CLK = 24;
 const int mySPI_SS = 5;
 
 
-char *regList[] = {"CONFIG", "EN_AA", "EN_RXADDR", "SETUP_AW", "SETUP_RETR", "RF_CH", "RF_SETUP", "STATUS",
-                   "OBSERVE_TX", "CD", "RX_ADDR_P0", "RX_ADDR_P1", "RX_ADDR_P2", "RX_ADDR_P3", "RX_ADDR_P4",
-                   "RX_ADDR_P5",
-                   "TX_ADDR", "RX_PW_P0", "RX_PW_P1", "RX_PW_P2", "RX_PW_P3", "RX_PW_P4", "RX_PW_P5", "FIFO_STATUS"
+char *regList[] = {
+  "CONFIG", "EN_AA", "EN_RXADDR", "SETUP_AW", "SETUP_RETR", "RF_CH", "RF_SETUP", "STATUS",
+  "OBSERVE_TX", "CD", "RX_ADDR_P0", "RX_ADDR_P1", "RX_ADDR_P2", "RX_ADDR_P3", "RX_ADDR_P4",
+  "RX_ADDR_P5",
+  "TX_ADDR", "RX_PW_P0", "RX_PW_P1", "RX_PW_P2", "RX_PW_P3", "RX_PW_P4", "RX_PW_P5", "FIFO_STATUS"
 };
 
 #include "wiring_private.h" // pinPeripheral() function
-// #define PIN_SPI_MISO         (22u)
-// #define PIN_SPI_MOSI         (23u)
-// #define PIN_SPI_SCK          (24u)
-// #define PERIPH_SPI           sercom4
-// #define PAD_SPI_TX           SPI_PAD_2_SCK_3
-// #define PAD_SPI_RX           SERCOM_RX_PAD_0
-// SPIClass mySPI(&sercom2, mySPI_MISO, mySPI_CLK, mySPI_MOSI, SPI_PAD_3_SCK_1, SERCOM_RX_PAD_0);
-// #define PIN_SPI_MISO         (22u)
-// #define PIN_SPI_MOSI         (5u)
-// #define PIN_SPI_SCK          (38u)
-// #define PERIPH_SPI           sercom2
-// #define PAD_SPI_TX           SPI_PAD_3_SCK_1
-// #define PAD_SPI_RX           SERCOM_RX_PAD_0
 #include <SPI.h>
 
 const int PIN_SPI_SS = mySPI_SS;
-bool talk = true;
-bool pTalk = true;
 int talkMax = 100;
 int talki = 0;
 int packetPrint = 500;
 int outByte = 255;
 int lastCmd = -1;
-bool waitForRead = false;
-bool waitForWrite = false;
-bool waitForCmd = false;
 const int slaveLogSize = 1024;
 
 uint8_t dVals[slaveLogSize];
 uint8_t pNos[slaveLogSize];
 int ivp = 0;
 int packetStart = 0;
-bool showIt = false;
-bool skipIt = false;
+boolean showIt = false;
+boolean skipIt = false;
 
 int lastSaved = -1;
 int lastShown = -1;
 int cheatCnt = 0;
 int byteToSend = 0;
 int packetPos = 0;
-bool singlePass = false;
+boolean singlePass = false;
 
 int outQueue[256];
 int queueSize = 0;
@@ -425,8 +386,8 @@ void SERCOM1_Handler()
 {
   // Serial.println("In SPI Interrupt");
   SPISlaveInterrupts++;
-  bool dataWritten = false;
-  bool byteProcessed = false; // Should be true by the end of the function.
+  boolean dataWritten = false;
+  boolean byteProcessed = false; // Should be true by the end of the function.
   uint8_t data = 0;
 
   uint8_t interrupts = SERCOM1->SPI.INTFLAG.reg; //Read SPI interrupt register
@@ -634,42 +595,10 @@ void setupComm()
   colorSingleDot(4, 120);
 }
 
-#ifdef NOTUSED
-void pollWatcher() {
-  int LEDs = ivp / 1024;
-  int i;
-  Serial.print("ivp ");
-  Serial.println(ivp);
-  for ( i = 0; i < LEDs; i++ ) {
-
-    pixel.setPixelColor(i, pixel.Color(0, 30, 0));
-  }
-  for ( ; i < 8; i++ ) {
-    pixel.setPixelColor(i, pixel.Color(0, 00, 10));
-  }
-  if ( ivp > slaveLogSize ) {
-    dispIntVal();
-
-    float loopCnt = 0.0;
-    while (true) {
-      for (int n = 0; n < 8; n++) {
-
-        pixel.setPixelColor(n, hsvColor((float)n * 45.0 + loopCnt, 1.0, 1.0));
-      }
-      loopCnt = loopCnt + 0.1;
-      delay(20);
-
-    }
-  }
-
-}
-#endif
 unsigned long nextDebugPrint = 0;
 
 void pollComm()
 {
-
-
   if (XN297L_regs[0x0f] != 0xC6)
   {
     radioDefault();
@@ -696,9 +625,5 @@ void pollComm()
     {
       dispXn297LLog();
     }
-
   }
-  xn297L_debug();
 }
-
-
