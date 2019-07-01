@@ -1,5 +1,6 @@
 
 #include "state.h"
+#include "objects/src/ControllerState.h"
 
 extern void xn_writereg(int reg, int val);
 
@@ -152,9 +153,6 @@ void nextchannel()
   xn_writereg(0x25, rfchannel[rf_chan]);
 }
 
-
-#define DISABLE_EXPO
-
 float packettodata(int *data)
 {
   return (((data[0] & 0x0003) * 256 + data[1]) - 512) * 0.001953125;
@@ -206,6 +204,7 @@ bool verifyChecksum(uint8_t packet[15])
   return packet[14] == (sum & 0xff);
 }
 
+// newPacket will have stick values from newrx[] and everything else from oldPacket.
 void replaceRx(float newrx[4], uint8_t oldPacket[15], uint8_t newPacket[15])
 {
   for (int i = 0; i < 14; i++)
@@ -221,7 +220,13 @@ void replaceRx(float newrx[4], uint8_t oldPacket[15], uint8_t newPacket[15])
 
 bool auxChanged = false;
 char trims[4];
-
+void setupController(void)
+{
+  addSym(&refControl.throttle,"rt","3n");
+  addSym(&refControl.leftStickXPosition,"rx2","3n");
+  addSym(&refControl.rightStickXPosition,"rx0","3n");
+  addSym(&refControl.rightStickYPosition,"rx1","3n");
+}
 static int decodepacket(void)
 {
   if (rxdata[0] == 165)
@@ -240,20 +245,17 @@ static int decodepacket(void)
       rx[3] =
           ((rxdata[8] & 0x0003) * 256 +
            rxdata[9]) * 0.000976562f;
-
-#ifndef DISABLE_EXPO
-      rx[0] = rcexpo(rx[0], EXPO_XY);
-      rx[1] = rcexpo(rx[1], EXPO_XY);
-      rx[2] = rcexpo(rx[2], EXPO_YAW);
-#endif
+      refControl.throttle = rx[3];
+      refControl.leftStickXPosition = rx[2];
+      refControl.rightStickXPosition = rx[0];
+      refControl.rightStickYPosition = rx[1];
 
       trims[0] = rxdata[6] >> 2;
-      trim0 = (float) trims[0] * 0.5;
+      trim0 = (float) trims[0] - 31.0;
       trims[1] = rxdata[4] >> 2;
-      trim1 = trim1offset + (float) trims[1] * 0.5;
+      trim1 = (float) trims[1] - 31.0;
       trims[2] = rxdata[8] >> 2;
       trims[3] = rxdata[10] >> 2;
-
 
       for (int i = 0; i < 2; i++)
         if (trims[i] != lasttrim[i])

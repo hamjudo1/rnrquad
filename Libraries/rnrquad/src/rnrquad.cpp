@@ -24,6 +24,7 @@ void baseSetup()
   setupDebug();
   setupNeoSupp();
   setupFlow();
+  setupController();
   for (int i = 0; i < 5; i++)
   {
     colorSingleDot(i, 240);

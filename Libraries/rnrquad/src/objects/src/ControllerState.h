@@ -9,14 +9,16 @@ class ControllerState
 {
 public:
   ControllerState();
-
-  float leftStickYPosition;
+  ControllerState(bool isEmpty);
+  float throttle;
   float leftStickXPosition;
   float rightStickXPosition;
   float rightStickYPosition;
-  float leftTrigger;
-  float rightTrigger;
+  bool leftTrigger;
+  bool rightTrigger;
+  float trim0;
+  float trim1;
   // TODO buttons
 };
-
+extern ControllerState refControl;
 #endif

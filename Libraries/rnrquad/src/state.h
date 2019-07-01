@@ -372,5 +372,6 @@ extern void spi_sendbyte(int b);
 extern void spi_cson(void); // start of packet stuff.
 extern void spi_csoff(void); // end of packet
 extern void spiSlave_init(); // initialize SPI slave (connection to brain stem)
+extern void setupController();
 
 #endif
