@@ -22,61 +22,61 @@ void baseSetup()
 
   setupSymtable();  // symbols to be logged.
   setupDebug();
-  setupNeoSupp();
+  Led::setupNeoSupp();
   setupFlow();
   setupController();
   for (int i = 0; i < 5; i++)
   {
-    colorSingleDot(i, 240);
+    Led::hsvColorSingleLed(i, 240);
   }
-  colorSingleDot(1, 120.0);
+  Led::hsvColorSingleLed(1, 120.0);
   setupSerial();
-  colorSingleDot(2, 120.0);
+  Led::hsvColorSingleLed(2, 120.0);
 
   setupComm();
 
   setupRangeFinders();
-  colorSingleDot(3, 120.0);
-  colorSingleDot(4, 120.0);
+  Led::hsvColorSingleLed(3, 120.0);
+  Led::hsvColorSingleLed(4, 120.0);
   initTime = millis();
 }
 
 void baseLoop()
 {
-  colorSingleDot(1, 60);
+  Led::hsvColorSingleLed(1, 60);
   debugStart = millis();
   pollDebug();
-  colorSingleDot(1, 120);
+  Led::hsvColorSingleLed(1, 120);
   commStart = millis();
 
   debugTime = debugTime + commStart - debugStart;
   pollComm();
-  colorSingleDot(1, 180);
+  Led::hsvColorSingleLed(1, 180);
 
   neoStart = millis();
   commTime = commTime + neoStart - commStart;
-  colorSingleDot(1, 240);
+  Led::hsvColorSingleLed(1, 240);
   rangeStart = millis();
   pollRangeFinders();
-  colorSingleDot(1, 300);
+  Led::hsvColorSingleLed(1, 300);
   thinkStart = millis();
   rangeTime = rangeTime + thinkStart - rangeStart;
   pollFlow();
-  colorSingleDot(1, 360);
+  Led::hsvColorSingleLed(1, 360);
   thinkTime = thinkTime + millis() - thinkStart;
   if (micros() - lastHeartBeat > 50000)
   {
 
     if (thinkStart % 666 > 222)
     {
-      rgbSingleDot1(0, 1.0, 0.0, 0.0);
+      Led::rgbColorSingleLed(0, 1.0, 0.0, 0.0);
     } else
     {
-      rgbSingleDot1(0, 0.0, 1.0, 0.0);
+      Led::rgbColorSingleLed(0, 0.0, 1.0, 0.0);
     }
   } else
   {
-    colorSingleDot(0, iter++);
+    Led::hsvColorSingleLed(0, iter++);
   }
 }
 
@@ -120,7 +120,7 @@ void setControllerState(ControllerState controllerState)
  */
 void setLED(int ledNumber, RgbLed led)
 {
-  rgbSingleDot1(ledNumber, led.red, led.green, led.blue);
+  Led::rgbColorSingleLed(ledNumber, led.red, led.green, led.blue);
 }
 
 bool waitForConnection = true;

@@ -33,10 +33,10 @@ int getAveFlow(float &xFlow, float &yFlow, float &qFlow)
   {
     if (age > 50000)
     {
-      rgbSingleDot1(4, 1.0, 1.0, 1.0);
+      Led::rgbColorSingleLed(4, 1.0, 1.0, 1.0);
     } else
     {
-      rgbSingleDot1(4, 1.0, 0.0, 0.0);
+      Led::rgbColorSingleLed(4, 1.0, 0.0, 0.0);
     }
     return 0;
   }
@@ -47,7 +47,7 @@ int getAveFlow(float &xFlow, float &yFlow, float &qFlow)
   for (int n = 3; n < 5; n++)
   {
     float flowSquared = xFlow * xFlow + yFlow * yFlow;
-    colorSingleDot(n, 120 + (flowSquared / 20.0));
+    Led::hsvColorSingleLed(n, 120 + (flowSquared / 20.0));
   }
   return 1;
 }
@@ -75,7 +75,7 @@ void setupFlow()
   pinPeripheral(6, PIO_SERCOM); //Assign RX function to pin 6
   flowSerial.begin(19200);      // This will initialize SERCOM5 correctly, but mess up pin 6
   pinPeripheral(6, PIO_SERCOM); // Switch the port back to pin 6
-  colorSingleDot(0, 0.0);
+  Led::hsvColorSingleLed(0, 0.0);
   addSym(&newestXFlow, "xFlow", "flow sensor", "1N");
   addSym(&newestYFlow, "yFlow", "flow sensor", "1N");
   addSym(&newestQFlow, "qFlow", "flow sensor", "0N");
