@@ -3,9 +3,11 @@
 #include "wiring_private.h"
 #include "../../state.h"
 
-float newestXFlow = 0.0, newestYFlow = 0.0;
-float newestQFlow = 0.0, newestTFlow = 0.0;
+float rawXFlow = 0.0, rawYFlow = 0.0;
+float rawQFlow = 0.0, rawTFlow = 0.0;
 long sercom5timeStamp = 0;
+unsigned long lastSample = 0; // Last real flow sensor data
+unsigned long lastUpdate = 0; // Last time flow sensor data was updated, possibly indicating no data.
 Uart flowSerial(&sercom5, 6, 20, SERCOM_RX_PAD_2, UART_TX_PAD_0); // Create the new UART instance assigning it by arduino pin numbers
 
 /**
@@ -17,52 +19,36 @@ void SERCOM5_Handler()
   sercom5timeStamp = micros();
 }
 
-unsigned long lastSample = 0;
-
-int getAveFlow(float &xFlow, float &yFlow, float &qFlow)
-{
-  long age = micros() - lastSample;
-  if (newestXFlow == 0.0 && newestYFlow == 0.0)
-  {
-    noFlowNoise++;
-  } else
-  {
-    noFlowNoise = 0;
-  }
-  if (age > 50000 || newestQFlow < 71) // 50k microseconds, ie 50milliseconds
-  {
-    if (age > 50000)
-    {
-      Led::rgbColorSingleLed(4, 1.0, 1.0, 1.0);
-    } else
-    {
-      Led::rgbColorSingleLed(4, 1.0, 0.0, 0.0);
-    }
-    return 0;
-  }
-
-  xFlow = 0.5 * xFlow + 0.5 * newestXFlow;
-  yFlow = 0.5 * yFlow + 0.5 * newestYFlow;
-  qFlow = newestQFlow;
-  for (int n = 3; n < 5; n++)
-  {
-    float flowSquared = xFlow * xFlow + yFlow * yFlow;
-    Led::hsvColorSingleLed(n, 120 + (flowSquared / 20.0));
-  }
-  return 1;
-}
 
 void processFlowPacket(int dx, int dy, int q, int t)
 {
-  lastSample = sercom5timeStamp;
+  float flowHeight = rangesInM[DOWNRANGE] - 0.040;
+  if ( flowHeight < 0.0 )
+  {
+    flowHeight = 0.0;
+  }
 
-  newestXFlow = dx; // Assumes flow sensor time is more stable than
+  if ( (lastSample - sercom5timeStamp) < 50000 )
+  {
+    refSensor.flowX = 0.5 * dx*flowHeight + refSensor.flowX; // Average in with recent last reading.
+    refSensor.flowY = 0.5 * dy*flowHeight + refSensor.flowY;
+  }
+  else
+  {
+    refSensor.flowX = dx*flowHeight;  // No recent last reading, use this one only.
+    refSensor.flowY = dy*flowHeight;
+  }
+  refSensor.flowQ = q;
+  lastSample = sercom5timeStamp;
+  lastUpdate = lastSample;
+  refSensor.flowTimeStamp = (float)sercom5timeStamp/1000000;
+  rawXFlow = dx; // Assumes flow sensor time is more stable than
   // measuring character timing. Will have to verify.
 
-  newestYFlow = dy; // (1000 milliseconds per second, 40 milliseconds per loop,
+  rawYFlow = dy; // (1000 milliseconds per second, 40 milliseconds per loop,
   // Result is in arbitrary flow units per second.
-  newestQFlow = q;
-  newestTFlow = t;
+  rawQFlow = q;
+  rawTFlow = t;
 }
 
 void setupFlow()
@@ -76,10 +62,13 @@ void setupFlow()
   flowSerial.begin(19200);      // This will initialize SERCOM5 correctly, but mess up pin 6
   pinPeripheral(6, PIO_SERCOM); // Switch the port back to pin 6
   Led::hsvColorSingleLed(0, 0.0);
-  addSym(&newestXFlow, "xFlow", "flow sensor", "1N");
-  addSym(&newestYFlow, "yFlow", "flow sensor", "1N");
-  addSym(&newestQFlow, "qFlow", "flow sensor", "0N");
-  addSym(&newestTFlow, "tFlow", "flow sensor", "0N");
+  addSym(&rawXFlow, "rawxf", "flow sensor raw data", "1N");
+  addSym(&rawYFlow, "rawyf", "flow sensor raw data", "1N");
+  addSym(&rawQFlow, "rawqf", "flow sensor raw data", "0N");
+  addSym(&rawTFlow, "rawtf", "flow sensor raw data", "1N");
+  addSym(&(refSensor.flowX), "xf", "flow sensor X", "3N");
+  addSym(&(refSensor.flowY), "yf", "flow sensor Y", "3N");
+  addSym(&(refSensor.flowQ), "qf", "flow sensor Quality", "3N");
 }
 
 void pollFlow()
@@ -154,5 +143,14 @@ void pollFlow()
         break;
     }
     flowIndex += 1;
+  }
+  if ( micros() - lastUpdate > 50000 ) {
+    
+    lastUpdate = micros();
+
+    refSensor.flowX *= 0.8;  // If no recent real data, make the old value decay away.
+    refSensor.flowY *= 0.8; 
+    refSensor.flowQ -= 2;
+    
   }
 }

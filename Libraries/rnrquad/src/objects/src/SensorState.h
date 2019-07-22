@@ -9,6 +9,8 @@ class SensorState
 {
 public:
   SensorState();
+  SensorState(bool isEmpty);
+
 
   float batteryVoltage;
 
@@ -16,16 +18,19 @@ public:
   float flowX;
   float flowY;
   float flowQ;
+  float flowTimeStamp;
 
   // Gyro sensor
   float gyroX;
   float gyroY;
   float gyroZ;
+  float gyroTimeStamp;
 
   // Accelerometer
   float accelX;
   float accelY;
   float accelZ;
+  float accelTimeStamp;
 
   // Lidars
   Lidar lidarFront;
@@ -34,5 +39,5 @@ public:
   Lidar lidarRight;
   Lidar lidarBottom;
 };
-
+extern SensorState refSensor;
 #endif
