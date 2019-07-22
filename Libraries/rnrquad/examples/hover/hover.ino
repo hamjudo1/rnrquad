@@ -135,8 +135,6 @@ void udMotion(float dt, float newRx[4])
   }
   udBase = udBaseUntrim + tf0;
   newRx[3] = constrain(udBase + udKP * udError + udKD * udDerivative, minThrottle, maxThrottle);
-
-
 }
 
 float lastLrError;
@@ -216,24 +214,18 @@ void setup()
 void loop()
 {
   baseLoop();
+  SensorState sensors = new SensorState();
 
   float newRx[4];
   static float xFlow = 0.0, yFlow = 0.0, qFlow = 0.0;
 
 
-  int sampCnt = getAveFlow(xFlow, yFlow, qFlow);
+  
   unsigned long now = millis();
   unsigned long loopTime = now - prevLoop;
   prevLoop = now;
-  if (sampCnt > 0)
-  {
-    xFlowC = xFlow * (rangesInM[DOWNRANGE] - 0.025);
-    yFlowC = yFlow * (rangesInM[DOWNRANGE] - 0.025);
-  } else
-  {
-    xFlowC = xFlowC * 0.8;
-    yFlowC = yFlowC * 0.8;
-  }
+  xFlowC = sensors.flowX;
+  yFlowC = sensors.flowY;
 
   for (int i = 0; i < 4; i++)
   {
@@ -243,22 +235,19 @@ void loop()
   throttle = newRx[3];
   if (okayToFly())
   {
-
-
     if (fabs(rx[0]) < 0.1 && fabs(rx[1]) < 0.1)
     {
       // xFlow Positive is traveling backwards, yFlow Positive is moving Left
 
       if (rangesInM[DOWNRANGE] > 0.15)
       {
-        if (sampCnt > 0)
+        if (sensors.flowQ > 70 ) 
         {
           newRx[1] = constrain(yFlowC * 0.05, -0.3, +0.3); // newRx Positive is forward thrust
           newRx[0] = constrain(-xFlowC * 0.05, -0.3, +0.3); // Negative is left
         }
       }
-
-    }
+    } 
   } else
   { // under voltage or something
     if (notokay == 3.0 || notokay == 2.0)
