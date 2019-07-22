@@ -98,10 +98,29 @@ ControllerState getControllerState()
 
 /**
  * Sets output controller values
+ *
+ * @param controllerState
  */
 void setControllerState(ControllerState controllerState)
 {
   sendMotorSignal(controllerState);
+}
+
+/**
+ * Sets LED values
+ * # | pos
+ * 0 | back
+ * 1 | left
+ * 2 | left_front
+ * 3 | right_front
+ * 4 | right
+ *
+ * @param led
+ * @param ledNumber
+ */
+void setLED(int ledNumber, RgbLed led)
+{
+  rgbSingleDot1(ledNumber, led.red, led.green, led.blue);
 }
 
 bool waitForConnection = true;

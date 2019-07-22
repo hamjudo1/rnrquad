@@ -4,8 +4,6 @@
 
 #include <rnrquad.h>
 
-
-
 void setup()
 {
   baseSetup();
