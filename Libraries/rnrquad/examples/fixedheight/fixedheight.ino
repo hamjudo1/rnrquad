@@ -16,12 +16,19 @@ void setup()
 {
   baseSetup();
 
-  udPID.begin(target_height, proportional_constant, integral_constant, derivative_constant);
+//  udPID.begin(target_height, proportional_constant, integral_constant, derivative_constant);
 }
 
 void loop()
 {
   baseLoop();
 
-  udPID.tstep()
+  ControllerState inputControllerState;
+
+  inputControllerState = getControllerState();
+
+//  udPID.tstep()
+
+
+  setControllerState(inputControllerState);
 }

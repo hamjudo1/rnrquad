@@ -93,15 +93,15 @@ SensorState getSensorState()
  */
 ControllerState getControllerState()
 {
-  //TODO
+  return refControl;
 }
 
 /**
  * Sets output controller values
  */
-void setControllerState()
+void setControllerState(ControllerState controllerState)
 {
-  //TODO
+  sendMotorSignal(controllerState);
 }
 
 bool waitForConnection = true;

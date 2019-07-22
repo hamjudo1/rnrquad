@@ -8,4 +8,4 @@ SensorState getSensorState();
 
 ControllerState getControllerState();
 
-void setControllerState();
+void setControllerState(ControllerState controllerState);

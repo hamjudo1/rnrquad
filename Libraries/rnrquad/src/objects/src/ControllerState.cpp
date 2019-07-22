@@ -4,6 +4,7 @@
 #include "state.h"
 #include "ControllerState.h"
 
+// Pointless double constructor so it's possible to make all ControllerState objects clones of the reference controller
 ControllerState::ControllerState(bool isEmpty)
 {
   throttle = 0;

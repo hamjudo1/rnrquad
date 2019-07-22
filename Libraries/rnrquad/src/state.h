@@ -374,4 +374,6 @@ extern void spi_csoff(void); // end of packet
 extern void spiSlave_init(); // initialize SPI slave (connection to brain stem)
 extern void setupController();
 
+void sendMotorSignal(ControllerState controller_out);
+
 #endif

@@ -251,10 +251,10 @@ static int decodepacket(void)
       refControl.rightStickYPosition = rx[1];
 
       trims[0] = rxdata[6] >> 2;
-      trim0 = (float) trims[0] - 31.0;
+      refControl.trim0 = (float) trims[0] - 31.0;
       trims[1] = rxdata[4] >> 2;
        
-      trim1 = 31.0 - (float) trims[1]; // Yes the sign is different
+      refControl.trim1 = 31.0 - (float) trims[1]; // Yes the sign is different
       trims[2] = rxdata[8] >> 2;
       trims[3] = rxdata[10] >> 2;
 
