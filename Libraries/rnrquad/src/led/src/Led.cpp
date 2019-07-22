@@ -10,7 +10,7 @@ Adafruit_DotStar pixel = Adafruit_DotStar(NUMPIXELS, DATAPIN, CLOCKPIN, DOTSTAR_
 // Note, this version is suboptimal to make it easier for me to explain. There
 // are better versions out there.
 //
-static uint32_t hsvColor(float h, float s, float v)
+uint32_t Led::hsvColor(float h, float s, float v)
 {  // h is 0.-360., s and v are 0 to 1.0
   // h is Hue, s is Saturation, v is Value.
   float r = 0., g = 0., b = 0.;
@@ -61,7 +61,7 @@ static uint32_t hsvColor(float h, float s, float v)
   return pixel.Color(int(r * brightness), int(g * brightness), int(b * brightness));
 }
 
-static void setupNeoSupp()
+void Led::setupNeoSupp()
 {
   int r = 50, g = 200, b = 50;
   pixel.begin();
@@ -82,13 +82,13 @@ static void setupNeoSupp()
   }
 }
 
-static void hsvColorSingleLed(int dotNo, float angle)
+void Led::hsvColorSingleLed(int dotNo, float angle)
 {
   pixel.setPixelColor(dotNo, hsvColor(angle, 1.0, 1.0));
   pixel.show();
 }
 
-static void Led::rgbColorSingleLed(int dotNo, float r, float g, float b)
+void Led::rgbColorSingleLed(int dotNo, float r, float g, float b)
 {
   r = constrain(r, 0.0, 1.0);
   g = constrain(g, 0.0, 1.0);
