@@ -72,7 +72,6 @@ int getQueuedByte()
 }
 
 int stem_status_check_count = 0;
-float colorAngle = 0.0;
 int countList[15] = {1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15};
 int inbound[16];
 int SPI_STATE = 'N'; // N for Normal, W for Write, R for Read
@@ -580,19 +579,19 @@ void setupComm()
   int cnt = 0;
   for (int i = 0; i < 5; i++)
   {
-    colorSingleDot(i, 240);
+    Led::hsvColorSingleLed(i, 240);
   }
-  colorSingleDot(0, 120);
+  Led::hsvColorSingleLed(0, 120);
   SPI.begin();
-  colorSingleDot(1, 120);
+  Led::hsvColorSingleLed(1, 120);
   spiSlave_init();
-  colorSingleDot(2, 120);
+  Led::hsvColorSingleLed(2, 120);
 
   pinMode(PIN_SPI_SS, OUTPUT);
   digitalWrite(PIN_SPI_SS, HIGH);
-  colorSingleDot(3, 120);
+  Led::hsvColorSingleLed(3, 120);
   radioInitialized = (radioDefault() == 0xC6);
-  colorSingleDot(4, 120);
+  Led::hsvColorSingleLed(4, 120);
 }
 
 unsigned long nextDebugPrint = 0;

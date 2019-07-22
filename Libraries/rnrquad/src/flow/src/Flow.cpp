@@ -23,13 +23,18 @@ void SERCOM5_Handler()
 void processFlowPacket(int dx, int dy, int q, int t)
 {
   float flowHeight = rangesInM[DOWNRANGE] - 0.040;
-  if ( flowHeight < 0.0 ) {
+  if ( flowHeight < 0.0 )
+  {
     flowHeight = 0.0;
   }
-  if ( (lastSample - sercom5timeStamp) < 50000 ) {
+
+  if ( (lastSample - sercom5timeStamp) < 50000 )
+  {
     refSensor.flowX = 0.5 * dx*flowHeight + refSensor.flowX; // Average in with recent last reading.
     refSensor.flowY = 0.5 * dy*flowHeight + refSensor.flowY;
-  } else {
+  }
+  else
+  {
     refSensor.flowX = dx*flowHeight;  // No recent last reading, use this one only.
     refSensor.flowY = dy*flowHeight;
   }
@@ -56,7 +61,7 @@ void setupFlow()
   pinPeripheral(6, PIO_SERCOM); //Assign RX function to pin 6
   flowSerial.begin(19200);      // This will initialize SERCOM5 correctly, but mess up pin 6
   pinPeripheral(6, PIO_SERCOM); // Switch the port back to pin 6
-  colorSingleDot(0, 0.0);
+  Led::hsvColorSingleLed(0, 0.0);
   addSym(&rawXFlow, "rawxf", "flow sensor raw data", "1N");
   addSym(&rawYFlow, "rawyf", "flow sensor raw data", "1N");
   addSym(&rawQFlow, "rawqf", "flow sensor raw data", "0N");

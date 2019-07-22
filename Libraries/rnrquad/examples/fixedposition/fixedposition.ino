@@ -153,8 +153,6 @@ void motion(float newRx[4])
   udMotion(dt, newRx);
 }
 
-extern float colorAngle;
-
 float tenths = 0;
 int lastTenths = 0;
 long lastTime = 0;

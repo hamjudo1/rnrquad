@@ -3,13 +3,14 @@
 
 const int DATAPIN = 17;
 const int CLOCKPIN = 18;
+
 Adafruit_DotStar pixel = Adafruit_DotStar(NUMPIXELS, DATAPIN, CLOCKPIN, DOTSTAR_BGR);
 
 // HSV code inspired by https://en.wikipedia.org/wiki/HSL_and_HSV
 // Note, this version is suboptimal to make it easier for me to explain. There
 // are better versions out there.
 //
-uint32_t hsvColor(float h, float s, float v)
+uint32_t Led::hsvColor(float h, float s, float v)
 {  // h is 0.-360., s and v are 0 to 1.0
   // h is Hue, s is Saturation, v is Value.
   float r = 0., g = 0., b = 0.;
@@ -60,7 +61,7 @@ uint32_t hsvColor(float h, float s, float v)
   return pixel.Color(int(r * brightness), int(g * brightness), int(b * brightness));
 }
 
-void setupNeoSupp()
+void Led::setupNeoSupp()
 {
   int r = 50, g = 200, b = 50;
   pixel.begin();
@@ -81,50 +82,13 @@ void setupNeoSupp()
   }
 }
 
-uint32_t shortRed(int pixNo, int phaseNo, void *options)
-{
-  if (phaseNo == 0)
-  {
-    return pixel.Color(40, 0, 0);
-  } else if (phaseNo > 0)
-  {
-    return pixel.Color(0, 0, 0);
-  } else
-  {
-    Serial.print("shortRed");
-  }
-}
-
-uint32_t longRed(int pixNo, int phaseNo, void *options)
-{
-  if (phaseNo == 0)
-  {
-    return pixel.Color(0, 0, 0);
-  } else
-  {
-    return pixel.Color(30, 0, 0);
-  }
-}
-
-const int rxLEDOffset = 0;
-extern float colorAngle;
-bool everyOther = false;
-int pixelPhase = 0;
-int subPhase = 0;
-
-void colorSingleDotA(int dotNo, float angle)
+void Led::hsvColorSingleLed(int dotNo, float angle)
 {
   pixel.setPixelColor(dotNo, hsvColor(angle, 1.0, 1.0));
   pixel.show();
 }
 
-void colorSingleDot(int dotNo, float angle)
-{
-  pixel.setPixelColor(dotNo, hsvColor(angle, 1.0, 1.0));
-  pixel.show();
-}
-
-void rgbSingleDot1(int dotNo, float r, float g, float b)
+void Led::rgbColorSingleLed(int dotNo, float r, float g, float b)
 {
   r = constrain(r, 0.0, 1.0);
   g = constrain(g, 0.0, 1.0);
@@ -132,22 +96,3 @@ void rgbSingleDot1(int dotNo, float r, float g, float b)
   pixel.setPixelColor(dotNo, pixel.Color(int(255 * r), int(255 * g), int(255 * b)));
   pixel.show();
 }
-
-void showSmallInt(int iVal)
-{
-  int mod5 = iVal % 5;
-  int div5 = iVal / 5;
-  float color2 = div5 * 60;
-  float color1 = color2 + 60;
-  int dot = 0;
-  for (; dot < mod5; dot++)
-  {
-    colorSingleDotA(dot, color1);
-  }
-  for (; dot < 5; dot++)
-  {
-    colorSingleDotA(dot, color2);
-  }
-}
-
-

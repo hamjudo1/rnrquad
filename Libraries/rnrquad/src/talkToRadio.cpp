@@ -358,7 +358,7 @@ void processPacket(uint8_t inbData[15])
     } else
     {
       // cortexDebug(radio_confused);
-    }
+  }
   } else
   {
     unsigned long temptime = micros();

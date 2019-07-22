@@ -147,8 +147,6 @@ void motion(float newRx[4])
   udMotion(dt, newRx);
 }
 
-extern float colorAngle;
-
 float tenths = 0;
 int lastTenths = 0;
 long lastTime = 0;
@@ -254,10 +252,10 @@ void loop()
     { // active undervoltage
       if (millis() % 666 > 222)
       {
-        rgbSingleDot1(2, 0.0, 0.0, 1.0);
+        Led::rgbColorSingleLed(2, 0.0, 0.0, 1.0);
       } else
       {
-        rgbSingleDot1(2, 0.0, 1.0, 0.0);
+        Led::rgbColorSingleLed(2, 0.0, 1.0, 0.0);
       }
     }
 
@@ -268,19 +266,19 @@ void loop()
   {
     if (millis() % 333 > 222)
     {
-      rgbSingleDot1(2, 0.0, 0.0, 0.0);
+      Led::rgbColorSingleLed(2, 0.0, 0.0, 0.0);
     } else
     {
 
       if (rangesInM[DOWNRANGE] > 0.6)
       {
-        rgbSingleDot1(2, 0.0, 0.0, 0.5);
+        Led::rgbColorSingleLed(2, 0.0, 0.0, 0.5);
       } else if (rangesInM[DOWNRANGE] > 0.1)
       {
-        rgbSingleDot1(2, 0.0, 0.5, 0.0);
+        Led::rgbColorSingleLed(2, 0.0, 0.5, 0.0);
       } else
       {
-        rgbSingleDot1(2, 0.5, 0.0, 0.0);
+        Led::rgbColorSingleLed(2, 0.5, 0.0, 0.0);
       }
     }
   }
@@ -289,19 +287,19 @@ void loop()
   updateChecksum(XN297L_payloadOut[!XN297L_goodPayloadOut]);
   if (millis() % 666 > 555)
   {
-    rgbSingleDot1(3, 0.0, 0.0, 0.0);
+    Led::rgbColorSingleLed(3, 0.0, 0.0, 0.0);
   } else
   {
 
     if (noFlowNoise < 2)
     {
-      rgbSingleDot1(3, 0.0, 0.5, 0.0);
+      Led::rgbColorSingleLed(3, 0.0, 0.5, 0.0);
     } else if (noFlowNoise < 10)
     {
-      rgbSingleDot1(3, 0.5, 0.5, 0.0);
+      Led::rgbColorSingleLed(3, 0.5, 0.5, 0.0);
     } else
     {
-      rgbSingleDot1(3, 0.7, 0.7, 0.7);
+      Led::rgbColorSingleLed(3, 0.7, 0.7, 0.7);
     }
   }
   XN297L_goodPayloadOut = !XN297L_goodPayloadOut;

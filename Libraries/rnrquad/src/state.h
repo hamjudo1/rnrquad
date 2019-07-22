@@ -7,6 +7,7 @@
 #include "objects/src/RgbLed.h"
 #include "objects/src/SensorState.h"
 #include "objects/src/PID.h"
+#include "led/src/Led.h"
 
 typedef unsigned char uint8_t;
 
@@ -173,26 +174,12 @@ extern void setupFlow();
 
 extern void pollFlow();
 
-extern uint32_t shortRed(int pixNo, int phaseNo, void *options);
-
-extern uint32_t longRed(int pixNo, int phaseNo, void *options);
-
-extern uint32_t hsvColor(float h, float s, float v);
-
 extern char *dupString(char *origString);// create a copy of a string in malloc'ed memory.
 extern char *catString3(char *origString1, char *origString2, char *origString3);
 
 extern char *catString2(char *origString1, char *origString2);
 
-extern void setupNeoSupp();
-
-extern void showSmallInt(int iVal);
-
 extern void buttonPressed(int buttonNo);
-
-extern void colorSingleDot(int dotNo, float angle);
-
-extern void rgbSingleDot1(int dotNo, float r, float g, float b);
 
 extern void NeoUpdate();
 

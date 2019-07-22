@@ -5,7 +5,6 @@
 #ifndef RNRQUAD_RGBLED_H
 #define RNRQUAD_RGBLED_H
 
-
 class RgbLed
 {
 public:
