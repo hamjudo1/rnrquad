@@ -226,6 +226,7 @@ void packetComplete()
       {
         // Serial.print("Voltage: ");
         voltage = (float) voltageByte / 50.0;
+	refSensor.batteryVoltage = voltage;
         // Serial.println((float)voltageByte / 50.0, 2);
       }
     } else
