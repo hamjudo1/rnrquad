@@ -111,8 +111,6 @@ void udMotion(float dt, float newRx[4])
   {
     altitudeSeen = 1.3;
   }
-  A = altitudeSeen;
-  B = refSensor.rangeDown;
   if (trim1 > 0.5 && trim1 < 30)
   {
     tf1 = (15.5 - trim1) / 10.0;
@@ -138,7 +136,6 @@ void udMotion(float dt, float newRx[4])
   }
   udBase = udBaseUntrim;
   newRx[3] = constrain(udBase + udKP * udError + udKD * udDerivative, minThrottle, maxThrottle);
-
 }
 
 float lastLrError;
@@ -170,11 +167,6 @@ unsigned long prevLoop = 0;
 void setup()
 {
   baseSetup();
-  pidInit();
-  addSym(&A, "A", "A", "3N");
-  addSym(&B, "B", "B", "3N");
-  addSym(&C, "C", "C", "3N");
-  addSym(&D, "D", "D", "3N");
   addSym(&undervoltCount, "uvc", "under voltage Event count", "0N");
   addSym(&xFlowC, "xf", "optical flow in X (altitude compensated)", "3N");
   addSym(&yFlowC, "yf", "optical flow in Y (altitude compensated)", "3N");
