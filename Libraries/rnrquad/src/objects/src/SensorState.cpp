@@ -15,9 +15,9 @@ SensorState::SensorState(bool isEmpty)
   flowTimeStamp = 0;
 
   // Gyro sensor
-  gyroX = 0;
-  gyroY = 0;
-  gyroZ = 0;
+  gyroXY = 0;
+  gyroYZ = 0;
+  gyroZX = 0;
   gyroTimeStamp = 0;
 
   // Accelerometer
@@ -27,11 +27,11 @@ SensorState::SensorState(bool isEmpty)
   accelTimeStamp = 0;
 
   // Lidars
-  rangeFront = 0.0;
-  rangeTop = 0.0;
+  rangeForward = 0.0;
+  rangeUp = 0.0;
   rangeLeft = 0.0;
   rangeRight = 0.0;
-  rangeBottom = 0.0;
+  rangeDown = 0.0;
 };
 SensorState refSensor(true);
 
@@ -46,9 +46,9 @@ SensorState::SensorState()
   flowTimeStamp = refSensor.flowTimeStamp;
 
   // Gyro sensor
-  gyroX = refSensor.gyroX;
-  gyroY = refSensor.gyroY;
-  gyroZ = refSensor.gyroZ;
+  gyroXY = refSensor.gyroXY;
+  gyroYZ = refSensor.gyroYZ;
+  gyroZX = refSensor.gyroZX;
   gyroTimeStamp = refSensor.gyroTimeStamp;
 
   // Accelerometer
@@ -58,9 +58,9 @@ SensorState::SensorState()
   accelTimeStamp = refSensor.accelTimeStamp;
 
   // Lidars
-  rangeFront = refSensor.rangeFront;
-  rangeTop =  refSensor.rangeTop;
+  rangeForward = refSensor.rangeForward;
+  rangeUp =  refSensor.rangeUp;
   rangeLeft =  refSensor.rangeLeft;
   rangeRight =  refSensor.rangeRight;
-  rangeBottom =  refSensor.rangeBottom;
+  rangeDown =  refSensor.rangeDown;
 };

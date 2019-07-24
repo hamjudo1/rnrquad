@@ -21,9 +21,9 @@ public:
   float flowTimeStamp;
 
   // Gyro sensor
-  float gyroX;
-  float gyroY;
-  float gyroZ;
+  float gyroXY;
+  float gyroYZ;
+  float gyroZX;
   float gyroTimeStamp;
 
   // Accelerometer
@@ -33,11 +33,11 @@ public:
   float accelTimeStamp;
 
   // Lidars
-  float rangeFront;
-  float rangeTop;
+  float rangeForward;
+  float rangeUp;
   float rangeLeft;
   float rangeRight;
-  float rangeBottom;
+  float rangeDown;
 };
 extern SensorState refSensor;
 #endif

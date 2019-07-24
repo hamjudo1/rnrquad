@@ -24,5 +24,4 @@ ControllerState::ControllerState()
   rightStickYPosition = refControl.rightStickYPosition;
   trim0 = refControl.trim0;
   trim1 = refControl.trim1;
-  
 }

@@ -4,32 +4,26 @@
 
 #include <rnrquad.h>
 
-const int target_height = .3;
-const int proportional_constant = 1;
-const int derivative_constant = .5;
-const int integral_constant = 0;
-
-// Left - Right, Up - Down, Front - Back PID loops
-PID lrPID, udPID, fbPID;
+PID dPID;
 
 void setup()
 {
   baseSetup();
 
-  udPID.begin(target_height, proportional_constant, integral_constant, derivative_constant);
+  dPID.begin(.3, 1, 0, .5);
 }
 
 void loop()
 {
   baseLoop();
 
-  ControllerState inputControllerState;
-  int value;
+  ControllerState controllerState = getControllerState();
+  SensorState sensorState = getSensorState();
 
-  inputControllerState = getControllerState();
+  if (controllerState.throttle > .5)
+  {
+    controllerState.throttle = dPID.tstep(sensorState.rangeDown);
+  }
 
-  value = udPID.tstep(value);
-
-
-  setControllerState(inputControllerState);
+  setControllerState(controllerState);
 }

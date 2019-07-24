@@ -155,10 +155,10 @@ void pollRangeFinders()
     {
       switch (loxIndex) {
         case FRONTRANGE:
-	   refSensor.rangeFront = rangesInM[loxIndex];
+	   refSensor.rangeForward = rangesInM[loxIndex];
 	   break;
 	case DOWNRANGE:
-	   refSensor.rangeBottom = rangesInM[loxIndex];
+	   refSensor.rangeDown = rangesInM[loxIndex];
 	   break;
 	case RIGHTRANGE:
 	   refSensor.rangeRight = rangesInM[loxIndex];
@@ -167,7 +167,7 @@ void pollRangeFinders()
 	   refSensor.rangeLeft = rangesInM[loxIndex];
 	   break;
 	 case TOPRANGE:
-	   refSensor.rangeTop = rangesInM[loxIndex];
+	   refSensor.rangeUp = rangesInM[loxIndex];
 	   break;
 	}
       lastR[loxIndex] = (lastR[loxIndex] + 1) % HISTDEPTH;
