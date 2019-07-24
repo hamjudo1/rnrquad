@@ -33,11 +33,11 @@ public:
   float accelTimeStamp;
 
   // Lidars
-  Lidar lidarFront;
-  Lidar lidarTop;
-  Lidar lidarLeft;
-  Lidar lidarRight;
-  Lidar lidarBottom;
+  float rangeFront;
+  float rangeTop;
+  float rangeLeft;
+  float rangeRight;
+  float rangeBottom;
 };
 extern SensorState refSensor;
 #endif

@@ -153,6 +153,23 @@ void pollRangeFinders()
     int loxIndex = activeRF[i];
     if (loxes[i].updateRangeInMeters(&(rangesInM[loxIndex])))
     {
+      switch (loxIndex) {
+        case FRONTRANGE:
+	   refSensor.rangeFront = rangesInM[loxIndex];
+	   break;
+	case DOWNRANGE:
+	   refSensor.rangeBottom = rangesInM[loxIndex];
+	   break;
+	case RIGHTRANGE:
+	   refSensor.rangeRight = rangesInM[loxIndex];
+	   break;
+	case LEFTRANGE:
+	   refSensor.rangeLeft = rangesInM[loxIndex];
+	   break;
+	 case TOPRANGE:
+	   refSensor.rangeTop = rangesInM[loxIndex];
+	   break;
+	}
       lastR[loxIndex] = (lastR[loxIndex] + 1) % HISTDEPTH;
       // We don't know when it completes finding a range, since we are polling,
       // but we know when we start. So log the start time. Sometime after it completes and

@@ -26,7 +26,7 @@ float udError = 0.0;
 float udOutput = 0.0;
 float udTargetUntrim = 0.300;
 float udTarget = udTargetUntrim;
-float udBaseUntrim = 0.59;
+float udBaseUntrim = 0.7;
 float udBase = udBaseUntrim;
 
 float lrKI = 0.0000;
@@ -105,11 +105,14 @@ void udMotion(float dt, float newRx[4])
 {
   float tf0, tf1;
   float dv = rangeVel[DOWNRANGE];
-  float altitudeSeen = rangesInM[DOWNRANGE];
+ // SensorState sensors = new SensorState();
+  float altitudeSeen = refSensor.rangeBottom;
   if (altitudeSeen == 0)
   {
     altitudeSeen = 1.3;
   }
+  A = altitudeSeen;
+  B = refSensor.rangeBottom;
   if (trim1 > 0.5 && trim1 < 30)
   {
     tf1 = (15.5 - trim1) / 10.0;
@@ -117,7 +120,7 @@ void udMotion(float dt, float newRx[4])
   {
     tf1 = 0.0;
   }
-  udTarget = constrain(udTargetUntrim + tf1, 0.0, 1.0);
+  udTarget = constrain(udTargetUntrim, 0.0, 1.0);
   udError = udTarget - altitudeSeen;
 
   udError = constrain(udError, -0.30, 0.10); // more negative means too high.
@@ -133,8 +136,9 @@ void udMotion(float dt, float newRx[4])
   {
     tf0 = 0.0;
   }
-  udBase = udBaseUntrim + tf0;
+  udBase = udBaseUntrim;
   newRx[3] = constrain(udBase + udKP * udError + udKD * udDerivative, minThrottle, maxThrottle);
+
 }
 
 float lastLrError;
@@ -146,6 +150,8 @@ void motion(float newRx[4])
   lastTimeMicros = nowMicros;
   udMotion(dt, newRx);
 }
+
+extern float colorAngle;
 
 float tenths = 0;
 int lastTenths = 0;
@@ -164,7 +170,11 @@ unsigned long prevLoop = 0;
 void setup()
 {
   baseSetup();
-
+  pidInit();
+  addSym(&A, "A", "A", "3N");
+  addSym(&B, "B", "B", "3N");
+  addSym(&C, "C", "C", "3N");
+  addSym(&D, "D", "D", "3N");
   addSym(&undervoltCount, "uvc", "under voltage Event count", "0N");
   addSym(&xFlowC, "xf", "optical flow in X (altitude compensated)", "3N");
   addSym(&yFlowC, "yf", "optical flow in Y (altitude compensated)", "3N");
@@ -205,31 +215,31 @@ void setup()
   tState = 0;
   //turn the PID on
   pidInit();
-  lrTarget = rangesInM[LEFTRANGE];
-  fbTarget = rangesInM[FRONTRANGE];
+  lrTarget = refSensor.rangeLeft;
+  fbTarget = refSensor.rangeFront;
 }
 
 void loop()
 {
   baseLoop();
-  SensorState sensors = new SensorState();
+ // SensorState sensors = refSensor;
 
   float newRx[4];
   static float xFlow = 0.0, yFlow = 0.0, qFlow = 0.0;
 
 
-  
+
   unsigned long now = millis();
   unsigned long loopTime = now - prevLoop;
   prevLoop = now;
-  xFlowC = sensors.flowX;
-  yFlowC = sensors.flowY;
-
+  xFlowC = refSensor.flowX;
+  yFlowC = refSensor.flowY;
   for (int i = 0; i < 4; i++)
   {
     newRx[i] = rx[i];
   }
   motion(newRx);
+  
   throttle = newRx[3];
   if (okayToFly())
   {
@@ -237,15 +247,15 @@ void loop()
     {
       // xFlow Positive is traveling backwards, yFlow Positive is moving Left
 
-      if (rangesInM[DOWNRANGE] > 0.15)
+      if (refSensor.rangeBottom > 0.15)
       {
-        if (sensors.flowQ > 70 ) 
+        if (refSensor.flowQ > 70 )
         {
           newRx[1] = constrain(yFlowC * 0.05, -0.3, +0.3); // newRx Positive is forward thrust
           newRx[0] = constrain(-xFlowC * 0.05, -0.3, +0.3); // Negative is left
         }
       }
-    } 
+    }
   } else
   { // under voltage or something
     if (notokay == 3.0 || notokay == 2.0)
@@ -270,10 +280,10 @@ void loop()
     } else
     {
 
-      if (rangesInM[DOWNRANGE] > 0.6)
+      if (refSensor.rangeBottom > 0.6)
       {
         Led::rgbColorSingleLed(2, 0.0, 0.0, 0.5);
-      } else if (rangesInM[DOWNRANGE] > 0.1)
+      } else if (refSensor.rangeBottom > 0.1)
       {
         Led::rgbColorSingleLed(2, 0.0, 0.5, 0.0);
       } else
@@ -289,7 +299,7 @@ void loop()
   {
     Led::rgbColorSingleLed(3, 0.0, 0.0, 0.0);
   } else
-  {
+  { //
 
     if (noFlowNoise < 2)
     {

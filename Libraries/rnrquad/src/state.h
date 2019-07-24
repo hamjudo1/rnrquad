@@ -3,7 +3,6 @@
 
 #include "Arduino.h"
 #include "objects/src/ControllerState.h"
-#include "objects/src/Lidar.h"
 #include "objects/src/RgbLed.h"
 #include "objects/src/SensorState.h"
 #include "objects/src/PID.h"
@@ -284,6 +283,7 @@ const int DOWNRANGE = 1;
 const int FRONTRANGE = 0;
 const int RIGHTRANGE = 2;
 const int LEFTRANGE = 3;
+const int TOPRANGE = 4;
 extern long debugTime, debugStart;
 extern long commTime, commStart;
 extern long neoTime, neoStart;

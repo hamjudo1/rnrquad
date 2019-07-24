@@ -19,8 +19,6 @@ public:
   static void hsvColorSingleLed(int dotNo, float angle);
   static void rgbColorSingleLed(int dotNo, float r, float g, float b);
   static LedMode ledMode;
-
-private:
   static uint32_t hsvColor(float h, float s, float v);
 };
 

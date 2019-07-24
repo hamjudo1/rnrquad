@@ -2,7 +2,6 @@
 // Created by Florian VanKampen on 2019-06-17.
 //
 
-#include "Lidar.h"
 #include "SensorState.h"
 
 SensorState::SensorState(bool isEmpty)
@@ -28,11 +27,11 @@ SensorState::SensorState(bool isEmpty)
   accelTimeStamp = 0;
 
   // Lidars
-  lidarFront = Lidar();
-  lidarTop = Lidar();
-  lidarLeft = Lidar();
-  lidarRight = Lidar();
-  lidarBottom = Lidar();
+  rangeFront = 0.0;
+  rangeTop = 0.0;
+  rangeLeft = 0.0;
+  rangeRight = 0.0;
+  rangeBottom = 0.0;
 };
 SensorState refSensor(true);
 
@@ -59,9 +58,9 @@ SensorState::SensorState()
   accelTimeStamp = refSensor.accelTimeStamp;
 
   // Lidars
-  lidarFront = refSensor.lidarFront;
-  lidarTop =  refSensor.lidarTop;
-  lidarLeft =  refSensor.lidarLeft;
-  lidarRight =  refSensor.lidarRight;
-  lidarBottom =  refSensor.lidarBottom;
+  rangeFront = refSensor.rangeFront;
+  rangeTop =  refSensor.rangeTop;
+  rangeLeft =  refSensor.rangeLeft;
+  rangeRight =  refSensor.rangeRight;
+  rangeBottom =  refSensor.rangeBottom;
 };
