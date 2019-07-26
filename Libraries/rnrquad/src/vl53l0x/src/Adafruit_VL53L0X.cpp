@@ -242,7 +242,7 @@ bool Adafruit_VL53L0X::updateRangeInMeters(float *range)
       if (measure.RangeStatus == 0 || measure.RangeStatus == 2)
       {
         *range = (float) measure.RangeMilliMeter * 0.001;
-        if (*range > 1.3)
+        if (*range > 1.3 || *range == 0.0 )
         {
           *range = 1.3; // Sometimes with RangeStatus == 2, the range is reported as 8192.
         }
