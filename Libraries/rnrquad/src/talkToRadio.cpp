@@ -173,9 +173,29 @@ void datatopacket(float val, uint8_t *packet)
   packet[1] = newVal & 0xff;
   packet[0] = newVal / 256 | (packet[0] & 0xfc);
 }
-
+extern float voltage;
+float vcorrection = 0.0;
 void throttletopacket(float val, uint8_t *packet)
 {
+// The pid loop did okay at these base throttle values:
+// 0.5 at 3.5 volts and above
+// 0.6 works around 3.4 volts
+// 0.65 at 3.3 volts
+// 0.69 at 3.15
+// 0.70 at cutoff 3.10 volts
+  if ( val < 0.1 ) {
+    vcorrection = 0.0; // Don't bother with very low throttle.
+  } else if ( voltage < 3.2 ) { // Add 0.2 at end of life.
+     vcorrection = 0.2;
+  } else if ( voltage < 3.4 ) {
+     // vcorrection = 0.15;   // 0.20 through 0.10 from 3.2 to 3.4
+     // vcorrection = 0.1; // 0.20 through 0.10 from 3.2 to 3.4
+     vcorrection = 0.10 + 0.5*(3.4 - voltage);
+  } else if ( voltage < 3.5 ) {
+     // vcorrection = 0.0;
+     vcorrection = 3.5 - voltage; //  0.10 through 0.00 from 3.4 to 3.5.
+  }
+  val = constrain(val+vcorrection, 0.0, 1.0);
   int newVal = int(0.5 + (val / 0.000976562f)); // Convert from 0.0 to 1.0 to 0 to 511;
   int byte0 = 0, byte1 = 0;
 

@@ -14,8 +14,8 @@ public:
   float leftStickXPosition;
   float rightStickXPosition;
   float rightStickYPosition;
-  bool leftTrigger;
-  bool rightTrigger;
+  bool leftTrigger; // 0, 1 ,2
+  bool rightTrigger; // not sent
   float trim0;
   float trim1;
   // TODO buttons
