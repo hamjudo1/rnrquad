@@ -57,7 +57,7 @@ bool initRangeFinderWRetries(int i)
   float *errorP;
   while (retryCount < 5)
   {
-    bool success = loxes[activeRangeFinderCnt].begin(1 + (i * 2), true);
+    bool success = loxes[activeRangeFinderCnt].begin(1 + (i * 2), false);
     Serial.print(allNames[i]);
     Serial.print(" ");
     Serial.print(i);
@@ -111,22 +111,28 @@ void setupRangeFinders()
     allNames[i] = rangeConfig[i].Name;
     if (rangeConfig[i].enabled)
     {
+      /*
       Serial.print("quadRange active count ");
       Serial.print(activeRangeFinderCnt);
       Serial.print(" i ");
       Serial.println(i);
+      */
       aPinNo = rangeConfig[i].j5Index;
       if (aPinNo >= 0)
       {
+      /*
         Serial.print("Setting Arduino Pin ");
         Serial.print(aPinNo);
         Serial.print(" HIGH for ");
         Serial.println(allNames[i]);
+      */
         digitalWrite(aPinNo, HIGH);
       }
       else
       {
+	/*
         Serial.println("Initializing the light sensor with a pullup resistor and pulldown removed.");
+	*/
       }
       if (initRangeFinderWRetries(i))
       {
@@ -136,12 +142,8 @@ void setupRangeFinders()
       }
 
       addSym(&(rangesInM[i]), allNames[i], "range finder", "3N");
-      Serial.print("quadRange ");
-      Serial.println(__LINE__);
     }
   }
-  Serial.print("quadRange ");
-  Serial.println(__LINE__);
 }
 
 void pollRangeFinders()

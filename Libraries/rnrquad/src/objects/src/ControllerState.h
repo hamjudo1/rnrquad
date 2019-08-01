@@ -14,10 +14,12 @@ public:
   float leftStickXPosition;
   float rightStickXPosition;
   float rightStickYPosition;
-  bool leftTrigger; // 0, 1 ,2
-  bool rightTrigger; // not sent
+  float leftTrigger; // 0, 1 ,2
+  // bool rightTrigger; // not sent
   float trim0;
   float trim1;
+  float button7;
+  float button8;
   // TODO buttons
 };
 extern ControllerState refControl;

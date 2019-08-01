@@ -6,6 +6,11 @@ const int CLOCKPIN = 18;
 
 Adafruit_DotStar pixel = Adafruit_DotStar(NUMPIXELS, DATAPIN, CLOCKPIN, DOTSTAR_BGR);
 
+LedSet::LedSet (color def) {
+  
+}
+LedSet redSet(red), yellowSet(yellow), greenSet(green), cyanSet(cyan), blueSet(blue), magentaSet(magenta);
+
 // HSV code inspired by https://en.wikipedia.org/wiki/HSL_and_HSV
 // Note, this version is suboptimal to make it easier for me to explain. There
 // are better versions out there.
@@ -61,7 +66,9 @@ uint32_t Led::hsvColor(float h, float s, float v)
   return pixel.Color(int(r * brightness), int(g * brightness), int(b * brightness));
 }
 
-void Led::setupNeoSupp()
+void Led::poll() {
+}
+void Led::setup()
 {
   int r = 50, g = 200, b = 50;
   pixel.begin();

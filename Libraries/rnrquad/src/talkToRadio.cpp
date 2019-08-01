@@ -183,6 +183,7 @@ void throttletopacket(float val, uint8_t *packet)
 // 0.65 at 3.3 volts
 // 0.69 at 3.15
 // 0.70 at cutoff 3.10 volts
+// Note that voltage has a limited resolution. Step size is 0.02
   if ( val < 0.1 ) {
     vcorrection = 0.0; // Don't bother with very low throttle.
   } else if ( voltage < 3.2 ) { // Add 0.2 at end of life.
@@ -246,7 +247,12 @@ void setupController(void)
   addSym(&refControl.leftStickXPosition,"rx2","3n");
   addSym(&refControl.rightStickXPosition,"rx0","3n");
   addSym(&refControl.rightStickYPosition,"rx1","3n");
+  addSym(&refControl.leftTrigger,"lt","0n");
+  addSym(&refControl.button7,"b7","0n");
+  addSym(&refControl.button8,"b8","0n");
 }
+int prevLT = 0;
+int currLT = 0;
 static int decodepacket(void)
 {
   if (rxdata[0] == 165)
@@ -269,7 +275,11 @@ static int decodepacket(void)
       refControl.leftStickXPosition = rx[2];
       refControl.rightStickXPosition = rx[0];
       refControl.rightStickYPosition = rx[1];
-
+      currLT = rxdata[2] & 0x3;
+      if ( currLT != prevLT ) {
+         prevLT = currLT;
+	 refControl.leftTrigger += 1.0;
+      }
       trims[0] = rxdata[6] >> 2;
       refControl.trim0 = (float) trims[0] - 31.0;
       trims[1] = rxdata[4] >> 2;
@@ -312,11 +322,11 @@ static int decodepacket(void)
           auxChanged = true;
           if (i == 8)
           {
-            buttonPressed(8);
+	    refControl.button8 += 1.0;
           }
           if (i == 7)
           {
-            buttonPressed(7);
+	    refControl.button7 += 1.0;
           }
         }
         lastaux[i] = aux[i];

@@ -29,8 +29,6 @@ bool Adafruit_VL53L0X::begin(uint8_t i2c_addr, bool debug)
   {
     Serial.println(F("debug on"));
   }
-  Serial.print("Adafruit_VL53L0X ");
-  Serial.println(__LINE__);
 
   // unclear if this is even needed:
   if (VL53L0X_IMPLEMENTATION_VER_MAJOR != VERSION_REQUIRED_MAJOR ||
@@ -45,26 +43,16 @@ bool Adafruit_VL53L0X::begin(uint8_t i2c_addr, bool debug)
       Serial.println(
           F("Requires " STR(VERSION_REQUIRED_MAJOR) "." STR(VERSION_REQUIRED_MINOR) "." STR(VERSION_REQUIRED_BUILD)));
     }
-    Serial.print("Adafruit_VL53L0X ");
-    Serial.println(__LINE__);
     Status = VL53L0X_ERROR_NOT_SUPPORTED;
 
     return false;
   }
-  Serial.print("Adafruit_VL53L0X ");
-  Serial.println(__LINE__);
   Status = VL53L0X_DataInit(&MyDevice);         // Data initialization
-  Serial.print("Adafruit_VL53L0X ");
-  Serial.println(__LINE__);
   if (!setAddress(i2c_addr))
   {
     return false;
   }
-  Serial.print("Adafruit_VL53L0X ");
-  Serial.println(__LINE__);
   Status = VL53L0X_GetDeviceInfo(&MyDevice, &DeviceInfo);
-  Serial.print("Adafruit_VL53L0X ");
-  Serial.println(__LINE__);
   if (Status == VL53L0X_ERROR_NONE)
   {
     if (debug)

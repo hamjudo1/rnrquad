@@ -8,10 +8,10 @@
 // 0.65 at 3.3 volts
 // 0.69 at 3.15
 // 0.70 at cutoff 3.10 volts
-// 
+//
 //Specify the links and initial tuning parameters
 float throttle = 0.0;
-float notokay = 0.0;
+
 float enableLogging[10] = {0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
 float enableLoggingNoComm = 0.0;
 float lrTarget = 0;
@@ -23,7 +23,10 @@ float fbKD = 1.0;
 float fbError = 0.0;
 float fbOutput = 0.0;
 
-float udKI = 0.0000;
+float udIntegral = 0.0;
+
+float udKI = 0.01;
+
 float udKPuntrim = 1.0;
 float udKP = udKPuntrim;
 float udKD = 0.5;
@@ -74,38 +77,16 @@ extern float tokenVal;
 // Left - Right, Up - Down, Front - Back PID loops
 simplePID lrPID, dPID, fbPID;
 
+
 void pidInit()
 {
   lrPID.begin("lr", &lrError, &lrOutput, &lrKP, &lrKI, &lrKD);
-  dPID.begin("ud", &udError, &udOutput, &udKP, &udKI, &udKD);
+  // dPID.begin("ud", &udError, &udOutput, &udKP, &udKI, &udKD);
   fbPID.begin("fb", &fbError, &fbOutput, &fbKP, &fbKI, &fbKD);
 }
 
-bool okayToFly()
-{
-  static bool throttleDownSinceLastEvent = false;
-  if (rx[3] < 0.1)
-  {
-    throttleDownSinceLastEvent = true;
-    notokay = 1.0; // + event;
-    return false;
-  } else if (!throttleDownSinceLastEvent)
-  {
-    notokay = 2.0; // + event;
-    return false;
-  } else if (voltage < 3.1)
-  {
-    undervoltCount++;
-    notokay = 3.0; // + event;
-    throttleDownSinceLastEvent = false;
-    return false;
-  }
-  notokay = 0;
-  return true;
-}
-
 long lastTimeMicros = 0;
-
+float targetAltitude = 0.0;
 void udMotion(float dt, float newRx[4])
 {
   float tf0, tf1;
@@ -123,13 +104,19 @@ void udMotion(float dt, float newRx[4])
   {
     tf1 = 0.0;
   }
-  udTarget = constrain(udTargetUntrim + refControl.trim1*0.01, 0.0, 1.0);
+  // udTarget = constrain(udTargetUntrim + refControl.trim1 * 0.01, 0.0, 1.0);
+  udTarget = constrain(targetAltitude, 0.0, 1.0);
   udError = udTarget - altitudeSeen;
 
-  udError = constrain(udError, -0.30, 0.10); // more negative means too high.
+  udError = constrain(udError, -0.10, 0.10); // more negative means too high.
 
   udDerivative = (udError - udPrevError) / dt;
   udDerivative = constrain(udDerivative, -0.20, 0.20);
+  if ( okayToFly() &&  flightTime() > 0.1 ) {
+    udIntegral += udError * dt;
+  } else {
+    udIntegral = 0.0;
+  }
   udPrevError = udError;
   udKP = udKPuntrim; // + (trim0 - 15.5);
   if (trim0 > 0.5 && trim0 < 30)
@@ -140,7 +127,7 @@ void udMotion(float dt, float newRx[4])
     tf0 = 0.0;
   }
   udBase = udBaseUntrim + refControl.trim0 * 0.01;
-  newRx[3] = constrain(udBase + udKP * udError + udKD * udDerivative, minThrottle, maxThrottle);
+  newRx[3] = constrain(udBase + udKP * udError + udKD * udDerivative + udKI * udIntegral, minThrottle, maxThrottle);
 }
 
 float lastLrError;
@@ -169,6 +156,7 @@ float rateOfClimb = 0.0;
 float prevAltitude = 0.0;
 
 unsigned long prevLoop = 0;
+int dir = 0;
 
 void setup()
 {
@@ -177,13 +165,16 @@ void setup()
   addSym(&xFlowC, "xf", "optical flow in X (altitude compensated)", "3N");
   addSym(&yFlowC, "yf", "optical flow in Y (altitude compensated)", "3N");
   addSym(&throttle, "t", "throttle", "3N");
- // addSym(&trim0, "trim0", "remote control trim #0", "1N");
- // addSym(&trim1, "trim1", "remote control trim #1", "1N");
- // addSym(&trim1offset, "trim1offset", "constant added to trim1", "1N");
- // addSym(&takeOffPower, "takeOff", "Throttle at Takeoff (estimate)", "3");
- // addSym(&minThrottle, "minThrottle", "Lowest throttle setting during flight", "2");
+  addSym(&targetAltitude, "ta", "targetAltitude", "3N");
+  addSym(&udKI, "udki", "updown integral constant", "3N");
+  addSym(&udIntegral, "udi", "updown integral", "3N");
+  // addSym(&trim0, "trim0", "remote control trim #0", "1N");
+  // addSym(&trim1, "trim1", "remote control trim #1", "1N");
+  // addSym(&trim1offset, "trim1offset", "constant added to trim1", "1N");
+  // addSym(&takeOffPower, "takeOff", "Throttle at Takeoff (estimate)", "3");
+  // addSym(&minThrottle, "minThrottle", "Lowest throttle setting during flight", "2");
   // addSym(&maxThrottle, "maxThrottle", "Highest throttle setting during flight", "2");
- // addSym(&spin, "spin", "Positive is CCW", "2");
+  // addSym(&spin, "spin", "Positive is CCW", "2");
 
   addSym(&udBase, "udBase", "up/down base thrust (with trim)", "3");
   addSym(&udBaseUntrim, "udBu", "up down base thrust untrimmed", "3");
@@ -194,29 +185,26 @@ void setup()
   addSym(&udError, "udError", "ud error", "3");
   addSym(&lrKP, "lrKP", "lr proportional", "3");
   addSym(&lrError, "lrError", "lr error", "3");
-  addSym(&notokay, "notokay", "reason given by okayToFly() for not flying", "3");
-
-  /* for (int i = 0; i < 10; i++)
-    {
-     char *sym = (char *) calloc(strlen("el0") + 1, 1);
-     char *desc = (char *) calloc(strlen("FLAG enable logging during state 0") + 1, 1);
-     sprintf(sym, "el%d", i);
-     sprintf(desc, "FLAG enable logging during state %d", i);
-     addSym(&(enableLogging[i]), sym, desc, "F");
-    } */
 
   tState = 0;
   //turn the PID on
   pidInit();
-  lrTarget = refSensor.rangeLeft;
-  fbTarget = refSensor.rangeForward;
-}
-float takeOff() {
-}
-float flightTime() {
+  // lrTarget = refSensor.rangeLeft;
+  //fbTarget = refSensor.rangeForward;
 }
 void flightLogic() {
-
+  float ft = flightTime();
+  if ( ft < 0.1 ) {
+    targetAltitude = 0.0; // Propellors to minimum operational speed, not flying but close.
+    dir = 0;
+  } else if ( ft < 2.6 ) {
+    targetAltitude = (ft - 0.1) * 0.2;
+    dir = 0;
+  } else {
+    targetAltitude = 0.5;
+    dir = 0;
+    // dir = 1 + (int(ft) % 4);
+  }
 }
 void loop()
 {
@@ -224,10 +212,10 @@ void loop()
   // SensorState sensors = refSensor;
 
   float newRx[4];
-  static float xFlow = 0.0, yFlow = 0.0, qFlow = 0.0;
   unsigned long now = millis();
   unsigned long loopTime = now - prevLoop;
   prevLoop = now;
+  flightLogic();
   xFlowC = refSensor.flowX;
   yFlowC = refSensor.flowY;
   for (int i = 0; i < 4; i++)
@@ -242,8 +230,6 @@ void loop()
     if (fabs(rx[0]) < 0.1 && fabs(rx[1]) < 0.1)
     {
       // xFlow Positive is traveling backwards, yFlow Positive is moving Left
-
-
       if (refSensor.flowQ > 70 )
       {
         newRx[1] = constrain(yFlowC * 0.06, -0.3, +0.3); // newRx Positive is forward thrust
@@ -252,7 +238,7 @@ void loop()
 
     }
   } else
-  { // under voltage or something
+  { // under voltage or somethingd
     if (notokay == 3.0 || notokay == 2.0)
     { // active undervoltage
       if (millis() % 666 > 222)

@@ -113,8 +113,8 @@ typedef unsigned char uint8_t;
 
 #include <Adafruit_DotStar.h>
 
+extern float throttleUpTime;
 const int simpleLED = 6;
-const int NUMPIXELS = 5;
 // J5X1  Arduino9 (up)
 extern const int J5X1;
 extern const char *J5X1name;
@@ -187,10 +187,6 @@ extern void sysStatus();
 extern void freeRam();
 extern void showUsageTime();
 extern void stripW(char *);
-
-
-
-
 extern int tookTooLongCount;
 extern bool readyToUpdateNeoPixels;
 extern unsigned long nextNeoUpdate;
@@ -358,9 +354,16 @@ extern void spi_sendbyte(int b);
 
 extern void spi_cson(void); // start of packet stuff.
 extern void spi_csoff(void); // end of packet
-extern void spiSlave_init(); // initialize SPI slave (connection to brain stem)
-extern void setupController();
+void spiSlave_init(); // initialize SPI slave (connection to brain stem)
+void setupController();
 
 void sendMotorSignal(ControllerState controller_out);
+bool okayToFly();
+float age(float timeStamp);
+float flightTime();
+float seconds();
+extern float notokay;
+void setupUtility();
+
 
 #endif

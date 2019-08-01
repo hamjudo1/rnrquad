@@ -21,8 +21,9 @@ void baseSetup()
   pinMode(versionGPIO, INPUT_PULLUP);
 
   setupSymtable();  // symbols to be logged.
+  setupUtility();
   setupDebug();
-  Led::setupNeoSupp();
+  Led::setup();
   setupFlow();
   setupController();
   for (int i = 0; i < 5; i++)
@@ -78,6 +79,7 @@ void baseLoop()
   {
     Led::hsvColorSingleLed(0, iter++);
   }
+  Led::poll();
 }
 
 /**

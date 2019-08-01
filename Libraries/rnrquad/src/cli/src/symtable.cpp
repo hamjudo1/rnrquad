@@ -559,7 +559,11 @@ void processChar(int c)
   static bool negative = false;
   static bool gotVal = false;
   float *varPt;
-  if (c == '\n' || c == '\r' || c == ';')
+  if ( c == '#' ) {
+    clearWatch();  // bootloader sends a #
+    state = 'E';
+    vp = 0;
+  } else if (c == '\n' || c == '\r' || c == ';')
   {
     state = 'E';
   } else if (state == 'B')

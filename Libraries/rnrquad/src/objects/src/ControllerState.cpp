@@ -11,8 +11,11 @@ ControllerState::ControllerState(bool isEmpty)
   leftStickXPosition = 0;
   rightStickXPosition = 0;
   rightStickYPosition = 0;
+  leftTrigger = 0;
   trim0 = 0;
   trim1 = 0;
+  button7 = 0;
+  button8 = 0;
 }
 ControllerState refControl=ControllerState(true);
 
@@ -22,6 +25,9 @@ ControllerState::ControllerState()
   leftStickXPosition = refControl.leftStickXPosition;
   rightStickXPosition = refControl.rightStickXPosition;
   rightStickYPosition = refControl.rightStickYPosition;
+  leftTrigger = refControl.leftTrigger;
+  button7 = refControl.button7;
+  button8 = refControl.button8;
   trim0 = refControl.trim0;
   trim1 = refControl.trim1;
 }

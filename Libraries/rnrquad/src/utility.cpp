@@ -3,6 +3,14 @@
 //
 #include "state.h"
 
+float throttleUpTime = 0.0;  // Timestamp when we were last on the ground with throttle down.
+float notokay = 0.0;
+
+void setupUtility() {
+  addSym(&notokay, "notokay", "reason given by okayToFly() for not flying", "3");
+}
+
+
 /**
  allocate space for a copy of a string.
  These strings should be freed with free() if
@@ -73,4 +81,37 @@ void stripW(char *s)
 float mapf(float val, float in_min, float in_max, float out_min, float out_max)
 {
   return (val - in_min) * (out_max - out_min) / (in_max - in_min) + out_min;
+}
+
+float seconds() {
+  return (float)(micros()*0.000001);
+}
+
+float age(float timestamp) {
+  return seconds()-timestamp;
+}
+float flightTime () {
+  return seconds() - throttleUpTime;
+}
+bool okayToFly()
+{
+  static bool throttleDownSinceLastEvent = false;
+  notokay = 0;
+  if (rx[3] < 0.1)
+  {
+    throttleDownSinceLastEvent = true;
+    notokay = 1.0; // + event;
+  } else if (!throttleDownSinceLastEvent)
+  {
+    notokay = 2.0; // + event;
+  } else if (voltage < 3.1)
+  {
+    notokay = 3.0; // + event;
+    throttleDownSinceLastEvent = false;
+  }
+  if ( notokay ) {
+    throttleUpTime = seconds(); // Actually throttle up time is the last time the throttle wasn't up.
+    return false;
+  }
+  return true;
 }

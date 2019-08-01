@@ -1,4 +1,4 @@
-#include "PID.h"
+#include "state.h"
 
 void simplePID::tstep(float dt)
 {
@@ -15,13 +15,13 @@ void simplePID::begin(char *prefix, float *pError, float *pOutput, float *pKP, f
   KP = pKP;
   KI = pKI;
   KD = pKD;
-//  addSym(PIDerror, catString2(prefix, "_error"), "PID error", "3L");
-//  addSym(PIDoutput, catString2(prefix, "_output"), "PID output", "3L");
-//  addSym(&PIDintegral, catString2(prefix, "_integral"), "PID integral", "3L");
-//  addSym(&PIDderivative, catString2(prefix, "_derivative"), "PID derivative", "3L");
-//  addSym(KP, catString2(prefix, "_KP"), "PID KP", "3L");
-//  addSym(KI, catString2(prefix, "_KI"), "PID KI", "3L");
-//  addSym(KD, catString2(prefix, "_KD"), "PID KD", "3L");
+  addSym(PIDerror, catString2(prefix, "_error"), "PID error", "3L");
+  addSym(PIDoutput, catString2(prefix, "_output"), "PID output", "3L");
+  addSym(&PIDintegral, catString2(prefix, "_integral"), "PID integral", "3L");
+  addSym(&PIDderivative, catString2(prefix, "_derivative"), "PID derivative", "3L");
+  addSym(KP, catString2(prefix, "_KP"), "PID KP", "3L");
+  addSym(KI, catString2(prefix, "_KI"), "PID KI", "3L");
+  addSym(KD, catString2(prefix, "_KD"), "PID KD", "3L");
   PIDintegral = 0.0;
   PIDderivative = 0.0;
   prevError = 0.0;
