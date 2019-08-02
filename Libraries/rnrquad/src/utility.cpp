@@ -10,6 +10,9 @@ void setupUtility() {
   addSym(&notokay, "notokay", "reason given by okayToFly() for not flying", "3");
 }
 
+float mapf(float val, float in_min, float in_max, float out_min, float out_max) {
+  return (val - in_min) * (out_max - out_min) / (in_max - in_min) + out_min;
+}
 
 /**
  allocate space for a copy of a string.
@@ -78,11 +81,6 @@ void stripW(char *s)
   *l = '\0';
 }
 
-float mapf(float val, float in_min, float in_max, float out_min, float out_max)
-{
-  return (val - in_min) * (out_max - out_min) / (in_max - in_min) + out_min;
-}
-
 float seconds() {
   return (float)(micros()*0.000001);
 }
@@ -108,6 +106,9 @@ bool okayToFly()
   {
     notokay = 3.0; // + event;
     throttleDownSinceLastEvent = false;
+    redSet.blink(2,red,green);
+    redSet.blink(3,green,red);
+
   }
   if ( notokay ) {
     throttleUpTime = seconds(); // Actually throttle up time is the last time the throttle wasn't up.

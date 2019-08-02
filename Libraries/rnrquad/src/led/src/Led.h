@@ -7,21 +7,28 @@
 
 
 enum color {
-  red = 0xff0000,
-  yellow = 0xffff00,
-  green = 0x00ff00,
-  cyan = 0x00ffff,
-  blue = 0x0000ff,
-  magenta = 0xff00ff, 
+  red = 0x3f0000,
+  yellow = 0x3f3f00,
+  green = 0x003f00,
+  cyan = 0x003f3f,
+  blue = 0x00003f,
+  magenta = 0x3f003f, 
 } ;
 const int NUMPIXELS = 5;  
 class LedSet {
 public:
   LedSet(color def);
+  void show();
   void hsv(int dotNo, float h, float s, float v);
   void rgb(int dotNo, float r, float g, float b);
   void named(int dotNo, color name);
+  void constant(int dotNo,uint32_t col);
+  void blink(int dotNo,uint32_t col1, uint32_t col2);
   uint32_t dots[NUMPIXELS];
+  uint32_t altdots[NUMPIXELS];
+  uint32_t defColor;
+  uint32_t dim(uint32_t);
+  uint32_t bright(uint32_t);
 };
 class Led
 {

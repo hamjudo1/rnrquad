@@ -14,12 +14,15 @@ public:
   float leftStickXPosition;
   float rightStickXPosition;
   float rightStickYPosition;
-  float leftTrigger; // 0, 1 ,2
+  float leftTrigger; // increments with each press
+  float leftTriggerTime;
   // bool rightTrigger; // not sent
   float trim0;
   float trim1;
-  float button7;
-  float button8;
+  float button7; // increments with each press
+  float button7Time;
+  float button8; // increments with each press
+  float button8Time;
   // TODO buttons
 };
 extern ControllerState refControl;

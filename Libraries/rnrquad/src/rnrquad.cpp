@@ -41,43 +41,65 @@ void baseSetup()
   Led::hsvColorSingleLed(4, 120.0);
   initTime = millis();
 }
+bool debugHang = false; // Set to true Diagnose hangs in the main loop.
 
 void baseLoop()
 {
-  Led::hsvColorSingleLed(1, 60);
+  if ( debugHang ) {
+    Led::hsvColorSingleLed(1, 60);
+  }
   debugStart = millis();
   pollDebug();
-  Led::hsvColorSingleLed(1, 120);
+  if ( debugHang ) {
+    Led::hsvColorSingleLed(1, 120);
+  }
   commStart = millis();
 
   debugTime = debugTime + commStart - debugStart;
   pollComm();
-  Led::hsvColorSingleLed(1, 180);
+  if ( debugHang ) {
+    Led::hsvColorSingleLed(1, 180);
+  }
 
   neoStart = millis();
   commTime = commTime + neoStart - commStart;
-  Led::hsvColorSingleLed(1, 240);
+  if ( debugHang ) {
+    Led::hsvColorSingleLed(1, 240);
+  }
   rangeStart = millis();
   pollRangeFinders();
-  Led::hsvColorSingleLed(1, 300);
+  if ( debugHang ) {
+    Led::hsvColorSingleLed(1, 300);
+  }
   thinkStart = millis();
   rangeTime = rangeTime + thinkStart - rangeStart;
   pollFlow();
-  Led::hsvColorSingleLed(1, 360);
+  if ( debugHang ) {
+    Led::hsvColorSingleLed(1, 360);
+  }
   thinkTime = thinkTime + millis() - thinkStart;
+  
   if (micros() - lastHeartBeat > 50000)
   {
-
-    if (thinkStart % 666 > 222)
-    {
-      Led::rgbColorSingleLed(0, 1.0, 0.0, 0.0);
-    } else
-    {
-      Led::rgbColorSingleLed(0, 0.0, 1.0, 0.0);
-    }
+    redSet.blink(0,red,blue);
+    redSet.blink(1,blue,red);
   } else
   {
-    Led::hsvColorSingleLed(0, iter++);
+    redSet.constant(0,red);
+    redSet.constant(1,red);
+  } 
+  if ( voltage < 3.1 ) {
+    redSet.blink(2,Led::hsvColor(60,1.0,1.0),Led::hsvColor(120,1.0,1.0));
+    redSet.blink(3,Led::hsvColor(120,1.0,1.0),Led::hsvColor(60,1.0,1.0));
+  } else if ( voltage < 3.2 ) {
+    redSet.blink(2,Led::hsvColor(120,1.0,0.8),Led::hsvColor(180,1.0,0.8));
+    redSet.blink(3,Led::hsvColor(180,1.0,0.8),Led::hsvColor(120,1.0,0.8));
+  } else if ( voltage < 3.3 ) {
+    redSet.blink(2,Led::hsvColor(180,1.0,0.6),Led::hsvColor(240,1.0,0.6));
+    redSet.blink(3,Led::hsvColor(240,1.0,0.6),Led::hsvColor(180,1.0,0.6));
+  } else {
+    redSet.blink(2,Led::hsvColor(240,1.0,0.4),Led::hsvColor(300,1.0,0.4));
+    redSet.blink(3,Led::hsvColor(300,1.0,0.4),Led::hsvColor(240,1.0,0.4));
   }
   Led::poll();
 }

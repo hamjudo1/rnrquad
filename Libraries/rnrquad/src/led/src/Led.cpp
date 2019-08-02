@@ -7,9 +7,38 @@ const int CLOCKPIN = 18;
 Adafruit_DotStar pixel = Adafruit_DotStar(NUMPIXELS, DATAPIN, CLOCKPIN, DOTSTAR_BGR);
 
 LedSet::LedSet (color def) {
-  
+  defColor = def;
+  for(int i=0; i<NUMPIXELS; i++) {
+    dots[i] = defColor;
+    altdots[i] = defColor;
+  }
 }
-LedSet redSet(red), yellowSet(yellow), greenSet(green), cyanSet(cyan), blueSet(blue), magentaSet(magenta);
+void LedSet::show() {
+  unsigned long now = millis() % 1000;
+  if ( (seconds() - refControl.leftTriggerTime) < 1.5 ) {
+    for(int i=0; i<NUMPIXELS; i++) {
+      pixel.setPixelColor(i,defColor);
+    }
+  } else {
+    for(int i=0; i<NUMPIXELS; i++) {
+      if ( now < 500 ) {
+        pixel.setPixelColor(i, dots[i]);
+      } else {
+        pixel.setPixelColor(i,altdots[i]);
+      }
+    }
+  }
+  pixel.show();
+}
+void LedSet::blink(int pixelNo, uint32_t col1, uint32_t col2) {
+  int pixNo = constrain(pixelNo,0,5);
+  dots[pixNo] = col1;
+  altdots[pixNo] = col2;
+}
+void LedSet::constant(int pixelNo, uint32_t col1) {
+  blink(pixelNo, col1, col1);
+}
+
 
 // HSV code inspired by https://en.wikipedia.org/wiki/HSL_and_HSV
 // Note, this version is suboptimal to make it easier for me to explain. There
@@ -62,11 +91,61 @@ uint32_t Led::hsvColor(float h, float s, float v)
   r = constrain(r + m, 0.0, 1.0);
   g = constrain(g + m, 0.0, 1.0);
   b = constrain(b + m, 0.0, 1.0);
-  float brightness = 50.0;
+  float brightness = 255.0;
   return pixel.Color(int(r * brightness), int(g * brightness), int(b * brightness));
 }
 
+LedSet redSet(red), yellowSet(yellow), greenSet(green), cyanSet(cyan), blueSet(blue), magentaSet(magenta);
+
+uint32_t flowToCol(float flowRate) {
+  return Led::hsvColor((1+flowRate)*120.0,1.0,0.5);
+}
+uint32_t rangeToCol(float range) {
+  if ( range < 0.01 ) {
+     return 0;
+  } else {
+    return Led::hsvColor(range*183.0,1.0,0.5);
+  }
+}
 void Led::poll() {
+  int choice = (int)(refControl.leftTrigger) % 6;
+
+  switch (choice) {
+  case 0:
+     redSet.show();
+     break;
+  case 1:
+     yellowSet.constant(0,rangeToCol(refSensor.rangeUp));
+     yellowSet.constant(1,rangeToCol(refSensor.rangeRight));
+     yellowSet.constant(2,rangeToCol(refSensor.rangeForward));
+     yellowSet.constant(3,rangeToCol(refSensor.rangeDown));
+     yellowSet.constant(4,rangeToCol(refSensor.rangeLeft));
+     yellowSet.show();
+     break;
+  case 2:
+     if ( refSensor.flowQ < 72 ) {
+       for(int i=0;i<NUMPIXELS;i++) {
+	 greenSet.blink(i,green,0);
+	}
+      } else {
+	 greenSet.constant(0,flowToCol(refSensor.flowY));
+	 greenSet.constant(1,flowToCol(-refSensor.flowX));
+	 greenSet.constant(2,flowToCol(-refSensor.flowY));
+	 greenSet.constant(3,flowToCol(-refSensor.flowY));
+	 greenSet.constant(4,flowToCol(refSensor.flowX));
+      }
+     greenSet.show();
+     break;
+  case 3:
+     cyanSet.show();
+     break;
+  case 4:
+     blueSet.show();
+     break;
+  case 5:
+     magentaSet.show();
+     break;
+   }
 }
 void Led::setup()
 {
@@ -88,7 +167,24 @@ void Led::setup()
     pixel.show();
   }
 }
-
+uint32_t bright(uint32_t color) {
+  int r = (color >> 16) & 0xff;
+  int g = (color >> 8) & 0xff;
+  int b = (color) & 0xff;
+  return pixel.Color(r*2, g*2, b*2);
+}
+uint32_t dim(uint32_t color) {
+  int r = (color >> 16) & 0xff;
+  int g = (color >> 8) & 0xff;
+  int b = (color) & 0xff;
+  return pixel.Color(r/2, g/2, b/2);
+}
+uint32_t verydim(uint32_t color) {
+  int r = (color >> 16) & 0xff;
+  int g = (color >> 8) & 0xff;
+  int b = (color) & 0xff;
+  return pixel.Color(r/8, g/8, b/8);
+}
 void Led::hsvColorSingleLed(int dotNo, float angle)
 {
   pixel.setPixelColor(dotNo, hsvColor(angle, 1.0, 1.0));

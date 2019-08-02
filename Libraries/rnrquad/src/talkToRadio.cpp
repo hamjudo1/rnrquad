@@ -279,6 +279,7 @@ static int decodepacket(void)
       if ( currLT != prevLT ) {
          prevLT = currLT;
 	 refControl.leftTrigger += 1.0;
+	 refControl.leftTriggerTime = seconds();
       }
       trims[0] = rxdata[6] >> 2;
       refControl.trim0 = (float) trims[0] - 31.0;
@@ -323,10 +324,12 @@ static int decodepacket(void)
           if (i == 8)
           {
 	    refControl.button8 += 1.0;
+	    refControl.button8Time = seconds();
           }
           if (i == 7)
           {
 	    refControl.button7 += 1.0;
+	    refControl.button8Time = seconds();
           }
         }
         lastaux[i] = aux[i];

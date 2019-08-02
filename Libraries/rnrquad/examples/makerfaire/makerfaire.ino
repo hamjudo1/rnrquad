@@ -89,7 +89,7 @@ long lastTimeMicros = 0;
 float targetAltitude = 0.0;
 void udMotion(float dt, float newRx[4])
 {
-  float tf0, tf1;
+  float tf0, tf1; 
   float dv = rangeVel[DOWNRANGE];
   // SensorState sensors = new SensorState();
   float altitudeSeen = refSensor.rangeDown;
@@ -212,9 +212,6 @@ void loop()
   // SensorState sensors = refSensor;
 
   float newRx[4];
-  unsigned long now = millis();
-  unsigned long loopTime = now - prevLoop;
-  prevLoop = now;
   flightLogic();
   xFlowC = refSensor.flowX;
   yFlowC = refSensor.flowY;
@@ -232,66 +229,16 @@ void loop()
       // xFlow Positive is traveling backwards, yFlow Positive is moving Left
       if (refSensor.flowQ > 70 )
       {
-        newRx[1] = constrain(yFlowC * 0.06, -0.3, +0.3); // newRx Positive is forward thrust
-        newRx[0] = constrain(-xFlowC * 0.06, -0.3, +0.3); // Negative is left
-      }
-
-    }
-  } else
-  { // under voltage or somethingd
-    if (notokay == 3.0 || notokay == 2.0)
-    { // active undervoltage
-      if (millis() % 666 > 222)
-      {
-        Led::rgbColorSingleLed(2, 0.0, 0.0, 1.0);
-      } else
-      {
-        Led::rgbColorSingleLed(2, 0.0, 1.0, 0.0);
+        newRx[1] = constrain(yFlowC * 0.03, -0.3, +0.3); // newRx Positive is forward thrust
+        newRx[0] = constrain(-xFlowC * 0.03, -0.3, +0.3); // Negative is left
       }
     }
-
-    newRx[3] = 0;
-  }
-
-  if (notokay < 1.5)
-  {
-    if (millis() % 333 > 222)
-    {
-      Led::rgbColorSingleLed(2, 0.0, 0.0, 0.0);
-    } else
-    {
-
-      if (refSensor.rangeDown > 0.6)
-      {
-        Led::rgbColorSingleLed(2, 0.0, 0.0, 0.5);
-      } else if (refSensor.rangeDown > 0.1)
-      {
-        Led::rgbColorSingleLed(2, 0.0, 0.5, 0.0);
-      } else
-      {
-        Led::rgbColorSingleLed(2, 0.5, 0.0, 0.0);
-      }
-    }
+  } else {
+    newRx[3] = 0.0;
   }
 
   replaceRx(newRx, XN297L_payloadIn[XN297L_goodPayloadIn], XN297L_payloadOut[!XN297L_goodPayloadOut]);
   updateChecksum(XN297L_payloadOut[!XN297L_goodPayloadOut]);
-  if (millis() % 666 > 555)
-  {
-    Led::rgbColorSingleLed(3, 0.0, 0.0, 0.0);
-  } else
-  { //
 
-    if (noFlowNoise < 2)
-    {
-      Led::rgbColorSingleLed(3, 0.0, 0.5, 0.0);
-    } else if (noFlowNoise < 10)
-    {
-      Led::rgbColorSingleLed(3, 0.5, 0.5, 0.0);
-    } else
-    {
-      Led::rgbColorSingleLed(3, 0.7, 0.7, 0.7);
-    }
-  }
   XN297L_goodPayloadOut = !XN297L_goodPayloadOut;
 }

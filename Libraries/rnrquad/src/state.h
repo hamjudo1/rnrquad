@@ -113,6 +113,8 @@ typedef unsigned char uint8_t;
 
 #include <Adafruit_DotStar.h>
 
+extern LedSet redSet, yellowSet, greenSet, cyanSet, blueSet, magentaSet;
+
 extern float throttleUpTime;
 const int simpleLED = 6;
 // J5X1  Arduino9 (up)
