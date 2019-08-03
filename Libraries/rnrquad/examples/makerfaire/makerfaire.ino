@@ -232,7 +232,11 @@ void loop()
         newRx[1] = constrain(yFlowC * 0.03, -0.3, +0.3); // newRx Positive is forward thrust
         newRx[0] = constrain(-xFlowC * 0.03, -0.3, +0.3); // Negative is left
       }
+    } else {
+      rx[0] = rx[0]/8.0;
+      rx[1] = rx[1]/8.0;
     }
+    rx[2] = rx[2]/4.0;
   } else {
     newRx[3] = 0.0;
   }
