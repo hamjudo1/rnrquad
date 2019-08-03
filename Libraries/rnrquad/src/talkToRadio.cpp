@@ -436,6 +436,7 @@ void writeregs(uint8_t data[], uint8_t size)
 // Logic analyzer says
 // | 39 01 | 2A 00 00 00 00 00 | 21 00 | 22 01 | 26 39 | 31 0F | 24 00 | 23 03 | E2 | 25 00 | 3D 38 | FD 00 | 20 8F | 0F C6 | 07 4E | 07 4E
 
+int rxFailCount = 0;
 int radioDefault(void)
 {
   // Gauss filter amplitude - lowest
@@ -464,7 +465,17 @@ int radioDefault(void)
   xn_writereg(0, XN_TO_RX);   // power up, crc enabled, rx mode | 20 8F |
 
   int rxcheck = xn_readreg(0x0f);   // | 0f ?? |
-  Serial.print("rxcheck ");
-  Serial.println(rxcheck);
+  if ( rxcheck != 0xC6 ) {
+    rxFailCount++;
+    if ((rxFailCount % 500) == 1) {
+      Serial.print("Radio failed to initialize on attempt ");
+      Serial.print(rxFailCount);
+      Serial.print(" rxcheck value ");
+      Serial.print(rxcheck);
+      int status = xn_readreg(0x07);
+      Serial.print(" status value ");
+      Serial.println(status);
+    }
+  }
   return rxcheck;
 }
