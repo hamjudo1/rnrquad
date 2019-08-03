@@ -19,7 +19,6 @@ void SERCOM5_Handler()
   sercom5timeStamp = micros();
 }
 
-
 void processFlowPacket(int dx, int dy, int q, int t)
 {
   float flowHeight = rangesInM[DOWNRANGE] - 0.040;
@@ -28,10 +27,14 @@ void processFlowPacket(int dx, int dy, int q, int t)
     flowHeight = 0.0;
   }
 
-  if ( (lastSample - sercom5timeStamp) < 50000 )
+  if ( ((sercom5timeStamp - lastSample) < 50000) && q > 70 )
   {
-    refSensor.flowX = 0.5 * dx*flowHeight + refSensor.flowX; // Average in with recent last reading.
-    refSensor.flowY = 0.5 * dy*flowHeight + refSensor.flowY;
+    refSensor.flowX = dx*flowHeight; 
+    refSensor.flowY = dy*flowHeight;
+    refSensor.flowPosX += refSensor.flowX;
+    refSensor.flowPosY += refSensor.flowY;
+    refSensor.flowPosQ += q;
+    refSensor.flowPosSamples += 1.0;
   }
   else
   {
@@ -69,6 +72,10 @@ void setupFlow()
   addSym(&(refSensor.flowX), "xf", "flow sensor X", "3N");
   addSym(&(refSensor.flowY), "yf", "flow sensor Y", "3N");
   addSym(&(refSensor.flowQ), "qf", "flow sensor Quality", "3N");
+  addSym(&(refSensor.flowPosSamples), "fps", "samples in flow sensor","0N");
+  addSym(&(refSensor.flowPosX), "xfp", "flow sensor X relative position", "3N");
+  addSym(&(refSensor.flowPosY), "yfp", "flow sensor Y relative position", "3N");
+  addSym(&(refSensor.flowPosQ), "qfp", "flow sensor Quality relative position", "3N");
 }
 
 void pollFlow()

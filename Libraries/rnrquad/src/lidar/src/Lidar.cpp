@@ -1,8 +1,6 @@
 #include "../../vl53l0x/src/Adafruit_VL53L0X.h"
+#include <SparkFun_VL53L1X.h>
 
-// #include <Adafruit_NeoPixel.h>
-// i2c pin 31 SDA Arduino20 (default for wire library)
-// i2c pin 32 SCL Arduino21 (likewise)
 
 #include "../../state.h"
 

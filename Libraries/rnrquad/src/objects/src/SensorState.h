@@ -18,7 +18,12 @@ public:
   float flowX;
   float flowY;
   float flowQ;
+  float flowPosX;
+  float flowPosY;
+  float flowPosQ;
+  float flowPosStartTime;
   float flowTimeStamp;
+  float flowPosSamples;
 
   // Gyro sensor
   float gyroXY;
