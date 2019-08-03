@@ -398,6 +398,31 @@ void clearWatch()
   }
   watching = 0;
 }
+void quiet() {
+  clearWatch();
+  showPacketLog = 0.0;
+  showUsageLog = 0.0;
+  showXn297LLog = 0.0;
+  showBrainStemLog = 0.0;
+  showLogLog = 0.0;
+}
+// One of the early characters transmitted during an attempted download handshake is the "#", which is not
+// otherwise used in our interface. Thus it is interpretted as a shutoff all printing to allow reprogramming.
+// Note that it does not require a trailing carriage return or linefeed.
+void downloadAttemptDetected() {
+  quiet();
+}
+
+void echoWatch() { // Print command line for recreating the current display
+  for (int i = 0; i < watchListSize; i++)
+  { 
+    if( watchList[i] ) {
+      Serial.print(watchList[i]->name);
+      Serial.print(" ;w; ");
+    }
+  }
+  Serial.println();
+}
 
 void watch()
 {
@@ -560,7 +585,7 @@ void processChar(int c)
   static bool gotVal = false;
   float *varPt;
   if ( c == '#' ) {
-    clearWatch();  // bootloader sends a #
+    downloadAttemptDetected();  // bootloader sends a #
     state = 'E';
     vp = 0;
   } else if (c == '\n' || c == '\r' || c == ';')
@@ -694,6 +719,8 @@ void setupSymtable()
   addCmd(&watch, "w", "Periodically print a variable w less typing", NULL);
   addCmd(&unwatch, "unwatch", "remove variable from watch list", NULL);
   addCmd(&clearWatch, "clear", "empty the watch list", NULL);
+  addCmd(&echoWatch, "ws", "Display current watch settings", NULL);
+  addCmd(&quiet,"quiet", "turn off debug printing", NULL);
 }
 /*
 

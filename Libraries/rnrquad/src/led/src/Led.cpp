@@ -102,7 +102,7 @@ uint32_t flowToCol(float flowRate) {
 }
 uint32_t rangeToCol(float range) {
   if ( range < 0.01 ) {
-     return 0;
+     return 0x808080;
   } else {
     return Led::hsvColor(range*183.0,1.0,0.5);
   }
