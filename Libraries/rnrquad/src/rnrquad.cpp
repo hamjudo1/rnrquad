@@ -33,7 +33,6 @@ void baseSetup()
   Led::hsvColorSingleLed(1, 120.0);
   setupSerial();
   Led::hsvColorSingleLed(2, 120.0);
-
   setupComm();
 
   setupRangeFinders();
@@ -154,7 +153,7 @@ void setupSerial()
   Serial.begin(115200);
   if (waitForConnection)
   {
-    for (int i = 4; i > 0; i--)
+    for (int i = 2; i > 0; i--)
     {
       Serial.print(i);
       delay(1000);
