@@ -186,7 +186,7 @@ void setupNew() {
   downR.setI2CAddress(10 + (i * 2));
 
   forwardR.startRanging();
-  // downR.startRanging();
+  downR.startRanging();
 
   nextReading = millis() + 100;
 }
@@ -245,6 +245,7 @@ void flightLogic() {
 
 void loopNew() {
   int distance;
+  int dDown;
   if ( millis() > nextReading ) {
     nextReading = millis() + 100;
 
@@ -253,6 +254,12 @@ void loopNew() {
     rangesInM[0] = refSensor.rangeForward;
     forwardR.stopRanging();
     forwardR.startRanging();
+
+    dDown = downR.getDistance(); //Get the result of the measurement from the sensor
+    refSensor.rangeDown = (float)dDown * 0.001;
+    rangesInM[1] = refSensor.rangeDown;
+    downR.stopRanging();
+    downR.startRanging();
     /* if ( forwardR.checkForDataReady()) {
        distance = forwardR.getDistance(); //Get the result of the measurement from the sensor
        forwardR.stopRanging();
