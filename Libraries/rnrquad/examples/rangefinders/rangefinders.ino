@@ -157,13 +157,13 @@ float prevAltitude = 0.0;
 unsigned long prevLoop = 0;
 int dir = 0;
 SFEVL53L1X forwardR;
-SFEVL53L1X downR;
+// SFEVL53L1X downR;
 unsigned long nextReading = 0;
 void setupNew() {
   int i;
   rangeFinderSyms();
-  pinMode(7,OUTPUT);
-  digitalWrite(7,0);
+  //pinMode(7, OUTPUT);
+  //digitalWrite(7, 0);
 
   // rangeFinderSetLow();
   Serial.begin(115200);
@@ -180,9 +180,14 @@ void setupNew() {
   }
   i = 0;
   forwardR.setI2CAddress(10 + (i * 2));
+  //digitalWrite(7, 1);
+  //downR.begin();
+  i = 1;
+  //downR.setI2CAddress(10 + (i * 2));
 
   forwardR.startRanging();
-  
+  // downR.startRanging();
+
   nextReading = millis() + 100;
 }
 
