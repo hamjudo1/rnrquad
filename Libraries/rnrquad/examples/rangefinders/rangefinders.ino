@@ -159,10 +159,15 @@ int dir = 0;
 SFEVL53L1X forwardR;
 unsigned long nextReading = 0;
 void setupNew() {
+  int i;
   rangeFinderSyms();
+  pinMode(7,OUTPUT);
+  digitalWrite(7,0);
+
+  // rangeFinderSetLow();
   Serial.begin(115200);
   Wire.begin();
-  for (int i = 5; i > 0; i--) {
+  for (i = 5; i > 0; i--) {
     Serial.print(i);
     delay(800);
   }
@@ -176,6 +181,9 @@ void setupNew() {
 
     Serial.println("Sensor ?unhappy!");
   }
+  i = 0;
+  forwardR.setI2CAddress(10 + (i * 2));
+
   forwardR.startRanging();
   nextReading = millis() + 100;
 }

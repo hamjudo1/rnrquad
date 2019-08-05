@@ -99,6 +99,16 @@ void rangeFinderSyms() {
     addSym(&(rangesInM[i]), allNames[i], "range finder", "3N");
   }
 }
+void rangeFinderSetLow() {
+  for (int i=0; i < RFINDERS; i++ ) {
+    int aPinNo = rangeConfig[i].j5Index;
+    if (aPinNo >= 0)
+    {                 // Always set the xshut pin to low output, even for disabled range finders. Or they block the bus.
+      pinMode(aPinNo, OUTPUT);
+      digitalWrite(aPinNo, LOW);
+    }
+  }
+}
 void setupRangeFinders()
 {
   int i;
@@ -125,12 +135,10 @@ void setupRangeFinders()
     }
     rangeHistTotal[i] = 0.0;
     aPinNo = rangeConfig[i].j5Index;
-    if (aPinNo >=
-        0)
+    if (aPinNo >= 0)
     {                 // Always set the xshut pin to low output, even for disabled range finders. Or they block the bus.
       pinMode(aPinNo, OUTPUT);
       digitalWrite(aPinNo, LOW);
-      Serial.print(__FILE__);Serial.println(__LINE__);
     }
   }
   for (i = 0; i < RFINDERS; i++)

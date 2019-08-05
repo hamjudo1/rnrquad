@@ -176,7 +176,7 @@ extern void setupFlow();
 
 extern void pollFlow();
 extern void rangeFinderSyms();
-
+extern void rangeFinderSetLow();
 extern char *dupString(const char *origString);// create a copy of a string in malloc'ed memory.
 
 extern char *catString2(const char *origString1, const char *origString2);
