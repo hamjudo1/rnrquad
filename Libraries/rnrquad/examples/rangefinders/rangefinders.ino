@@ -246,7 +246,7 @@ void loopNew() {
     Serial.print(distanceFeet, 2);
 
     Serial.println();
-    delay(2000);
+    delay(50);
   }
 
 }
