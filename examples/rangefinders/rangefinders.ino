@@ -182,7 +182,7 @@ void initRangeFinder(SFEVL53L1X finder, int finderIndex) {
   }
   Serial.println(rangeConfig[finderIndex].Name);
 }
-
+extern void testRangeFindersI2Csafe();
 void setupNew() {
   int i;
   int finderIndex;
@@ -308,14 +308,14 @@ void loopNew() {
     }
     
     if ( rangeConfig[2].enabled ) {
-      dLeft = rightR.getDistance(); //Get the result of the measurement from the sensor
+      dLeft = leftR.getDistance(); //Get the result of the measurement from the sensor
       refSensor.rangeLeft = (float)dLeft * 0.001;
       rangesInM[2] = refSensor.rangeLeft;
       leftR.stopRanging();
       leftR.startRanging();
     }
     if ( rangeConfig[3].enabled ) {
-      dLeft = leftR.getDistance(); //Get the result of the measurement from the sensor
+      dRight = rightR.getDistance(); //Get the result of the measurement from the sensor
       refSensor.rangeRight = (float)dRight * 0.001;
       rangesInM[3] = refSensor.rangeRight;
       rightR.stopRanging();
