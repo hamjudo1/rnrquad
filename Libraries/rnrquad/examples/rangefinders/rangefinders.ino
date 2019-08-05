@@ -228,7 +228,7 @@ void flightLogic() {
   }
 }
 
-void loop() {
+void loopNew() {
   distanceSensor.startRanging(); //Write configuration bytes to initiate measurement
 
   int distance = distanceSensor.getDistance(); //Get the result of the measurement from the sensor
@@ -248,9 +248,10 @@ void loop() {
   delay(2000);
 
 }
-void loopOld()
+void loop()
 {
   baseLoop();
+  loopNew();
 
   // SensorState sensors = refSensor;
 
