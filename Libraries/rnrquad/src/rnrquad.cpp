@@ -35,7 +35,7 @@ void baseSetup()
   Led::hsvColorSingleLed(2, 120.0);
   setupComm();
 
-  setupRangeFinders();
+//  setupRangeFinders();
   Led::hsvColorSingleLed(3, 120.0);
   Led::hsvColorSingleLed(4, 120.0);
   initTime = millis();
@@ -66,7 +66,7 @@ void baseLoop()
     Led::hsvColorSingleLed(1, 240);
   }
   rangeStart = millis();
-  pollRangeFinders();
+  // pollRangeFinders();
   if ( debugHang ) {
     Led::hsvColorSingleLed(1, 300);
   }
@@ -109,6 +109,7 @@ void baseLoop()
 SensorState getSensorState()
 {
   //TODO
+  return refSensor;
 }
 
 /**

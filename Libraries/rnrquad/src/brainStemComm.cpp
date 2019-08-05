@@ -12,7 +12,7 @@ const int mySPI_CLK = 24;
 const int mySPI_SS = 5;
 
 
-char *regList[] = {
+const char *regList[] = {
   "CONFIG", "EN_AA", "EN_RXADDR", "SETUP_AW", "SETUP_RETR", "RF_CH", "RF_SETUP", "STATUS",
   "OBSERVE_TX", "CD", "RX_ADDR_P0", "RX_ADDR_P1", "RX_ADDR_P2", "RX_ADDR_P3", "RX_ADDR_P4",
   "RX_ADDR_P5",

@@ -1,6 +1,7 @@
 #include "../../state.h"
 
 bool radioInitialized = false;
+bool i2cBusSafe = false;
 int mode;
 int tookTooLongCount = 0;
 bool readyToUpdateNeoPixels = false;

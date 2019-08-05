@@ -7,6 +7,7 @@
 #include "objects/src/SensorState.h"
 #include "objects/src/PID.h"
 #include "led/src/Led.h"
+#include "vl53l1x/src/SparkFun_VL53L1X.h"
 
 typedef unsigned char uint8_t;
 
@@ -175,10 +176,9 @@ extern void setupFlow();
 
 extern void pollFlow();
 
-extern char *dupString(char *origString);// create a copy of a string in malloc'ed memory.
-extern char *catString3(char *origString1, char *origString2, char *origString3);
+extern char *dupString(const char *origString);// create a copy of a string in malloc'ed memory.
 
-extern char *catString2(char *origString1, char *origString2);
+extern char *catString2(const char *origString1, const char *origString2);
 
 extern void buttonPressed(int buttonNo);
 
@@ -206,6 +206,7 @@ extern int voltageByte;
 extern int noFlowNoise;
 extern float voltage;
 extern bool radioInitialized;
+extern bool i2cBusSafe;
 extern float showBrainStemLog;
 extern float showXn297LLog;
 extern float showPacketLog;
@@ -255,7 +256,7 @@ void initTable();
 
 void logSyms();
 
-void addSym(float *v, const char *n, const char *d, char *opt);
+void addSym(float *v, const char *n, const char *d, const char *opt);
 
 void addSym(float *v, const char *n, const char *d);
 

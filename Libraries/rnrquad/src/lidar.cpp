@@ -1,14 +1,12 @@
-#include "../../vl53l0x/src/Adafruit_VL53L0X.h"
-#include <SparkFun_VL53L1X.h>
+#include "state.h"
 
+// SFEVL53L1X loxes[RFINDERS] = {SFEVL53L1X(),SFEVL53L1X(),SFEVL53L1X(),SFEVL53L1X(),SFEVL53L1X()};
+//SFEVL53L1X front;
+SFEVL53L1X downR;
+//SFEVL53L1X right;
+//SFEVL53L1X left;
+//SFEVL53L1X up;
 
-#include "../../state.h"
-
-Adafruit_VL53L0X loxes[RFINDERS] = {Adafruit_VL53L0X(), Adafruit_VL53L0X(), Adafruit_VL53L0X(), Adafruit_VL53L0X(),
-                                    Adafruit_VL53L0X()
-};
-
-#define TCAADDR 0x74
 // J5 1 CPU pin 12 Port PA07 Arduino Pin 9.
 // J5 2 CPU pin 11 Port PA06 Arduino Pin 8.
 // J5 3 CPU pin 10 Port PA05 Arduino Pin 18.
@@ -30,32 +28,43 @@ const int J5X5 = 16;
 
 rangeConfigElem_t rangeConfig[] = {
     {-1, true, "front", 0},
-    {7,  true, "down",  0},
-    {0,  true, "right", 0},
-    {19, true, "left",  0},
-    {16, true, "up",    0},
+    {7,  false, "down",  0},
+    {0,  false, "right", 0},
+    {19, false, "left",  0},
+    {16, false, "up",    0},
 };
-
-void tcaselect(uint8_t i)
-{
-  if (i > 7) return;
-
-  Wire.beginTransmission(TCAADDR);
-  Wire.write(1 << i);
-  Wire.endTransmission();
+bool I2C_Would_Hang(int SDAPin, int SCLPin) {
+  bool wouldHang = false;
+  pinMode(SDAPin,INPUT);
+  pinMode(SCLPin,INPUT);
+  if ( digitalRead(SDAPin) != 1 ) {
+    Serial.println("SDA pin is low");
+    wouldHang = true;
+  }
+  if ( digitalRead(SCLPin) != 1 ) {
+    Serial.println("SCL pin is low");
+    wouldHang = true;
+  }
+  return wouldHang;
 }
-
 int activeRangeFinderCnt = 0;
 int activeRF[5];
 const char *allNames[5];
 
 bool initRangeFinderWRetries(int i)
 {
+
   int retryCount = 0;
   float *errorP;
   while (retryCount < 5)
   {
-    bool success = loxes[activeRangeFinderCnt].begin(1 + (i * 2), false);
+    Serial.print(__FILE__);Serial.println(__LINE__);
+    bool success = downR.begin();
+    // bool success = loxes[activeRangeFinderCnt].begin( );
+    Serial.print(__FILE__);Serial.println(__LINE__);
+    downR.setI2CAddress(1 + (i * 2));
+    // loxes[activeRangeFinderCnt].setI2CAddress(1 + (i * 2));
+    Serial.print(__FILE__);Serial.println(__LINE__);
     Serial.print(allNames[i]);
     Serial.print(" ");
     Serial.print(i);
@@ -84,9 +93,24 @@ bool initRangeFinderWRetries(int i)
 
 void setupRangeFinders()
 {
+  int i;
+  // moved to top, because even dead range finders get names.
+  for (i = 0; i < RFINDERS; i++)
+  {
+    addSym(&(rangesInM[i]), allNames[i], "range finder", "3N");
+  }
+  if ( I2C_Would_Hang(20,21) ) {
+    i2cBusSafe = false;
+    return;
+  } else {
+    i2cBusSafe = true;
+  }
+  Serial.print(__FILE__);Serial.println(__LINE__);
+     
   // Setup I2C
   Wire.begin();
-  int i, aPinNo;
+  Serial.print(__FILE__);Serial.println(__LINE__);
+  int aPinNo;
   for (i = 0; i < RFINDERS; i++)
   {
     rangesInM[i] = 0.0;
@@ -102,6 +126,7 @@ void setupRangeFinders()
     {                 // Always set the xshut pin to low output, even for disabled range finders. Or they block the bus.
       pinMode(aPinNo, OUTPUT);
       digitalWrite(aPinNo, LOW);
+      Serial.print(__FILE__);Serial.println(__LINE__);
     }
   }
   for (i = 0; i < RFINDERS; i++)
@@ -118,28 +143,29 @@ void setupRangeFinders()
       aPinNo = rangeConfig[i].j5Index;
       if (aPinNo >= 0)
       {
-      /*
+      
         Serial.print("Setting Arduino Pin ");
         Serial.print(aPinNo);
         Serial.print(" HIGH for ");
         Serial.println(allNames[i]);
-      */
+     
         digitalWrite(aPinNo, HIGH);
       }
       else
       {
-	/*
+
         Serial.println("Initializing the light sensor with a pullup resistor and pulldown removed.");
-	*/
+
       }
       if (initRangeFinderWRetries(i))
       {
-        loxes[activeRangeFinderCnt].startRanging();
+	Serial.print(__FILE__);Serial.println(__LINE__);
+        // loxes[activeRangeFinderCnt].startRanging();
+        downR.startRanging();
         activeRF[activeRangeFinderCnt] = i;
         activeRangeFinderCnt++;
       }
 
-      addSym(&(rangesInM[i]), allNames[i], "range finder", "3N");
     }
   }
 }
@@ -148,11 +174,20 @@ void pollRangeFinders()
 {
   int count = 0;
   unsigned long now = millis();
+  if ( ! i2cBusSafe ) {
+    return;
+  }
   for (int i = 0; i < activeRangeFinderCnt; i++)
   {
     int loxIndex = activeRF[i];
-    if (loxes[i].updateRangeInMeters(&(rangesInM[loxIndex])))
-    {
+    // if ( loxes[i].checkForDataReady() ) {
+    if ( downR.checkForDataReady() ) {
+      // rangesInM[loxIndex] = (float)loxes[i].getDistance() * 0.001;
+      rangesInM[loxIndex] = (float)downR.getDistance() * 0.001;
+      // loxes[i].stopRanging();
+      downR.stopRanging();
+      // loxes[i].startRanging();
+      downR.stopRanging();
       switch (loxIndex) {
         case FRONTRANGE:
 	   refSensor.rangeForward = rangesInM[loxIndex];

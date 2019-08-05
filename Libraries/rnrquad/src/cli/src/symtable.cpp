@@ -265,7 +265,7 @@ void addCmd(void (*cmd_ptr)(void), const char *n, const char *d, char *opt)
 
 int symCount = 0;
 
-void addSym(float *v, const char *n, const char *d, char *opt)
+void addSym(float *v, const char *n, const char *d, const char *opt)
 {
   symCount++;
   entry *newSym = new entry;

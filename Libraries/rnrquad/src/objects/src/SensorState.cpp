@@ -15,7 +15,8 @@ SensorState::SensorState(bool isEmpty)
   flowPosX = 0;
   flowPosY = 0;
   flowPosQ = 0;
-  flowPosStartTime = 0.0;
+  flowPosSamples = 0.0;
+  flowPosMissedSamples = 0;
   flowTimeStamp = 0;
 
   // Gyro sensor
@@ -51,8 +52,8 @@ SensorState::SensorState()
   flowPosX = refSensor.flowPosX;
   flowPosY = refSensor.flowPosY;
   flowPosQ = refSensor.flowPosQ;
-  flowPosStartTime = refSensor.flowPosStartTime;
   flowPosSamples = refSensor.flowPosSamples;
+  flowPosMissedSamples = refSensor.flowPosMissedSamples;
 
   // Gyro sensor
   gyroXY = refSensor.gyroXY;
