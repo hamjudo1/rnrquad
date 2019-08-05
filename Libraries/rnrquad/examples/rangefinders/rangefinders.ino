@@ -234,18 +234,20 @@ void loopNew() {
   int distance = distanceSensor.getDistance(); //Get the result of the measurement from the sensor
   distanceSensor.stopRanging();
   refSensor.rangeForward = (float)distance * 0.001;
+  if ( A > 0 ) {
+    A = A - 1;
+    Serial.print("Distance(mm): ");
+    Serial.print(distance);
 
-  Serial.print("Distance(mm): ");
-  Serial.print(distance);
+    float distanceInches = distance * 0.0393701;
+    float distanceFeet = distanceInches / 12.0;
 
-  float distanceInches = distance * 0.0393701;
-  float distanceFeet = distanceInches / 12.0;
+    Serial.print("\tDistance(ft): ");
+    Serial.print(distanceFeet, 2);
 
-  Serial.print("\tDistance(ft): ");
-  Serial.print(distanceFeet, 2);
-
-  Serial.println();
-  delay(2000);
+    Serial.println();
+    delay(2000);
+  }
 
 }
 void loop()
