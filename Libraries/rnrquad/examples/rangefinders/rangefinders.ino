@@ -157,6 +157,7 @@ float prevAltitude = 0.0;
 unsigned long prevLoop = 0;
 int dir = 0;
 SFEVL53L1X distanceSensor;
+unsigned long nextReading = 0;
 void setupNew() {
   Serial.begin(115200);
   Wire.begin();
@@ -164,7 +165,7 @@ void setupNew() {
     Serial.print(i);
     delay(800);
   }
-
+  A = 5;
   Serial.println("VL53L1X Qwiic Test");
 
   if (distanceSensor.begin() == true)
@@ -175,6 +176,7 @@ void setupNew() {
     Serial.println("Sensor ?unhappy!");
   }
   distanceSensor.startRanging();
+  nextReading = millis() + 100;
 }
 
 void setup()
@@ -231,26 +233,33 @@ void flightLogic() {
 
 void loopNew() {
   int distance;
-  if ( distanceSensor.checkForDataReady()) {
+  if ( millis() > nextReading ) {
+    nextReading = millis() + 100;
+
     distance = distanceSensor.getDistance(); //Get the result of the measurement from the sensor
     distanceSensor.stopRanging();
-    distanceSensor.startRanging(); //Write configuration bytes to initiate measurement
-    refSensor.rangeForward = (float)distance * 0.001;
-  }
-  if ( A > 0 ) {
-    A = A - 1;
-    Serial.print("Distance(mm): ");
-    Serial.print(distance);
+    distanceSensor.startRanging();
+    /* if ( distanceSensor.checkForDataReady()) {
+       distance = distanceSensor.getDistance(); //Get the result of the measurement from the sensor
+       distanceSensor.stopRanging();
+       distanceSensor.startRanging(); //Write configuration bytes to initiate measurement
+       refSensor.rangeForward = (float)distance * 0.001;
+      } */
+    if ( A > 0 ) {
+      A = A - 1;
+      Serial.print("Distance(mm): ");
+      Serial.print(distance);
 
-    float distanceInches = distance * 0.0393701;
-    float distanceFeet = distanceInches / 12.0;
+      float distanceInches = distance * 0.0393701;
+      float distanceFeet = distanceInches / 12.0;
 
-    Serial.print("\tDistance(ft): ");
-    Serial.print(distanceFeet, 2);
+      Serial.print("\tDistance(ft): ");
+      Serial.print(distanceFeet, 2);
 
-    Serial.println();
-    delay(50);
+      Serial.println();
+    
 
+    }
   }
 
 }
