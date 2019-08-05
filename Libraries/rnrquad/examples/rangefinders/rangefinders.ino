@@ -157,7 +157,7 @@ float prevAltitude = 0.0;
 unsigned long prevLoop = 0;
 int dir = 0;
 SFEVL53L1X forwardR;
-// SFEVL53L1X downR;
+SFEVL53L1X downR;
 unsigned long nextReading = 0;
 void setupNew() {
   int i;
