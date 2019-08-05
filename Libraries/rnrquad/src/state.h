@@ -175,6 +175,7 @@ extern void checkPacket(void);
 extern void setupFlow();
 
 extern void pollFlow();
+extern void rangeFinderSyms();
 
 extern char *dupString(const char *origString);// create a copy of a string in malloc'ed memory.
 

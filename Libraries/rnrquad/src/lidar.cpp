@@ -91,14 +91,18 @@ bool initRangeFinderWRetries(int i)
   return false;
 }
 
+  // moved to independent function, because even dead range finders get names.
+void rangeFinderSyms() {
+  for (int i = 0; i < RFINDERS; i++)
+  {
+    allNames[i] = rangeConfig[i].Name;
+    addSym(&(rangesInM[i]), allNames[i], "range finder", "3N");
+  }
+}
 void setupRangeFinders()
 {
   int i;
-  // moved to top, because even dead range finders get names.
-  for (i = 0; i < RFINDERS; i++)
-  {
-    addSym(&(rangesInM[i]), allNames[i], "range finder", "3N");
-  }
+  rangeFinderSyms();
   if ( I2C_Would_Hang(20,21) ) {
     i2cBusSafe = false;
     return;

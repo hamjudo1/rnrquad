@@ -156,9 +156,10 @@ float prevAltitude = 0.0;
 
 unsigned long prevLoop = 0;
 int dir = 0;
-SFEVL53L1X distanceSensor;
+SFEVL53L1X forwardR;
 unsigned long nextReading = 0;
 void setupNew() {
+  rangeFinderSyms();
   Serial.begin(115200);
   Wire.begin();
   for (int i = 5; i > 0; i--) {
@@ -168,14 +169,14 @@ void setupNew() {
   A = 5;
   Serial.println("VL53L1X Qwiic Test");
 
-  if (distanceSensor.begin() == true)
+  if (forwardR.begin() == true)
   {
     Serial.println("Sensor online!");
   } else {
 
     Serial.println("Sensor ?unhappy!");
   }
-  distanceSensor.startRanging();
+  forwardR.startRanging();
   nextReading = millis() + 100;
 }
 
@@ -236,13 +237,15 @@ void loopNew() {
   if ( millis() > nextReading ) {
     nextReading = millis() + 100;
 
-    distance = distanceSensor.getDistance(); //Get the result of the measurement from the sensor
-    distanceSensor.stopRanging();
-    distanceSensor.startRanging();
-    /* if ( distanceSensor.checkForDataReady()) {
-       distance = distanceSensor.getDistance(); //Get the result of the measurement from the sensor
-       distanceSensor.stopRanging();
-       distanceSensor.startRanging(); //Write configuration bytes to initiate measurement
+    distance = forwardR.getDistance(); //Get the result of the measurement from the sensor
+    refSensor.rangeForward = (float)distance * 0.001;
+    rangesInM[0] = refSensor.rangeForward;
+    forwardR.stopRanging();
+    forwardR.startRanging();
+    /* if ( forwardR.checkForDataReady()) {
+       distance = forwardR.getDistance(); //Get the result of the measurement from the sensor
+       forwardR.stopRanging();
+       forwardR.startRanging(); //Write configuration bytes to initiate measurement
        refSensor.rangeForward = (float)distance * 0.001;
       } */
     if ( A > 0 ) {
@@ -257,7 +260,7 @@ void loopNew() {
       Serial.print(distanceFeet, 2);
 
       Serial.println();
-    
+
 
     }
   }
