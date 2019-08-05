@@ -153,65 +153,74 @@ unsigned long testStart = 0;
 float rateOfClimb = 0.0;
 
 float prevAltitude = 0.0;
-float ml = 20.0;
+float ml = 100.0;
 float et = 0.0;
 unsigned long prevLoop = 0;
 int dir = 0;
+extern rangeConfigElem_t rangeConfig[];
 SFEVL53L1X forwardR;
 SFEVL53L1X downR;
 SFEVL53L1X rightR;
 SFEVL53L1X leftR;
 SFEVL53L1X upR;
 unsigned long nextReading = 0;
+
+void initRangeFinder(SFEVL53L1X finder, int finderIndex) {
+  if ( rangeConfig[finderIndex].enabled ) {
+    int pinNo = rangeConfig[finderIndex].j5Index;
+    if (pinNo >= 0 ) {
+      pinMode(pinNo, OUTPUT);
+      digitalWrite(pinNo, 1);
+    }
+    finder.begin();
+    finder.setI2CAddress(10 + (finderIndex * 2));
+    (void)finder.startRanging(); // This returns a value that is bogus.
+    Serial.print("Init rangeFinder complete ");
+
+  } else {
+    Serial.print("Rangefinder already disabled. ");
+  }
+  Serial.println(rangeConfig[finderIndex].Name);
+}
+
 void setupNew() {
   int i;
+  int finderIndex;
+
   rangeFinderSyms();
-  pinMode(7, OUTPUT);
-  digitalWrite(7, 0);
-  pinMode(19, OUTPUT);
-  digitalWrite(19, 0);
-  pinMode(16, OUTPUT);
-  digitalWrite(16, 0);
-
-  // rangeFinderSetLow();
-  Serial.begin(115200);
-  Wire.begin();
-  A = 5;
-  Serial.println("VL53L1X Qwiic Test");
-
-  if (forwardR.begin() == true)
-  {
-    Serial.println("Sensor online!");
-  } else {
-
-    Serial.println("Sensor ?unhappy!");
+  Serial.println("Here now");
+  testRangeFindersI2Csafe();
+  for (finderIndex = 0; finderIndex < 5; finderIndex++) {
+    Serial.print(rangeConfig[finderIndex].enabled);
+    Serial.print(" ");
+    Serial.println(rangeConfig[finderIndex].Name);
   }
-  i = 0;
-  forwardR.setI2CAddress(10 + (i * 2));
-  digitalWrite(7, 1);
-  downR.begin();
-  i = 1;
-  downR.setI2CAddress(10 + (i * 2));
-
-  digitalWrite(19, 1);
-  leftR.begin();
-  i = 3;
-  leftR.setI2CAddress(10 + (i * 2));
-
-  digitalWrite(16, 1);
-  upR.begin();
-  i = 4;
-  upR.setI2CAddress(10 + (i * 2));
-  forwardR.startRanging();
-  downR.startRanging();
-  leftR.startRanging();
-  upR.startRanging();
+ // i2cBusSafe = false;
+ // Serial.println("Disabling i2c bus");
+  if ( ! i2cBusSafe ) {
+    Serial.println("i2cBus is not safe??");
+    return;
+  }
+   Serial.println("i2cBus is safe??");
+  Wire.begin();
+  initRangeFinder(forwardR, 0);
+  
+  initRangeFinder(downR, 1);
+  initRangeFinder(rightR, 2);
+  initRangeFinder(leftR, 3);
+  initRangeFinder(upR, 4);
   nextReading = millis() + (int)ml;
 }
 float percTime;
 float loopspersec = 0;
 void setup()
 {
+  Serial.begin(115200);
+
+  for (int i = 5; i > 0; i--) {
+    Serial.print(i);
+    delay(666);
+  }
   baseSetup();
   setupNew();
   addSym(&vcorrection, "vco", "low voltage correction", "3N");
@@ -283,30 +292,42 @@ void loopNew() {
     startTime = micros();
     nextReading = millis() + (int)ml;
     readingCount++;
-
-    distance = forwardR.getDistance(); //Get the result of the measurement from the sensor
-    refSensor.rangeForward = (float)distance * 0.001;
-    rangesInM[0] = refSensor.rangeForward;
-    forwardR.stopRanging();
-    forwardR.startRanging();
-
-    dDown = downR.getDistance(); //Get the result of the measurement from the sensor
-    refSensor.rangeDown = (float)dDown * 0.001;
-    rangesInM[1] = refSensor.rangeDown;
-    downR.stopRanging();
-    downR.startRanging();
-
-    dLeft = leftR.getDistance(); //Get the result of the measurement from the sensor
-    refSensor.rangeLeft = (float)dLeft * 0.001;
-    rangesInM[3] = refSensor.rangeLeft;
-    leftR.stopRanging();
-    leftR.startRanging();
-
-    dUp = upR.getDistance(); //Get the result of the measurement from the sensor
-    refSensor.rangeUp = (float)dUp * 0.001;
-    rangesInM[4] = refSensor.rangeUp;
-    upR.stopRanging();
-    upR.startRanging();
+    if ( rangeConfig[0].enabled ) {
+      distance = forwardR.getDistance(); //Get the result of the measurement from the sensor
+      refSensor.rangeForward = (float)distance * 0.001;
+      rangesInM[0] = refSensor.rangeForward;
+      forwardR.stopRanging();
+      forwardR.startRanging();
+    }
+    if ( rangeConfig[1].enabled ) {
+      dDown = downR.getDistance(); //Get the result of the measurement from the sensor
+      refSensor.rangeDown = (float)dDown * 0.001;
+      rangesInM[1] = refSensor.rangeDown;
+      downR.stopRanging();
+      downR.startRanging();
+    }
+    
+    if ( rangeConfig[2].enabled ) {
+      dLeft = rightR.getDistance(); //Get the result of the measurement from the sensor
+      refSensor.rangeLeft = (float)dLeft * 0.001;
+      rangesInM[2] = refSensor.rangeLeft;
+      leftR.stopRanging();
+      leftR.startRanging();
+    }
+    if ( rangeConfig[3].enabled ) {
+      dLeft = leftR.getDistance(); //Get the result of the measurement from the sensor
+      refSensor.rangeRight = (float)dRight * 0.001;
+      rangesInM[3] = refSensor.rangeRight;
+      rightR.stopRanging();
+      rightR.startRanging();
+    }
+    if ( rangeConfig[4].enabled ) {
+      dUp = upR.getDistance(); //Get the result of the measurement from the sensor
+      refSensor.rangeUp = (float)dUp * 0.001;
+      rangesInM[4] = refSensor.rangeUp;
+      upR.stopRanging();
+      upR.startRanging();
+    }
     /* if ( forwardR.checkForDataReady()) {
        distance = forwardR.getDistance(); //Get the result of the measurement from the sensor
        forwardR.stopRanging();

@@ -28,10 +28,10 @@ const int J5X5 = 16;
 
 rangeConfigElem_t rangeConfig[] = {
     {-1, true, "front", 0},
-    {7,  false, "down",  0},
-    {0,  false, "right", 0},
-    {19, false, "left",  0},
-    {16, false, "up",    0},
+    {7,  true, "down",  0},
+    {0,  true, "right", 0},
+    {19, true, "left",  0},
+    {16, true, "up",    0},
 };
 bool I2C_Would_Hang(int SDAPin, int SCLPin) {
   bool wouldHang = false;
@@ -53,7 +53,6 @@ const char *allNames[5];
 
 bool initRangeFinderWRetries(int i)
 {
-
   int retryCount = 0;
   float *errorP;
   while (retryCount < 5)
@@ -100,14 +99,50 @@ void rangeFinderSyms() {
     addSym(&(rangesInM[i]), allNames[i], "range finder", "3N");
   }
 }
-void rangeFinderSetLow() {
+bool testSettingXshut(int pinNo, int val, const char* name) {
+  bool failed = false;
+  pinMode(pinNo, OUTPUT);
+  digitalWrite(pinNo, val);
+  if ( I2C_Would_Hang(20,21) ) {
+    failed = true;
+    Serial.print("I2C Would Hang xshut pulled to ");
+    Serial.print(val);
+    Serial.print("low on ");
+    Serial.println(name);
+  }
+  pinMode(pinNo, INPUT);
+  return failed;
+}
+void disableAllRangeFinders() {
+  i2cBusSafe = false;
   for (int i=0; i < RFINDERS; i++ ) {
-    int aPinNo = rangeConfig[i].j5Index;
-    if (aPinNo >= 0)
-    {                 // Always set the xshut pin to low output, even for disabled range finders. Or they block the bus.
-      pinMode(aPinNo, OUTPUT);
-      digitalWrite(aPinNo, LOW);
+    rangeConfig[i].enabled = false;
+  }
+}
+
+// range finders one by one to see if any of them interfere with the I2C bus.
+void testRangeFindersI2Csafe() {
+  i2cBusSafe = true;
+  if ( I2C_Would_Hang(20,21) ) {
+    Serial.println("I2C bus is permanently broken even before xshut manipulation");
+    disableAllRangeFinders();
+    return;
+  }
+  
+  for (int i=0; i < RFINDERS; i++ ) {
+    int pinNo = rangeConfig[i].j5Index;
+    if (pinNo >= 0 ) {                 // Always set the xshut pin to low output, even for disabled range finders. Or they block the bus.
+      bool lowFailed = testSettingXshut(pinNo,LOW,allNames[i]);
+      bool highFailed = testSettingXshut(pinNo,HIGH,allNames[i]);
+      if ( lowFailed || highFailed ) {
+        rangeConfig[i].enabled = false;
+      }
     }
+  }
+  if ( I2C_Would_Hang(20,21) ) {
+    Serial.println("I2C bus is permanently broken ");
+    i2cBusSafe = false;
+    disableAllRangeFinders();
   }
 }
 void setupRangeFinders()

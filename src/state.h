@@ -167,6 +167,7 @@ extern void spi_sendbyte(int b);
 extern void spi_cson(void); // start of packet stuff.
 extern void spi_csoff(void); // end of packet
 extern void writeregs(uint8_t data[], uint8_t size);
+extern void testRangeFindersI2Csafe();
 
 extern void processPacket(uint8_t rxdata[15]);
 
