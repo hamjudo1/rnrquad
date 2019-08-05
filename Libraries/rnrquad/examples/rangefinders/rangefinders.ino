@@ -178,9 +178,9 @@ void setupNew() {
 
 void setup()
 {
-  setupNew();
-  baseSetup();
 
+  baseSetup();
+  setupNew();
   addSym(&vcorrection, "vco", "low voltage correction", "3N");
   addSym(&xFlowC, "xf", "optical flow in X (altitude compensated)", "3N");
   addSym(&yFlowC, "yf", "optical flow in Y (altitude compensated)", "3N");
