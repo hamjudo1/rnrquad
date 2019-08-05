@@ -153,17 +153,25 @@ unsigned long testStart = 0;
 float rateOfClimb = 0.0;
 
 float prevAltitude = 0.0;
-
+float ml = 20.0;
+float et = 0.0;
 unsigned long prevLoop = 0;
 int dir = 0;
 SFEVL53L1X forwardR;
 SFEVL53L1X downR;
+SFEVL53L1X rightR;
+SFEVL53L1X leftR;
+SFEVL53L1X upR;
 unsigned long nextReading = 0;
 void setupNew() {
   int i;
   rangeFinderSyms();
   pinMode(7, OUTPUT);
   digitalWrite(7, 0);
+  pinMode(19, OUTPUT);
+  digitalWrite(19, 0);
+  pinMode(16, OUTPUT);
+  digitalWrite(16, 0);
 
   // rangeFinderSetLow();
   Serial.begin(115200);
@@ -185,15 +193,25 @@ void setupNew() {
   i = 1;
   downR.setI2CAddress(10 + (i * 2));
 
+  digitalWrite(19, 1);
+  leftR.begin();
+  i = 3;
+  leftR.setI2CAddress(10 + (i * 2));
+
+  digitalWrite(16, 1);
+  upR.begin();
+  i = 4;
+  upR.setI2CAddress(10 + (i * 2));
   forwardR.startRanging();
   downR.startRanging();
-
-  nextReading = millis() + 100;
+  leftR.startRanging();
+  upR.startRanging();
+  nextReading = millis() + (int)ml;
 }
-
+float percTime;
+float loopspersec = 0;
 void setup()
 {
-
   baseSetup();
   setupNew();
   addSym(&vcorrection, "vco", "low voltage correction", "3N");
@@ -221,6 +239,11 @@ void setup()
   addSym(&lrKP, "lrKP", "lr proportional", "3");
   addSym(&lrError, "lrError", "lr error", "3");
   addSym(&A, "A", "A", "3N");
+  addSym(&ml, "ml", "millis per range loop", "0N");
+  addSym(&et, "et", "elapsed time", "3N");
+  addSym(&percTime, "pt", "percent time spent ranging", "3N");
+  addSym(&loopspersec, "lps", "loops per second", "1N");
+
 
   tState = 0;
   //turn the PID on
@@ -242,12 +265,24 @@ void flightLogic() {
     // dir = 1 + (int(ft) % 4);
   }
 }
+int totLoops = 0;
 
 void loopNew() {
   int distance;
-  int dDown;
+  int dDown, dLeft, dRight, dUp;;
+  static unsigned long startTime = 0, endTime = 0, elapsedTime = 0, beginTime = 0, totTime = 0;
+  static bool firstTime = true;
+  static int readingCount = 0;
+  totLoops++;
+  if ( firstTime ) {
+    firstTime = false;
+    beginTime = micros();
+
+  }
   if ( millis() > nextReading ) {
-    nextReading = millis() + 100;
+    startTime = micros();
+    nextReading = millis() + (int)ml;
+    readingCount++;
 
     distance = forwardR.getDistance(); //Get the result of the measurement from the sensor
     refSensor.rangeForward = (float)distance * 0.001;
@@ -260,29 +295,32 @@ void loopNew() {
     rangesInM[1] = refSensor.rangeDown;
     downR.stopRanging();
     downR.startRanging();
+
+    dLeft = leftR.getDistance(); //Get the result of the measurement from the sensor
+    refSensor.rangeLeft = (float)dLeft * 0.001;
+    rangesInM[3] = refSensor.rangeLeft;
+    leftR.stopRanging();
+    leftR.startRanging();
+
+    dUp = upR.getDistance(); //Get the result of the measurement from the sensor
+    refSensor.rangeUp = (float)dUp * 0.001;
+    rangesInM[4] = refSensor.rangeUp;
+    upR.stopRanging();
+    upR.startRanging();
     /* if ( forwardR.checkForDataReady()) {
        distance = forwardR.getDistance(); //Get the result of the measurement from the sensor
        forwardR.stopRanging();
        forwardR.startRanging(); //Write configuration bytes to initiate measurement
        refSensor.rangeForward = (float)distance * 0.001;
       } */
-    if ( A > 0 ) {
-      A = A - 1;
-      Serial.print("Distance(mm): ");
-      Serial.print(distance);
-
-      float distanceInches = distance * 0.0393701;
-      float distanceFeet = distanceInches / 12.0;
-
-      Serial.print("\tDistance(ft): ");
-      Serial.print(distanceFeet, 2);
-
-      Serial.println();
-
-
-    }
+    endTime = micros();
+    elapsedTime = endTime - startTime;
+    et = (float)elapsedTime * 0.000001;
+    totTime += elapsedTime;
+    unsigned long allTime = endTime - beginTime;
+    percTime = totTime * 100 / allTime;
+    loopspersec = totLoops / ((float)allTime * 0.000001);
   }
-
 }
 void loop()
 {
