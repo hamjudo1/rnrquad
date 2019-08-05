@@ -19,14 +19,14 @@ float mapf(float val, float in_min, float in_max, float out_min, float out_max) 
  These strings should be freed with free() if
  they aren't intended to be permanent.
  */
-char *dupString(char *origString)
+char *dupString(const char *origString)
 {
   char *newString = (char *) malloc(strlen(origString) + 1);
   strcpy(newString, origString);
   return newString;
 }
 
-char *catString2(char *origString1, char *origString2)
+char *catString2(const char *origString1, const char *origString2)
 {
   int newLen = 1 + strlen(origString1) + strlen(origString2);
   char *newString = (char *) malloc(newLen);
