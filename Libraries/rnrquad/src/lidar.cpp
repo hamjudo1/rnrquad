@@ -2,7 +2,7 @@
 
 // SFEVL53L1X loxes[RFINDERS] = {SFEVL53L1X(),SFEVL53L1X(),SFEVL53L1X(),SFEVL53L1X(),SFEVL53L1X()};
 //SFEVL53L1X front;
-SFEVL53L1X downR;
+//SFEVL53L1X downR;
 //SFEVL53L1X right;
 //SFEVL53L1X left;
 //SFEVL53L1X up;
@@ -59,10 +59,11 @@ bool initRangeFinderWRetries(int i)
   while (retryCount < 5)
   {
     Serial.print(__FILE__);Serial.println(__LINE__);
-    bool success = downR.begin();
+    bool success = false;
+    // bool success = downR.begin();
     // bool success = loxes[activeRangeFinderCnt].begin( );
     Serial.print(__FILE__);Serial.println(__LINE__);
-    downR.setI2CAddress(1 + (i * 2));
+    // downR.setI2CAddress(1 + (i * 2));
     // loxes[activeRangeFinderCnt].setI2CAddress(1 + (i * 2));
     Serial.print(__FILE__);Serial.println(__LINE__);
     Serial.print(allNames[i]);
@@ -173,7 +174,7 @@ void setupRangeFinders()
       {
 	Serial.print(__FILE__);Serial.println(__LINE__);
         // loxes[activeRangeFinderCnt].startRanging();
-        downR.startRanging();
+        // downR.startRanging();
         activeRF[activeRangeFinderCnt] = i;
         activeRangeFinderCnt++;
       }
@@ -193,13 +194,14 @@ void pollRangeFinders()
   {
     int loxIndex = activeRF[i];
     // if ( loxes[i].checkForDataReady() ) {
-    if ( downR.checkForDataReady() ) {
+    // if ( downR.checkForDataReady() ) {
+    if ( false ) {
       // rangesInM[loxIndex] = (float)loxes[i].getDistance() * 0.001;
-      rangesInM[loxIndex] = (float)downR.getDistance() * 0.001;
+      // rangesInM[loxIndex] = (float)downR.getDistance() * 0.001;
       // loxes[i].stopRanging();
-      downR.stopRanging();
+      // downR.stopRanging();
       // loxes[i].startRanging();
-      downR.stopRanging();
+      // downR.stopRanging();
       switch (loxIndex) {
         case FRONTRANGE:
 	   refSensor.rangeForward = rangesInM[loxIndex];

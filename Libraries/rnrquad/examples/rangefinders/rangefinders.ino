@@ -157,6 +157,7 @@ float prevAltitude = 0.0;
 unsigned long prevLoop = 0;
 int dir = 0;
 SFEVL53L1X forwardR;
+SFEVL53L1X downR;
 unsigned long nextReading = 0;
 void setupNew() {
   int i;
@@ -167,10 +168,6 @@ void setupNew() {
   // rangeFinderSetLow();
   Serial.begin(115200);
   Wire.begin();
-  for (i = 5; i > 0; i--) {
-    Serial.print(i);
-    delay(800);
-  }
   A = 5;
   Serial.println("VL53L1X Qwiic Test");
 
@@ -185,6 +182,7 @@ void setupNew() {
   forwardR.setI2CAddress(10 + (i * 2));
 
   forwardR.startRanging();
+  
   nextReading = millis() + 100;
 }
 
