@@ -157,7 +157,7 @@ float prevAltitude = 0.0;
 unsigned long prevLoop = 0;
 int dir = 0;
 SFEVL53L1X distanceSensor;
-void setup() {
+void setupNew() {
   Serial.begin(115200);
   Wire.begin();
   for (int i = 5; i > 0; i--) {
@@ -176,8 +176,9 @@ void setup() {
   }
 }
 
-void setupOld()
+void setup()
 {
+  setupNew();
   baseSetup();
 
   addSym(&vcorrection, "vco", "low voltage correction", "3N");
