@@ -174,6 +174,7 @@ void setupNew() {
 
     Serial.println("Sensor ?unhappy!");
   }
+  distanceSensor.startRanging();
 }
 
 void setup()
@@ -229,11 +230,13 @@ void flightLogic() {
 }
 
 void loopNew() {
-  distanceSensor.startRanging(); //Write configuration bytes to initiate measurement
-
-  int distance = distanceSensor.getDistance(); //Get the result of the measurement from the sensor
-  distanceSensor.stopRanging();
-  refSensor.rangeForward = (float)distance * 0.001;
+  int distance;
+  if ( distanceSensor.checkForDataReady()) {
+    distance = distanceSensor.getDistance(); //Get the result of the measurement from the sensor
+    distanceSensor.stopRanging();
+    distanceSensor.startRanging(); //Write configuration bytes to initiate measurement
+    refSensor.rangeForward = (float)distance * 0.001;
+  }
   if ( A > 0 ) {
     A = A - 1;
     Serial.print("Distance(mm): ");
@@ -247,6 +250,7 @@ void loopNew() {
 
     Serial.println();
     delay(50);
+
   }
 
 }
