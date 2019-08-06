@@ -11,6 +11,7 @@
 //Specify the links and initial tuning parameters
 float throttle = 0.0;
 
+float ERF[5] = {0, 0, 0, 0, 0};
 float enableLogging[10] = {0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
 float enableLoggingNoComm = 0.0;
 float lrTarget = 0;
@@ -177,12 +178,12 @@ void initRangeFinder(SFEVL53L1X finder, int finderIndex) {
     (void)finder.startRanging(); // This returns a value that is bogus.
     delay(100);
     int dist = finder.getDistance();
-    Serial.print("First reading in mm");
+    Serial.print("First reading in mm ");
     Serial.println(dist);
     finder.stopRanging();
     finder.startRanging();
     Serial.print("Init rangeFinder complete ");
-   
+
 
   } else {
     Serial.print("Rangefinder already disabled. ");
@@ -190,44 +191,58 @@ void initRangeFinder(SFEVL53L1X finder, int finderIndex) {
   Serial.println(rangeConfig[finderIndex].Name);
 }
 extern void testRangeFindersI2Csafe();
+float rfcRun = 0.0;
 void setupNew() {
   int i;
   int finderIndex;
 
   rangeFinderSyms();
-  Serial.println("Here now");
+ 
   testRangeFindersI2Csafe();
   for (finderIndex = 0; finderIndex < 5; finderIndex++) {
+    rangeConfig[finderIndex].enabled = (ERF[finderIndex] != 0.0);
     Serial.print(rangeConfig[finderIndex].enabled);
     Serial.print(" ");
     Serial.println(rangeConfig[finderIndex].Name);
   }
- // i2cBusSafe = false;
- // Serial.println("Disabling i2c bus");
+  // i2cBusSafe = false;
+  // Serial.println("Disabling i2c bus");
   if ( ! i2cBusSafe ) {
     Serial.println("i2cBus is not safe??");
     return;
   }
-   Serial.println("i2cBus is safe??");
+  Serial.println("i2cBus is safe??");
   Wire.begin();
-    Serial.println("Starting front");
+  Serial.println("Starting front");
 
   initRangeFinder(forwardR, 0);
   Serial.println("Starting down");
   initRangeFinder(downR, 1);
-    Serial.println("Starting right");
 
+  Serial.println("Starting right");
   initRangeFinder(rightR, 2);
-    Serial.println("Starting left");
 
+  Serial.println("Starting left");
   initRangeFinder(leftR, 3);
-    Serial.println("Starting up");
 
+  Serial.println("Starting up");
   initRangeFinder(upR, 4);
   nextReading = millis() + (int)ml;
+
+  rfcRun = 1.0;
 }
 float percTime;
 float loopspersec = 0;
+
+void rangeFinderConfig() {
+  setupNew();
+}
+void ltrig() {
+  refControl.leftTrigger += 1.0;
+  refControl.leftTriggerTime = seconds();
+}
+
+
 void setup()
 {
   Serial.begin(115200);
@@ -237,7 +252,14 @@ void setup()
     delay(666);
   }
   baseSetup();
-  setupNew();
+  for (int finderIndex = 0; finderIndex < 5; finderIndex++) {
+    ERF[finderIndex] = (float)rangeConfig[finderIndex].enabled;
+    addSym(&ERF[finderIndex], catString2(rangeConfig[finderIndex].Name, "_en"), "enable rangefinder", "F");
+  }
+  
+  addCmd(rangeFinderConfig, "RFC", "begin Rangefinder Configuration", NULL);
+  addCmd(ltrig, "ltrig", "simulate left trigger", NULL);
+  // setupNew();
   addSym(&vcorrection, "vco", "low voltage correction", "3N");
   addSym(&xFlowC, "xf", "optical flow in X (altitude compensated)", "3N");
   addSym(&yFlowC, "yf", "optical flow in Y (altitude compensated)", "3N");
@@ -274,6 +296,7 @@ void setup()
   pidInit();
   // lrTarget = refSensor.rangeLeft;
   //fbTarget = refSensor.rangeForward;
+ 
 }
 void flightLogic() {
   float ft = flightTime();
@@ -292,6 +315,9 @@ void flightLogic() {
 int totLoops = 0;
 
 void loopNew() {
+  if ( rfcRun == 0.0 ) {
+    return;
+  }
   int distance;
   int dDown, dLeft, dRight, dUp;;
   static unsigned long startTime = 0, endTime = 0, elapsedTime = 0, beginTime = 0, totTime = 0;
@@ -301,7 +327,6 @@ void loopNew() {
   if ( firstTime ) {
     firstTime = false;
     beginTime = micros();
-
   }
   if ( millis() > nextReading ) {
     startTime = micros();
@@ -321,21 +346,21 @@ void loopNew() {
       downR.stopRanging();
       downR.startRanging();
     }
-    
     if ( rangeConfig[2].enabled ) {
-      dLeft = leftR.getDistance(); //Get the result of the measurement from the sensor
-      refSensor.rangeLeft = (float)dLeft * 0.001;
-      rangesInM[2] = refSensor.rangeLeft;
-      leftR.stopRanging();
-      leftR.startRanging();
-    }
-    if ( rangeConfig[3].enabled ) {
       dRight = rightR.getDistance(); //Get the result of the measurement from the sensor
       refSensor.rangeRight = (float)dRight * 0.001;
-      rangesInM[3] = refSensor.rangeRight;
+      rangesInM[2] = refSensor.rangeRight;
       rightR.stopRanging();
       rightR.startRanging();
     }
+    if ( rangeConfig[3].enabled ) {
+      dLeft = leftR.getDistance(); //Get the result of the measurement from the sensor
+      refSensor.rangeLeft = (float)dLeft * 0.001;
+      rangesInM[3] = refSensor.rangeLeft;
+      leftR.stopRanging();
+      leftR.startRanging();
+    }
+
     if ( rangeConfig[4].enabled ) {
       dUp = upR.getDistance(); //Get the result of the measurement from the sensor
       refSensor.rangeUp = (float)dUp * 0.001;
@@ -362,7 +387,6 @@ void loop()
 {
   baseLoop();
   loopNew();
-
   // SensorState sensors = refSensor;
 
   float newRx[4];

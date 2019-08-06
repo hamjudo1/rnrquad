@@ -18,7 +18,6 @@ bool SFEVL53L1X::init()
 
 bool SFEVL53L1X::begin()
 {
-  Serial.print(__FILE__);Serial.println(__LINE__);
 	return _device->VL53L1X_SensorInit();
 }
 

@@ -173,28 +173,18 @@ VL53L1X_ERROR VL53L1X::VL53L1X_SetI2CAddress(uint8_t new_address)
 VL53L1X_ERROR VL53L1X::VL53L1X_SensorInit()
 {
 	VL53L1X_ERROR status = 0;
-  Serial.print(__FILE__);Serial.println(__LINE__);
-  Serial.print("i2c addr "); Serial.println(Device->I2cDevAddr);
 	uint8_t Addr = 0x00, tmp=0;
 	for (Addr = 0x2D; Addr <= 0x87; Addr++){
-  // Serial.print(__FILE__);Serial.println(__LINE__);
 		status = VL53L1_WrByte(Device, Addr, VL51L1X_DEFAULT_CONFIGURATION[Addr - 0x2D]);
 	}
 	
-  Serial.print("i2c addr "); Serial.println(Device->I2cDevAddr);
-  Serial.print(__FILE__);Serial.println(__LINE__);
 	status = VL53L1X_StartRanging();
-  Serial.print(__FILE__);Serial.println(__LINE__);
 	while(tmp==0){
 			status = VL53L1X_CheckForDataReady(&tmp);
-  // Serial.print(__FILE__);Serial.println(__LINE__);
 	}
 	tmp  = 0;
-  Serial.print(__FILE__);Serial.println(__LINE__);
 	status = VL53L1X_ClearInterrupt();
-  Serial.print(__FILE__);Serial.println(__LINE__);
 	status = VL53L1X_StopRanging();
-  Serial.print(__FILE__);Serial.println(__LINE__);
 	status = VL53L1_WrByte(Device, VL53L1_VHV_CONFIG__TIMEOUT_MACROP_LOOP_BOUND, 0x09); /* two bounds VHV */
 	status = VL53L1_WrByte(Device, 0x0B, 0); /* start VHV from the previous temperature */
 	return status;
