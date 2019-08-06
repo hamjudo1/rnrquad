@@ -229,19 +229,21 @@ void setupNew() {
   initRangeFinder(upR, 4);
   nextReading = millis() + (int)ml;
 
-  rfcRun = 1.0;
+  rfcRun = -1.0;
 }
 float percTime;
 float loopspersec = 0;
 
-void rangeFinderConfig() {
-  setupNew();
-}
+
 void ltrig() {
   refControl.leftTrigger += 1.0;
   refControl.leftTriggerTime = seconds();
 }
-
+void rangeFinderConfig() {
+  setupNew();
+  refControl.leftTrigger = 1.0;  // switch to yellow led set
+  refControl.leftTriggerTime = seconds();
+}
 
 void setup()
 {
@@ -260,6 +262,7 @@ void setup()
   addCmd(rangeFinderConfig, "RFC", "begin Rangefinder Configuration", NULL);
   addCmd(ltrig, "ltrig", "simulate left trigger", NULL);
   // setupNew();
+  addSym(&rfcRun, "norfc", "wait on starting the rangefinder config process, use \"RFC\" when ready.");
   addSym(&vcorrection, "vco", "low voltage correction", "3N");
   addSym(&xFlowC, "xf", "optical flow in X (altitude compensated)", "3N");
   addSym(&yFlowC, "yf", "optical flow in Y (altitude compensated)", "3N");
@@ -316,8 +319,14 @@ int totLoops = 0;
 
 void loopNew() {
   if ( rfcRun == 0.0 ) {
+    if ( millis() > 30000 ) {
+      rangeFinderConfig(); 
+    }
+    return;
+  } else if ( rfcRun > 0.0 ) {
     return;
   }
+  
   int distance;
   int dDown, dLeft, dRight, dUp;;
   static unsigned long startTime = 0, endTime = 0, elapsedTime = 0, beginTime = 0, totTime = 0;
