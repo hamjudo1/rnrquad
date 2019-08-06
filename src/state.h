@@ -8,6 +8,8 @@
 #include "objects/src/PID.h"
 #include "led/src/Led.h"
 #include "vl53l1x/src/SparkFun_VL53L1X.h"
+#include "utility/src/Utility.h"
+
 
 typedef unsigned char uint8_t;
 
@@ -190,7 +192,7 @@ extern float showUsageLog;
 extern void sysStatus();
 extern void freeRam();
 extern void showUsageTime();
-extern void stripW(char *);
+
 extern int tookTooLongCount;
 extern bool readyToUpdateNeoPixels;
 extern unsigned long nextNeoUpdate;
@@ -350,8 +352,6 @@ extern void xn_writepayload(int data[], int size);
 extern void addCmd(void (*cmd_ptr)(void), const char *n, const char *d, char *opt);
 
 extern int xn_readreg(int reg);
-
-extern float mapf(float val, float in_min, float in_max, float out_min, float out_max);
 
 extern int spi_recvbyte(void);
 

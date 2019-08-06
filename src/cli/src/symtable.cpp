@@ -564,7 +564,7 @@ void silentSetVar(char *varName, float val)
   {
     float *varPt = new float;
     *varPt = val;
-    char *newName = dupString(varName);
+    char *newName = Utility::dupString(varName);
     addSym(varPt, newName, "from brainstem", "6N");
   }
 }
@@ -649,7 +649,7 @@ void processChar(int c)
   {
     if (vp > 0)
     {
-      stripW(varName);
+      Utility::stripW(varName);
       if (negative)
       {
         tokenVal = -tokenVal;
@@ -686,7 +686,7 @@ void processChar(int c)
           Serial.print("\" set to ");
           varPt = new float;
           *varPt = tokenVal;
-          char *newName = dupString(varName);
+          char *newName = Utility::dupString(varName);
           addSym(varPt, newName, "new variable");
           Serial.println(tokenVal);
         } else

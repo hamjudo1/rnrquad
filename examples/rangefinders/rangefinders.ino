@@ -363,7 +363,9 @@ void loop()
   baseLoop();
   loopNew();
 
-  // SensorState sensors = refSensor;
+   SensorState sensorState = refSensor;
+
+   Serial.println(sensorState.rangeDown);
 
   float newRx[4];
   flightLogic();
