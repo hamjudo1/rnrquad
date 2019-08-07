@@ -4,7 +4,6 @@
 
 const int versionGPIO = 4; // grounded on greenboard.
 long initTime = 0;
-extern int activeRangeFinderCnt;
 
 extern void pollWatcher();
 
@@ -15,7 +14,32 @@ long rangeTime = 0, rangeStart = 0;
 long thinkTime = 0, thinkStart = 0;
 long nextDebugPacket = 1000;
 long iter = 0;
-
+unsigned long baseLoopEnd=0; // baseLoop is padded out to a constant time
+float ml=0.025;
+unsigned long loopTime;
+unsigned long loopEnd;
+unsigned long baseLoopTime;
+float overrun;
+void padLoopTime() {
+  long excessTime = baseLoopEnd - micros();
+  if ( excessTime > 50 ) {
+    delayMicroseconds(excessTime);
+  } else if ( excessTime < -1000 ) {
+    Serial.print("Loop Time Exceeded by ");
+    overrun = -(float)excessTime*0.000001;
+    Serial.print(overrun,3);
+    Serial.println(" seconds.");
+    Serial.print("baseLoopTime is ");
+    Serial.println(baseLoopTime);
+    baseLoopEnd = micros();
+  }
+  baseLoopEnd += baseLoopTime;
+}
+void firstLoopPadding() {
+  baseLoopTime = (long)(ml*1000000);
+  baseLoopEnd = ((micros() /baseLoopTime)+1) * baseLoopTime;
+  padLoopTime();
+}
 void baseSetup()
 {
   pinMode(versionGPIO, INPUT_PULLUP);
@@ -35,10 +59,11 @@ void baseSetup()
   Led::hsvColorSingleLed(2, 120.0);
   setupComm();
 
-//  setupRangeFinders();
+  setupRangeFinders();
   Led::hsvColorSingleLed(3, 120.0);
   Led::hsvColorSingleLed(4, 120.0);
   initTime = millis();
+  firstLoopPadding();
 }
 bool debugHang = false; // Set to true Diagnose hangs in the main loop.
 
@@ -66,7 +91,7 @@ void baseLoop()
     Led::hsvColorSingleLed(1, 240);
   }
   rangeStart = millis();
-  // pollRangeFinders();
+  pollRangeFinders();
   if ( debugHang ) {
     Led::hsvColorSingleLed(1, 300);
   }
@@ -101,6 +126,7 @@ void baseLoop()
     redSet.blink(3,Led::hsvColor(300,1.0,0.4),Led::hsvColor(240,1.0,0.4));
   }
   Led::poll();
+  padLoopTime();
 }
 
 /**
@@ -154,11 +180,11 @@ void setupSerial()
   Serial.begin(115200);
   if (waitForConnection)
   {
-    for (int i = 2; i > 0; i--)
+    for (int i = 5; i > 0; i--)
     {
       Serial.print(i);
-      delay(1000);
+      delay(400);
     }
-    Serial.println("greenBoard");
+    Serial.println();
   }
 }
