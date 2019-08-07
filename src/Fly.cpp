@@ -10,6 +10,9 @@ void sendMotorSignal(ControllerState controller_out)
                    controller_out.throttle
                   };
 
+  if ( ! okayToFly() ) {
+    newRx[3] = 0.0;
+  }
   replaceRx(newRx, XN297L_payloadIn[XN297L_goodPayloadIn], XN297L_payloadOut[!XN297L_goodPayloadOut]);
   updateChecksum(XN297L_payloadOut[!XN297L_goodPayloadOut]);
 
