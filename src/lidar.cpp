@@ -51,10 +51,10 @@ unsigned long nextReading = 0;
 bool rangeFindersDisabled = false;
 bool setupRangeFindersRun = false;
 void enableRangeFinders() {
+  rangeFindersDisabled = false;
   if ( ! setupRangeFindersRun ) {
     setupRangeFinders();
   }
-  rangeFindersDisabled = false;
 }
 void disableRangeFinders() {
   rangeFindersDisabled = true; 
@@ -110,14 +110,11 @@ bool initRangeFinderWRetries(int i)
   float *errorP;
   while (retryCount < 5)
   {
-    Serial.print(__FILE__);Serial.println(__LINE__);
     bool success = false;
     // bool success = downR.begin();
     // bool success = loxes[activeRangeFinderCnt].begin( );
-    Serial.print(__FILE__);Serial.println(__LINE__);
     // downR.setI2CAddress(1 + (i * 2));
     // loxes[activeRangeFinderCnt].setI2CAddress(1 + (i * 2));
-    Serial.print(__FILE__);Serial.println(__LINE__);
     Serial.print(allNames[i]);
     Serial.print(" ");
     Serial.print(i);
@@ -146,18 +143,19 @@ bool initRangeFinderWRetries(int i)
 
   // moved to independent function, because even dead range finders get names.
 void rangeFinderSyms() {
-  for (int i = 0; i < RFINDERS; i++)
-  {
-    allNames[i] = rangeConfig[i].Name;
-    addSym(&(rangesInM[i]), allNames[i], "range finder", "3N");
+  static bool rangeFinderSymsRun = false;
+  if ( ! rangeFinderSymsRun ) {
+    for (int i = 0; i < RFINDERS; i++)
+    {
+      allNames[i] = rangeConfig[i].Name;
+      addSym(&(rangesInM[i]), allNames[i], "range finder", "3N");
+    }
+    for (int finderIndex = 0; finderIndex < 5; finderIndex++) {
+      ERF[finderIndex] = (float)rangeConfig[finderIndex].enabled;
+      addSym(&ERF[finderIndex], catString2(rangeConfig[finderIndex].Name, "_en"), "enable rangefinder", "F");
+    }
+    rangeFinderSymsRun = true;
   }
-  for (int finderIndex = 0; finderIndex < 5; finderIndex++) {
-    ERF[finderIndex] = (float)rangeConfig[finderIndex].enabled;
-    addSym(&ERF[finderIndex], catString2(rangeConfig[finderIndex].Name, "_en"), "enable rangefinder", "F");
-  }
-  
-
-
 }
 bool testSettingXshut(int pinNo, int val, const char* name) {
   bool failed = false;
@@ -253,12 +251,10 @@ void pollRangeFinders() {
 }
 void setupRangeFinders() {
   int finderIndex;
+  rangeFinderSyms();
   if( rangeFindersDisabled ) {
     return;
   }
-
-  rangeFinderSyms();
- 
   testRangeFindersI2Csafe();
   for (finderIndex = 0; finderIndex < 5; finderIndex++) {
     rangeConfig[finderIndex].enabled = (ERF[finderIndex] != 0.0);

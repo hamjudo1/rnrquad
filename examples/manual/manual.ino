@@ -2,7 +2,6 @@
 
 void setup()
 {
-  disableRangeFinders();
   baseSetup();
 }
 
