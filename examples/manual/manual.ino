@@ -8,7 +8,7 @@ void setup()
 void loop()
 {
   baseLoop();
-  ControllerState controllerState(); 
+  ControllerState controllerState = getControllerState (); 
 
   setControllerState(controllerState);
 }
