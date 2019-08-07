@@ -1,3 +1,6 @@
+#ifndef RNRQUAD_OBJECTS_PID_H
+#define RNRQUAD_OBJECTS_PID_H
+
 class simplePID
 {
 public:
@@ -25,9 +28,14 @@ public:
   float KP;
   float KI;
   float KD;
-  float previous_value;
-  float accumulated_error;
+  float previousError;
+  float C;
 
-  void begin(float target_value, float proportional_constant, float integral_constant, float derivative_constant);
+  void begin(float targetValue, float proportionalConstant, float integralConstant, float derivativeConstant, float constant);
   float tstep(float value);
+private:
+  float accumulatedError;
+  float previousTime;
 };
+
+#endif

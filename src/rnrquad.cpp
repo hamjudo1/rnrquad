@@ -134,7 +134,6 @@ void baseLoop()
  */
 SensorState getSensorState()
 {
-  //TODO
   return refSensor;
 }
 
