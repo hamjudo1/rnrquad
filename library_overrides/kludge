@@ -1,0 +1,1 @@
+cp ./variant.cpp /home/paulh/.arduino15/packages/adafruit/hardware/samd/1.5.2/variants/feather_m0/variant.cpp
