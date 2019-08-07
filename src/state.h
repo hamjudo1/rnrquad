@@ -187,7 +187,7 @@ extern char *catString2(const char *origString1, const char *origString2);
 extern void buttonPressed(int buttonNo);
 
 extern void NeoUpdate();
-
+extern void disableRangeFinders();
 extern float showUsageLog;
 extern void sysStatus();
 extern void freeRam();
