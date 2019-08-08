@@ -39,9 +39,9 @@ const int J5X5 = 16;
 rangeConfigElem_t rangeConfig[] = {
     {-1, true, "front", 0},
     {7,  true, "down",  0},
-    {0,  true, "right", 0},
-    {19, true, "left",  0},
-    {16, true, "up",    0},
+    {0,  false, "right", 0},
+    {19, false, "left",  0},
+    {16, false, "up",    0},
 };
 unsigned long nextReading = 0;
 
@@ -57,7 +57,7 @@ void enableRangeFinders() {
   }
 }
 void disableRangeFinders() {
-  rangeFindersDisabled = true; 
+  rangeFindersDisabled = true;
   addCmd(enableRangeFinders, "RFC", "enable Rangefinders ", NULL);
 }
 
