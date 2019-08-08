@@ -13,6 +13,7 @@ enum color {
   cyan = 0x003f3f,
   blue = 0x00003f,
   magenta = 0x3f003f, 
+  black = 0x000000,
 } ;
 const int NUMPIXELS = 5;  
 class LedSet {
@@ -38,6 +39,7 @@ public:
   static void hsvColorSingleLed(int dotNo, float angle);
   static void rgbColorSingleLed(int dotNo, float r, float g, float b);
   static uint32_t hsvColor(float h, float s, float v);
+  static uint32_t rgbColor(float r, float g, float b);
 };
 
 #endif

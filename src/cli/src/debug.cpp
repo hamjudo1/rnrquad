@@ -5,6 +5,14 @@
 #include "../../state.h"
 
 
+void ltrig() {
+  refControl.leftTrigger += 1.0;
+  refControl.leftTriggerTime = seconds();
+}
+void sb7() {
+  refControl.button7 += 1.0;
+  refControl.button7Time = seconds();
+}
 void setupDebug()
 {
   addSym(&showBrainStemLog, "blog", "FLAG showBrainStemLog", "F");
@@ -15,6 +23,10 @@ void setupDebug()
   addSym(&voltage, "volts", "", "3N");
   addCmd(sysStatus, "stats", "show some debugging stats", NULL);
   addCmd(freeRam, "free", "report available RAM", NULL);
+  addCmd(ltrig, "ltrig", "simulate left trigger", NULL);
+  addCmd(ltrig, "sb7", "simulate button 7", NULL);
+
+
 }
 
 void pollDebug()

@@ -15,12 +15,16 @@ LedSet::LedSet (color def) {
 }
 void LedSet::show() {
   unsigned long now = millis() % 1000;
+  int availPixels = NUMPIXELS;
+  if (debugHang ) {
+     availPixels = NUMPIXELS - 1;
+  }
   if ( (seconds() - refControl.leftTriggerTime) < 1.5 ) {
-    for(int i=0; i<NUMPIXELS; i++) {
+    for(int i=0; i<availPixels; i++) {
       pixel.setPixelColor(i,defColor);
     }
   } else {
-    for(int i=0; i<NUMPIXELS; i++) {
+    for(int i=0; i<availPixels; i++) {
       if ( now < 500 ) {
         pixel.setPixelColor(i, dots[i]);
       } else {
@@ -31,7 +35,7 @@ void LedSet::show() {
   pixel.show();
 }
 void LedSet::blink(int pixelNo, uint32_t col1, uint32_t col2) {
-  int pixNo = constrain(pixelNo,0,5);
+  int pixNo = constrain(pixelNo,0,4);
   dots[pixNo] = col1;
   altdots[pixNo] = col2;
 }
@@ -40,6 +44,13 @@ void LedSet::constant(int pixelNo, uint32_t col1) {
 }
 
 
+uint32_t Led::rgbColor(float r, float g, float b)
+{
+  r = constrain(r,0.0, 1.0);
+  g = constrain(g,0.0, 1.0);
+  b = constrain(b,0.0, 1.0);
+  return pixel.Color(int(255 * r), int(255 * g ), int(255*b));
+}
 // HSV code inspired by https://en.wikipedia.org/wiki/HSL_and_HSV
 // Note, this version is suboptimal to make it easier for me to explain. There
 // are better versions out there.

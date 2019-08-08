@@ -52,78 +52,114 @@ void baseSetup()
   setupController();
   for (int i = 0; i < 5; i++)
   {
-    Led::hsvColorSingleLed(i, 240);
+    Led::rgbColorSingleLed(i,0.2,0.2,0.0);
   }
-  Led::hsvColorSingleLed(1, 120.0);
   setupSerial();
-  Led::hsvColorSingleLed(2, 120.0);
+  Led::rgbColorSingleLed(0,0.2,0.0,0.0);
   setupComm();
-
+  Led::rgbColorSingleLed(1,0.2,0.0,0.0);
   setupRangeFinders();
-  Led::hsvColorSingleLed(3, 120.0);
-  Led::hsvColorSingleLed(4, 120.0);
+  Led::rgbColorSingleLed(2,0.2,0.0,0.0);
   initTime = millis();
+  Led::rgbColorSingleLed(3,0.2,0.0,0.0);
   firstLoopPadding();
+  Led::rgbColorSingleLed(4,0.2,0.0,0.0);
 }
 bool debugHang = false; // Set to true Diagnose hangs in the main loop.
 
 void baseLoop()
 {
   if ( debugHang ) {
-    Led::hsvColorSingleLed(1, 60);
+    Led::hsvColorSingleLed(4, 60);
   }
   debugStart = millis();
   pollDebug();
   if ( debugHang ) {
-    Led::hsvColorSingleLed(1, 120);
+    Led::hsvColorSingleLed(4, 120);
   }
   commStart = millis();
 
   debugTime = debugTime + commStart - debugStart;
   pollComm();
   if ( debugHang ) {
-    Led::hsvColorSingleLed(1, 180);
+    Led::hsvColorSingleLed(4, 180);
   }
 
   neoStart = millis();
   commTime = commTime + neoStart - commStart;
   if ( debugHang ) {
-    Led::hsvColorSingleLed(1, 240);
+    Led::hsvColorSingleLed(4, 240);
   }
   rangeStart = millis();
   pollRangeFinders();
   if ( debugHang ) {
-    Led::hsvColorSingleLed(1, 300);
+    Led::hsvColorSingleLed(4, 300);
   }
   thinkStart = millis();
   rangeTime = rangeTime + thinkStart - rangeStart;
   pollFlow();
   if ( debugHang ) {
-    Led::hsvColorSingleLed(1, 360);
+    Led::hsvColorSingleLed(4, 360);
   }
   thinkTime = thinkTime + millis() - thinkStart;
   
-  if (micros() - lastHeartBeat > 50000)
+  unsigned long now = micros();
+  uint32_t color1 = red;
+  uint32_t color2 = yellow;
+  if (now - lastHeartBeat > 50000)
   {
-    redSet.blink(0,red,blue);
-    redSet.blink(1,blue,red);
+    color1 = red;
+    color2 = yellow;
+    if ( lastHeartBeat == 0 ) {
+      color2 = black;
+    }
+    if ( lastRadioContact == 0 ) { // never
+      redSet.blink(0,color1,color2);
+      redSet.blink(1,color1,color2);
+      redSet.blink(2,color1,color2);
+      redSet.blink(3,color2,color1);
+      redSet.blink(4,color2,color1);
+    } else if ( now - lastRadioContact > 200000 ) { // in the past, not recent
+      redSet.blink(0,color1,color2);
+      redSet.blink(1,color2,color1);
+      redSet.blink(2,color1,color2);
+      redSet.blink(3,color2,color1);
+      redSet.blink(4,color1,color2);
+    } else {  // recent
+      redSet.blink(0,color1,color2);
+      redSet.blink(1,color1,color2);
+      redSet.blink(2,color1,color2);
+      redSet.blink(3,color1,color2);
+      redSet.blink(4,color2,color1);
+    }
   } else
   {
-    redSet.constant(0,red);
-    redSet.constant(1,red);
-  } 
-  if ( voltage < 3.1 ) {
-    redSet.blink(2,Led::hsvColor(60,1.0,1.0),Led::hsvColor(120,1.0,1.0));
-    redSet.blink(3,Led::hsvColor(120,1.0,1.0),Led::hsvColor(60,1.0,1.0));
-  } else if ( voltage < 3.2 ) {
-    redSet.blink(2,Led::hsvColor(120,1.0,0.8),Led::hsvColor(180,1.0,0.8));
-    redSet.blink(3,Led::hsvColor(180,1.0,0.8),Led::hsvColor(120,1.0,0.8));
-  } else if ( voltage < 3.3 ) {
-    redSet.blink(2,Led::hsvColor(180,1.0,0.6),Led::hsvColor(240,1.0,0.6));
-    redSet.blink(3,Led::hsvColor(240,1.0,0.6),Led::hsvColor(180,1.0,0.6));
-  } else {
-    redSet.blink(2,Led::hsvColor(240,1.0,0.4),Led::hsvColor(300,1.0,0.4));
-    redSet.blink(3,Led::hsvColor(300,1.0,0.4),Led::hsvColor(240,1.0,0.4));
+    if ( voltage < 3.0 ) {
+      color2 = black;
+    } else {
+      float intensity = (voltage - 3.0) * 0.22;
+      color1 = Led::rgbColor((4.2 - 3.0) * 0.22, 0.0, 0.0);
+      color2 = Led::rgbColor(intensity,0.0,0.0);
+      if ( lastRadioContact == 0 ) { // never
+	redSet.blink(0,color1,color2);
+	redSet.blink(1,color1,color2);
+	redSet.blink(2,color1,color2);
+	redSet.blink(3,color2,color1);
+	redSet.blink(4,color2,color1);
+      } else if ( now - lastRadioContact > 200000 ) { // in the past, not recent
+	redSet.blink(0,color1,color2);
+	redSet.blink(1,color2,color1);
+	redSet.blink(2,color1,color2);
+	redSet.blink(3,color2,color1);
+	redSet.blink(4,color1,color2);
+      } else {  // recent
+	redSet.blink(0,color1,color2);
+	redSet.blink(1,color1,color2);
+	redSet.blink(2,color1,color2);
+	redSet.blink(3,color1,color2);
+	redSet.blink(4,color1,color2);
+      }
+    }
   }
   Led::poll();
   padLoopTime();

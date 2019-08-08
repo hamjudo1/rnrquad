@@ -346,9 +346,12 @@ static int decodepacket(void)
   return 0;                   // first byte different
 }
 
+unsigned long lastRadioContact = 0;
 
 void processPacket(uint8_t inbData[15])
 {
+  
+  lastRadioContact = micros();
   for (int i = 0; i < 15; i++)
   {
     rxdata[i] = inbData[i];

@@ -205,6 +205,9 @@ void testRangeFindersI2Csafe() {
 }
 void pollRangeFinders() {
   if( rangeFindersDisabled ) {
+    if ( refControl.button7 != 0 ) {
+      enableRangeFinders();
+    }
     return;
   }
   int distance;

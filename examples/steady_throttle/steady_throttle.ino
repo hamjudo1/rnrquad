@@ -1,13 +1,10 @@
-//
-// Created by Florian VanKampen on 2019-06-17.
-//
 #include <rnrquad.h>
-// 0.5 at 3.5 volts and above
-// 0.6 works around 3.4 volts
-// 0.65 at 3.3 volts
-// 0.69 at 3.15
-// 0.70 at cutoff 3.10 volts
-//
+
+
+
+// I will put the minimal required code above this line.
+
+
 //Specify the links and initial tuning parameters
 float throttle = 0.0;
 
@@ -236,7 +233,7 @@ float loopspersec = 0;
 
 
 void ltrig() {
-  refControl.leftTrigger += 1.0;
+  refControl.leftTrigger += 0.0;
   refControl.leftTriggerTime = seconds();
 }
 void rangeFinderConfig() {
@@ -259,10 +256,7 @@ void setup()
     addSym(&ERF[finderIndex], catString2(rangeConfig[finderIndex].Name, "_en"), "enable rangefinder", "F");
   }
   
-  addCmd(rangeFinderConfig, "RFC", "begin Rangefinder Configuration", NULL);
-  addCmd(ltrig, "ltrig", "simulate left trigger", NULL);
   // setupNew();
-  addSym(&rfcRun, "norfc", "wait on starting the rangefinder config process, use \"RFC\" when ready.");
   addSym(&vcorrection, "vco", "low voltage correction", "3N");
   addSym(&xFlowC, "xf", "optical flow in X (altitude compensated)", "3N");
   addSym(&yFlowC, "yf", "optical flow in Y (altitude compensated)", "3N");
@@ -315,83 +309,7 @@ void flightLogic() {
     // dir = 1 + (int(ft) % 4);
   }
 }
-int totLoops = 0;
 
-void loopNew() {
-  if ( rfcRun == 0.0 ) {
-    if ( millis() > 30000 ) {
-      rangeFinderConfig(); 
-    }
-    return;
-  } else if ( rfcRun > 0.0 ) {
-    return;
-  }
-  
-  int distance;
-  int dDown, dLeft, dRight, dUp;;
-  static unsigned long startTime = 0, endTime = 0, elapsedTime = 0, beginTime = 0, totTime = 0;
-  static bool firstTime = true;
-  static int readingCount = 0;
-  totLoops++;
-  if ( firstTime ) {
-    firstTime = false;
-    beginTime = micros();
-  }
-  if ( millis() > nextReading ) {
-    startTime = micros();
-    nextReading = millis() + (int)ml;
-    readingCount++;
-    if ( rangeConfig[0].enabled ) {
-      distance = forwardR.getDistance(); //Get the result of the measurement from the sensor
-      refSensor.rangeForward = (float)distance * 0.001;
-      rangesInM[0] = refSensor.rangeForward;
-      forwardR.stopRanging();
-      forwardR.startRanging();
-    }
-    if ( rangeConfig[1].enabled ) {
-      dDown = downR.getDistance(); //Get the result of the measurement from the sensor
-      refSensor.rangeDown = (float)dDown * 0.001;
-      rangesInM[1] = refSensor.rangeDown;
-      downR.stopRanging();
-      downR.startRanging();
-    }
-    if ( rangeConfig[2].enabled ) {
-      dRight = rightR.getDistance(); //Get the result of the measurement from the sensor
-      refSensor.rangeRight = (float)dRight * 0.001;
-      rangesInM[2] = refSensor.rangeRight;
-      rightR.stopRanging();
-      rightR.startRanging();
-    }
-    if ( rangeConfig[3].enabled ) {
-      dLeft = leftR.getDistance(); //Get the result of the measurement from the sensor
-      refSensor.rangeLeft = (float)dLeft * 0.001;
-      rangesInM[3] = refSensor.rangeLeft;
-      leftR.stopRanging();
-      leftR.startRanging();
-    }
-
-    if ( rangeConfig[4].enabled ) {
-      dUp = upR.getDistance(); //Get the result of the measurement from the sensor
-      refSensor.rangeUp = (float)dUp * 0.001;
-      rangesInM[4] = refSensor.rangeUp;
-      upR.stopRanging();
-      upR.startRanging();
-    }
-    /* if ( forwardR.checkForDataReady()) {
-       distance = forwardR.getDistance(); //Get the result of the measurement from the sensor
-       forwardR.stopRanging();
-       forwardR.startRanging(); //Write configuration bytes to initiate measurement
-       refSensor.rangeForward = (float)distance * 0.001;
-      } */
-    endTime = micros();
-    elapsedTime = endTime - startTime;
-    et = (float)elapsedTime * 0.000001;
-    totTime += elapsedTime;
-    unsigned long allTime = endTime - beginTime;
-    percTime = totTime * 100 / allTime;
-    loopspersec = totLoops / ((float)allTime * 0.000001);
-  }
-}
 void loop()
 {
   baseLoop();
