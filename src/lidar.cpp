@@ -51,6 +51,9 @@ unsigned long nextReading = 0;
 bool rangeFindersDisabled = false;
 bool setupRangeFindersRun = false;
 void enableRangeFinders() {
+  for(int i =0; i<5; i++ ) {
+    Led::rgbColorSingleLed(i,0,0.25,0);
+  }
   rangeFindersDisabled = false;
   if ( ! setupRangeFindersRun ) {
     setupRangeFinders();

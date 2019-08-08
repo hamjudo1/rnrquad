@@ -188,6 +188,7 @@ extern void buttonPressed(int buttonNo);
 
 extern void NeoUpdate();
 extern void disableRangeFinders();
+extern void enableRangeFinders();
 extern float showUsageLog;
 extern void sysStatus();
 extern void freeRam();

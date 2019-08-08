@@ -138,7 +138,7 @@ void baseLoop()
       color2 = black;
     } else {
       float intensity = (voltage - 3.0) * 0.22;
-      color1 = Led::rgbColor((4.2 - 3.0) * 0.22, 0.0, 0.0);
+      color1 = Led::rgbColor(0.0, (4.2 - 3.0) * 0.22, 0.0);
       color2 = Led::rgbColor(intensity,0.0,0.0);
       if ( lastRadioContact == 0 ) { // never
 	redSet.blink(0,color1,color2);
