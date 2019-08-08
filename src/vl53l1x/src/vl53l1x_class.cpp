@@ -176,11 +176,19 @@ VL53L1X_ERROR VL53L1X::VL53L1X_SensorInit()
 	uint8_t Addr = 0x00, tmp=0;
 	for (Addr = 0x2D; Addr <= 0x87; Addr++){
 		status = VL53L1_WrByte(Device, Addr, VL51L1X_DEFAULT_CONFIGURATION[Addr - 0x2D]);
+		if ( status != 0 ) {return status;};
 	}
 	
 	status = VL53L1X_StartRanging();
-	while(tmp==0){
-			status = VL53L1X_CheckForDataReady(&tmp);
+	if ( status != 0 ) {return status;};
+	uint32_t endTime = millis()+200;
+	while(status==0 && tmp==0){
+	  // Serial.print(__LINE__);Serial.print(" ");Serial.println(__FILE__);
+		      status = VL53L1X_CheckForDataReady(&tmp);
+		if ( status != 0 ) {return status;};
+		if ( millis() > endTime ) {
+		      return VL53L1_ERROR_TIME_OUT;
+		    }
 	}
 	tmp  = 0;
 	status = VL53L1X_ClearInterrupt();
@@ -218,9 +226,13 @@ VL53L1X_ERROR VL53L1X::VL53L1X_GetInterruptPolarity(uint8_t *pInterruptPolarity)
 	uint8_t Temp;
 	VL53L1X_ERROR status = 0;
 
+	// Serial.print(__LINE__);Serial.print(" ");Serial.println(__FILE__);
 	status = VL53L1_RdByte(Device, GPIO_HV_MUX__CTRL, &Temp);
+	if ( status ) return status;
 	Temp = Temp & 0x10;
+	if ( status ) return status;
 	*pInterruptPolarity = !(Temp>>4);
+	if ( status ) return status;
 	return status;
 }
 
@@ -474,7 +486,9 @@ VL53L1X_ERROR VL53L1X::VL53L1X_GetInterMeasurementInMs(uint16_t *pIM)
 	VL53L1X_ERROR status = 0;
 	uint32_t tmp;
 
+	// Serial.print(__LINE__);Serial.print(" ");Serial.println(__FILE__);
 	status = VL53L1_RdDWord(Device,VL53L1_SYSTEM__INTERMEASUREMENT_PERIOD, &tmp);
+	// Serial.print(__LINE__);Serial.print(" ");Serial.println(__FILE__);
 	*pIM = (uint16_t)tmp;
 	status = VL53L1_RdWord(Device, VL53L1_RESULT__OSC_CALIBRATE_VAL, &ClockPLL);
 	ClockPLL = ClockPLL&0x3FF;
@@ -521,10 +535,14 @@ VL53L1X_ERROR VL53L1X::VL53L1X_GetSignalPerSpad(uint16_t *signalRate)
 	VL53L1X_ERROR status = 0;
 	uint16_t SpNb=1, signal;
 
+	if ( status ) { return status;}
 	status = VL53L1_RdWord(Device,
 		VL53L1_RESULT__PEAK_SIGNAL_COUNT_RATE_CROSSTALK_CORRECTED_MCPS_SD0, &signal);
+	if ( status ) { return status;}
+	// Serial.print(__LINE__);Serial.print(" ");Serial.println(__FILE__);
 	status = VL53L1_RdWord(Device,
 		VL53L1_RESULT__DSS_ACTUAL_EFFECTIVE_SPADS_SD0, &SpNb);
+	// Serial.print(__LINE__);Serial.print(" ");Serial.println(__FILE__);
 	*signalRate = (uint16_t) (2000.0*signal/SpNb);
 	return status;
 }
@@ -535,7 +553,9 @@ VL53L1X_ERROR VL53L1X::VL53L1X_GetAmbientPerSpad(uint16_t *ambPerSp)
 	VL53L1X_ERROR status=0;
 	uint16_t AmbientRate, SpNb=1;
 
+	// Serial.print(__LINE__);Serial.print(" ");Serial.println(__FILE__);
 	status = VL53L1_RdWord(Device, RESULT__AMBIENT_COUNT_RATE_MCPS_SD, &AmbientRate);
+	// Serial.print(__LINE__);Serial.print(" ");Serial.println(__FILE__);
 	status = VL53L1_RdWord(Device, VL53L1_RESULT__DSS_ACTUAL_EFFECTIVE_SPADS_SD0, &SpNb);
 	*ambPerSp=(uint16_t) (2000.0 * AmbientRate / SpNb);
 	return status;
@@ -547,6 +567,7 @@ VL53L1X_ERROR VL53L1X::VL53L1X_GetSignalRate(uint16_t *signal)
 	VL53L1X_ERROR status = 0;
 	uint16_t tmp;
 
+	// Serial.print(__LINE__);Serial.print(" ");Serial.println(__FILE__);
 	status = VL53L1_RdWord(Device,
 		VL53L1_RESULT__PEAK_SIGNAL_COUNT_RATE_CROSSTALK_CORRECTED_MCPS_SD0, &tmp);
 	*signal = tmp*8;
@@ -559,6 +580,7 @@ VL53L1X_ERROR VL53L1X::VL53L1X_GetSpadNb(uint16_t *spNb)
 	VL53L1X_ERROR status = 0;
 	uint16_t tmp;
 
+	// Serial.print(__LINE__);Serial.print(" ");Serial.println(__FILE__);
 	status = VL53L1_RdWord(Device,
 			      VL53L1_RESULT__DSS_ACTUAL_EFFECTIVE_SPADS_SD0, &tmp);
 	*spNb = tmp >> 8;
@@ -571,6 +593,7 @@ VL53L1X_ERROR VL53L1X::VL53L1X_GetAmbientRate(uint16_t *ambRate)
 	VL53L1X_ERROR status = 0;
 	uint16_t tmp;
 
+	// Serial.print(__LINE__);Serial.print(" ");Serial.println(__FILE__);
 	status = VL53L1_RdWord(Device, RESULT__AMBIENT_COUNT_RATE_MCPS_SD, &tmp);
 	*ambRate = tmp*8;
 	return status;
@@ -652,6 +675,7 @@ VL53L1X_ERROR  VL53L1X::VL53L1X_GetOffset(int16_t *offset)
 	VL53L1X_ERROR status = 0;
 	uint16_t Temp;
 
+	// Serial.print(__LINE__);Serial.print(" ");Serial.println(__FILE__);
 	status = VL53L1_RdWord(Device,ALGO__PART_TO_PART_RANGE_OFFSET_MM, &Temp);
 	Temp = Temp<<3;
 	Temp = Temp >>5;
@@ -680,6 +704,7 @@ VL53L1X_ERROR VL53L1X::VL53L1X_GetXtalk(uint16_t *xtalk )
 	VL53L1X_ERROR status = 0;
 	uint16_t tmp;
 
+	// Serial.print(__LINE__);Serial.print(" ");Serial.println(__FILE__);
 	status = VL53L1_RdWord(Device,ALGO__CROSSTALK_COMPENSATION_PLANE_OFFSET_KCPS, &tmp);
 	*xtalk = (tmp*1000)>>9; /* * 1000 to convert kcps to cps and >> 9 (7.9 format) */
 	return status;
@@ -723,6 +748,7 @@ VL53L1X_ERROR VL53L1X::VL53L1X_GetDistanceThresholdLow(uint16_t *low)
 	VL53L1X_ERROR status = 0;
 	uint16_t tmp;
 
+	// Serial.print(__LINE__);Serial.print(" ");Serial.println(__FILE__);
 	status = VL53L1_RdWord(Device,SYSTEM__THRESH_LOW, &tmp);
 	*low = tmp;
 	return status;
@@ -733,6 +759,7 @@ VL53L1X_ERROR VL53L1X::VL53L1X_GetDistanceThresholdHigh(uint16_t *high)
 	VL53L1X_ERROR status = 0;
 	uint16_t tmp;
 
+	// Serial.print(__LINE__);Serial.print(" ");Serial.println(__FILE__);
 	status = VL53L1_RdWord(Device,SYSTEM__THRESH_HIGH, &tmp);
 	*high = tmp;
 	return status;
@@ -781,6 +808,7 @@ VL53L1X_ERROR VL53L1X::VL53L1X_GetSignalThreshold(uint16_t *signal)
 	VL53L1X_ERROR status = 0;
 	uint16_t tmp;
 
+	// Serial.print(__LINE__);Serial.print(" ");Serial.println(__FILE__);
 	status = VL53L1_RdWord(Device,
 				RANGE_CONFIG__MIN_COUNT_RATE_RTN_LIMIT_MCPS, &tmp);
 	*signal = tmp <<3;
@@ -805,6 +833,7 @@ VL53L1X_ERROR VL53L1X::VL53L1X_GetSigmaThreshold(uint16_t *sigma)
 	VL53L1X_ERROR status = 0;
 	uint16_t tmp;
 
+	// Serial.print(__LINE__);Serial.print(" ");Serial.println(__FILE__);
 	status = VL53L1_RdWord(Device,RANGE_CONFIG__SIGMA_THRESH, &tmp);
 	*sigma = tmp >> 2;
 	return status;
@@ -914,6 +943,7 @@ VL53L1X_ERROR VL53L1X::VL53L1_ReadMulti(VL53L1_DEV Dev, uint16_t index, uint8_t 
 {
     int status;
 
+	// Serial.print(__LINE__);Serial.print(" ");Serial.println(__FILE__);
     status = VL53L1_I2CRead(Dev->I2cDevAddr, index, pdata, (uint16_t)count);
 
     return status;
@@ -957,6 +987,7 @@ VL53L1X_ERROR VL53L1X::VL53L1_RdByte(VL53L1_DEV Dev, uint16_t index, uint8_t *da
 {
    int  status;
 
+	// Serial.print(__LINE__);Serial.print(" ");Serial.println(__FILE__);
    status = VL53L1_I2CRead(Dev->I2cDevAddr, index, data, 1);
 
    if(status)
@@ -970,6 +1001,7 @@ VL53L1X_ERROR VL53L1X::VL53L1_RdWord(VL53L1_DEV Dev, uint16_t index, uint16_t *d
    int  status;
    uint8_t buffer[2] = {0,0};
 
+	// Serial.print(__LINE__);Serial.print(" ");Serial.println(__FILE__);
    status = VL53L1_I2CRead(Dev->I2cDevAddr, index, buffer, 2);
    if (!status)
    {
@@ -984,6 +1016,7 @@ VL53L1X_ERROR VL53L1X::VL53L1_RdDWord(VL53L1_DEV Dev, uint16_t index, uint32_t *
    int status;
    uint8_t buffer[4] = {0,0,0,0};
 
+	// Serial.print(__LINE__);Serial.print(" ");Serial.println(__FILE__);
    status = VL53L1_I2CRead(Dev->I2cDevAddr, index, buffer, 4);
    if(!status)
    {
@@ -998,6 +1031,7 @@ VL53L1X_ERROR VL53L1X::VL53L1_UpdateByte(VL53L1_DEV Dev, uint16_t index, uint8_t
    int  status;
    uint8_t buffer = 0;
 
+	// Serial.print(__LINE__);Serial.print(" ");Serial.println(__FILE__);
    /* read data direct onto buffer */
    status = VL53L1_I2CRead(Dev->I2cDevAddr, index, &buffer,1);
    if (!status)
@@ -1033,6 +1067,7 @@ VL53L1X_ERROR VL53L1X::VL53L1_I2CWrite(uint8_t DeviceAddr, uint16_t RegisterAddr
 VL53L1X_ERROR VL53L1X::VL53L1_I2CRead(uint8_t DeviceAddr, uint16_t RegisterAddr, uint8_t* pBuffer, uint16_t NumByteToRead)
 {
    int status = 0;
+   int loops = 0;
 //Loop until the port is transmitted correctly
    do {
 #ifdef DEBUG_MODE
@@ -1046,17 +1081,24 @@ VL53L1X_ERROR VL53L1X::VL53L1_I2CRead(uint8_t DeviceAddr, uint16_t RegisterAddr,
 #endif
    uint8_t buffer[2];
    buffer[0]=(uint8_t) RegisterAddr>>8;
+	// Serial.print(__LINE__);Serial.print(" ");Serial.println(__FILE__);
    buffer[1]=(uint8_t) RegisterAddr&0xFF;
    dev_i2c->write(buffer, 2);
    status = dev_i2c->endTransmission(false);
 //Fix for some STM32 boards
 //Reinitialize th i2c bus with the default parameters
+// Added by paulh. This fix is not what is required on a feather.
 #ifdef ARDUINO_ARCH_STM32
 	if (status){
+		// Serial.print(__LINE__);Serial.print(" ");Serial.println(__FILE__);
 		dev_i2c->end();
 		dev_i2c->begin();
 		}
 #endif   
+     loops++;
+     if ( loops > 100 ) {
+       return VL53L1_ERROR_TIME_OUT;
+      }
 //End of fix
    } while(status != 0);
 

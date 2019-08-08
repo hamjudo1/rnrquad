@@ -51,9 +51,6 @@ unsigned long nextReading = 0;
 bool rangeFindersDisabled = false;
 bool setupRangeFindersRun = false;
 void enableRangeFinders() {
-  for(int i =0; i<5; i++ ) {
-    Led::rgbColorSingleLed(i,0,0.25,0);
-  }
   rangeFindersDisabled = false;
   if ( ! setupRangeFindersRun ) {
     setupRangeFinders();
@@ -74,6 +71,7 @@ void initRangeFinder(SFEVL53L1X finder, int finderIndex) {
     finder.begin();
     finder.setI2CAddress(10 + (finderIndex * 2));
     (void)finder.startRanging(); // This returns a value that is bogus.
+
     delay(100);
     int dist = finder.getDistance();
     Serial.print("First reading in mm ");
@@ -257,6 +255,9 @@ void pollRangeFinders() {
 }
 void setupRangeFinders() {
   int finderIndex;
+  for(int i =0; i<5; i++ ) {
+    Led::rgbColorSingleLed(i,0,0.25,0);
+  }
   rangeFinderSyms();
   if( rangeFindersDisabled ) {
     return;

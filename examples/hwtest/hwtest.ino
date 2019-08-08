@@ -2,7 +2,7 @@
 
 void setup()
 {
-  disableRangeFinders();
+  disableRangeFinders();//
   baseSetup();
 }
 
@@ -12,4 +12,11 @@ void loop()
   ControllerState controllerState = getControllerState (); 
 
   setControllerState(controllerState);
+  static bool notRun = true;
+  if ( notRun ) {
+    if ( seconds() > 10.0 ) {
+      notRun = false;
+      enableRangeFinders();
+    }
+  }
 }
