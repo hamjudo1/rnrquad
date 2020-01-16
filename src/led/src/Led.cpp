@@ -114,8 +114,18 @@ uint32_t flowToCol(float flowRate) {
 uint32_t rangeToCol(float range) {
   if ( range < 0.0001 ) {
      return 0x808080;
+  } else if ( range < 0.1 ) {
+    return red;
+  } else if ( range < 0.5 ) {
+    return yellow;
+  } else if ( range < 0.7 ) {
+    return green;
+  } else if ( range < 1.0 ) {
+    return cyan;
+  } else if ( range < 2.0 ) {
+    return blue;
   } else {
-    return Led::hsvColor(range*183.0,1.0,0.5);
+    return magenta;
   }
 }
 void Led::poll() {

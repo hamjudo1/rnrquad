@@ -184,17 +184,25 @@ void throttletopacket(float val, uint8_t *packet)
 // 0.69 at 3.15
 // 0.70 at cutoff 3.10 volts
 // Note that voltage has a limited resolution. Step size is 0.02
-  if ( val < 0.1 ) {
-    vcorrection = 0.0; // Don't bother with very low throttle.
-  } else if ( voltage < 3.2 ) { // Add 0.2 at end of life.
-     vcorrection = 0.2;
-  } else if ( voltage < 3.4 ) {
+  // if ( voltage < 3.2 ) { // Add 0.2 at end of life.
+  //   cyanSet.blink(0,yellow,0x808080);
+  //   vcorrection = 0.2;
+  // } else
+  if ( voltage < 3.4 ) {
+     cyanSet.blink(0,yellow,0x808080);
      // vcorrection = 0.15;   // 0.20 through 0.10 from 3.2 to 3.4
      // vcorrection = 0.1; // 0.20 through 0.10 from 3.2 to 3.4
-     vcorrection = 0.10 + 0.5*(3.4 - voltage);
+     // vcorrection = 0.10 + 0.5*(3.4 - voltage); //TODO Try cutting this rate in half 
+     vcorrection = 0.10;
   } else if ( voltage < 3.5 ) {
-     // vcorrection = 0.0;
+     cyanSet.blink(0,green,0x808080);
      vcorrection = 3.5 - voltage; //  0.10 through 0.00 from 3.4 to 3.5.
+  } else {
+     cyanSet.blink(0,blue,0x808080);
+    vcorrection = 0.0;
+  }
+  if ( val < 0.1 ) {
+    vcorrection = 0.0; // Don't bother with very low throttle.
   }
   val = constrain(val+vcorrection, 0.0, 1.0);
   int newVal = int(0.5 + (val / 0.000976562f)); // Convert from 0.0 to 1.0 to 0 to 511;
