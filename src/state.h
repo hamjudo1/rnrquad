@@ -347,6 +347,7 @@ extern void pollRangeFinders();
 extern void setupRangeFinders();
 
 extern void replaceRx(float newrx[4], uint8_t oldPacket[15], uint8_t newPacket[15]);
+extern void copyPacket(uint8_t oldPacket[15], uint8_t newPacket[15]);
 
 extern void updateChecksum(uint8_t packet[15]);
 

@@ -233,14 +233,17 @@ bool verifyChecksum(uint8_t packet[15])
   return packet[14] == (sum & 0xff);
 }
 
-// newPacket will have stick values from newrx[] and everything else from oldPacket.
-void replaceRx(float newrx[4], uint8_t oldPacket[15], uint8_t newPacket[15])
+void copyPacket(uint8_t oldPacket[15], uint8_t newPacket[15])
 {
   for (int i = 0; i < 14; i++)
   {
     newPacket[i] = oldPacket[i]; // Last byte is checksum, which we will calculate at the end.
   }
-
+}
+// newPacket will have stick values from newrx[] and everything else from oldPacket.
+void replaceRx(float newrx[4], uint8_t oldPacket[15], uint8_t newPacket[15])
+{
+  copyPacket(oldPacket,newPacket);
   datatopacket(newrx[0], &newPacket[4]);
   datatopacket(newrx[1], &newPacket[6]);
   datatopacket(newrx[2], &newPacket[10]);
@@ -251,10 +254,10 @@ bool auxChanged = false;
 char trims[4];
 void setupController(void)
 {
-  addSym(&refControl.throttle,"rt","3n");
-  addSym(&refControl.leftStickXPosition,"rx2","3n");
-  addSym(&refControl.rightStickXPosition,"rx0","3n");
-  addSym(&refControl.rightStickYPosition,"rx1","3n");
+  addSym(&refControl.throttle,"rt","controller throttle","3N");
+  addSym(&refControl.leftStickXPosition,"rx2","controller stick","3N");
+  addSym(&refControl.rightStickXPosition,"rx0","controller stick","3N");
+  addSym(&refControl.rightStickYPosition,"rx1","controller stick","3N");
   addSym(&refControl.leftTrigger,"lt","0n");
   addSym(&refControl.button7,"b7","0n");
   addSym(&refControl.button8,"b8","0n");

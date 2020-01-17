@@ -38,9 +38,11 @@ void loop()
   if (controllerState.throttle > .1 )
   {
     controllerState.throttle = constrain(throttle, .3 , .8);
-    if (sensorState.rangeForward < .4 )
+    if (sensorState.rangeDown < 0.3 ) {
+      controllerState.rightStickYPosition = 0;
+    } else if (sensorState.rangeForward < .4 )
     {
-      controllerState.rightStickYPosition = -0.5;
+      controllerState.rightStickYPosition = -0.3;
     } else if (sensorState.rangeForward < .6 )
     {
       controllerState.rightStickYPosition = -0.2;
@@ -52,17 +54,19 @@ void loop()
 
     if ( sensorState.rangeRight + sensorState.rangeLeft < 1.5 ) {
       float delta = sensorState.rangeRight - sensorState.rangeLeft;
-      controllerState.rightStickXPosition = constrain(delta/2.0, -0.25, 0.25);
+      controllerState.rightStickXPosition = constrain(delta / 2.0, -0.25, 0.25);
     } else {
       if (sensorState.rangeRight < .5 )
       {
         controllerState.rightStickXPosition = -0.25;
-      }
-
-      if (sensorState.rangeLeft < .5 )
-      {
+      } else if (sensorState.rangeLeft < .5 ) {
         controllerState.rightStickXPosition = +0.25;
+      } else {
+        controllerState.rightStickXPosition = 0.0;
       }
+    }
+    if ( controllerState.leftStickXPosition > -0.1 && controllerState.leftStickXPosition < 0.1 ) {
+      controllerState.leftStickXPosition = 0.0;
     }
   } else {
     controllerState.throttle = 0;
