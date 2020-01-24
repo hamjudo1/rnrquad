@@ -106,9 +106,6 @@ bool okayToFly()
   {
     notokay = 3.0; // + event;
     throttleDownSinceLastEvent = false;
-    redSet.blink(2,red,green);
-    redSet.blink(3,green,red);
-
   }
   if ( notokay ) {
     throttleUpTime = seconds(); // Actually throttle up time is the last time the throttle wasn't up.
