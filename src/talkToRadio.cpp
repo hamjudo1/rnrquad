@@ -188,15 +188,12 @@ void throttletopacket(float val, uint8_t *packet)
   //   cyanSet.blink(0,yellow,0x808080);
   //   vcorrection = 0.2;
   // } else
-  if ( voltage < 3.4 ) {
+  if ( voltage < 4.0 ) {
      cyanSet.blink(0,yellow,0x808080);
      // vcorrection = 0.15;   // 0.20 through 0.10 from 3.2 to 3.4
      // vcorrection = 0.1; // 0.20 through 0.10 from 3.2 to 3.4
      // vcorrection = 0.10 + 0.5*(3.4 - voltage); //TODO Try cutting this rate in half 
-     vcorrection = 0.10;
-  } else if ( voltage < 3.5 ) {
-     cyanSet.blink(0,green,0x808080);
-     vcorrection = 3.5 - voltage; //  0.10 through 0.00 from 3.4 to 3.5.
+     vcorrection = (4.0 - voltage) * 0.2;
   } else {
      cyanSet.blink(0,blue,0x808080);
     vcorrection = 0.0;
