@@ -21,6 +21,8 @@ public:
   float flowPosX;
   float flowPosY;
   float flowPosQ;
+  float flowAveX;
+  float flowAveY;
   float flowPosSamples;
   float flowPosMissedSamples;
   float flowTimeStamp;
