@@ -22,6 +22,11 @@ void SERCOM5_Handler()
 void processFlowPacket(int dx, int dy, int q, int t)
 {
   float flowHeight = rangesInM[DOWNRANGE] - 0.040;
+  static int histIndex = 0;
+  const int flowHistSize = 10;
+  static float fxhist[flowHistSize] = {0,};
+  static float fyhist[flowHistSize] = {0,};
+
   if ( flowHeight < 0.0 )
   {
     flowHeight = 0.0;
@@ -35,6 +40,15 @@ void processFlowPacket(int dx, int dy, int q, int t)
     refSensor.flowPosY += refSensor.flowY;
     refSensor.flowPosQ += q;
     refSensor.flowPosSamples += 1.0;
+    histIndex = (histIndex+1)%flowHistSize;
+    fxhist[histIndex] = refSensor.flowX;
+    fyhist[histIndex] = refSensor.flowY;
+    refSensor.flowAveX = 0.0;
+    refSensor.flowAveY = 0.0;
+    for (int i=0;i<flowHistSize;i++) {
+      refSensor.flowAveX += fxhist[i];
+      refSensor.flowAveY += fyhist[i];
+    }
   }
   else
   {
@@ -75,6 +89,8 @@ void setupFlow()
   addSym(&(refSensor.flowPosSamples), "fps", "samples in flow sensor","0N");
   addSym(&(refSensor.flowPosX), "xfp", "flow sensor X relative position", "3N");
   addSym(&(refSensor.flowPosY), "yfp", "flow sensor Y relative position", "3N");
+  addSym(&(refSensor.flowAveX), "xfa", "flow sensor X average velocity", "3N");
+  addSym(&(refSensor.flowAveY), "yfa", "flow sensor Y average velocity", "3N");
   addSym(&(refSensor.flowPosQ), "qfp", "flow sensor Quality relative position", "3N");
 }
 
