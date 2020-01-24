@@ -17,7 +17,10 @@ void sendMotorSignal(ControllerState controller_out)
     if ( ! okayToFly() ) {
       if ( wasFlying ) {
 	newRx[3] = 0.3;
-	if ( refSensor.rangeDown < 0.1 ) {
+	newRx[0] = 0.0;
+	newRx[1] = 0.0;
+	newRx[2] = 0.0;
+	if (( refSensor.rangeDown < 0.1 ) || (refSensor.rangeUp < 0.1)){
 	  wasFlying = false;
 	}
       } else {
