@@ -38,31 +38,32 @@ void loop()
   if (controllerState.throttle > .1 )
   {
     controllerState.throttle = constrain(throttle, .3 , .8);
-    if (sensorState.rangeDown < 0.3 ) {
+    if (sensorState.rangeDown < 0.3 ) {  // Too low. side looking lidar sees the ground.
       controllerState.rightStickYPosition = 0;
-    } else if (sensorState.rangeForward < .4 )
-    {
-      controllerState.rightStickYPosition = -0.3;
-    } else if (sensorState.rangeForward < .6 )
-    {
-      controllerState.rightStickYPosition = -0.2;
-    } else if (sensorState.rangeForward < 1.0 ) {
-      controllerState.rightStickYPosition = 0;
+      controllerState.rightStickXPosition = 0;
     } else {
-      controllerState.rightStickYPosition = 0.2;
-    }
-
-    if ( sensorState.rangeRight + sensorState.rangeLeft < 1.5 ) {
-      float delta = sensorState.rangeRight - sensorState.rangeLeft;
-      controllerState.rightStickXPosition = constrain(delta / 2.0, -0.25, 0.25);
-    } else {
-      if (sensorState.rangeRight < .5 )
-      {
-        controllerState.rightStickXPosition = -0.25;
-      } else if (sensorState.rangeLeft < .5 ) {
-        controllerState.rightStickXPosition = +0.25;
+      if (sensorState.rangeForward < .3 ) {
+        controllerState.rightStickYPosition = -(0.3 - sensorState.rangeForward);
+      } else if (sensorState.rangeForward < 0.7 ) {
+        controllerState.rightStickYPosition = 0;
+      } else if (sensorState.rangeForward < 1.0 ) {
+        controllerState.rightStickYPosition = ( sensorState.rangeForward - 0.7);
       } else {
-        controllerState.rightStickXPosition = 0.0;
+        controllerState.rightStickYPosition = 0.3;
+      }
+
+      if ( sensorState.rangeRight + sensorState.rangeLeft < 1.5 ) {
+        float delta = sensorState.rangeRight - sensorState.rangeLeft;
+        controllerState.rightStickXPosition = constrain(delta / 2.0, -0.25, 0.25);
+      } else {
+        if (sensorState.rangeRight < .5 )
+        {
+          controllerState.rightStickXPosition = -0.25;
+        } else if (sensorState.rangeLeft < .5 ) {
+          controllerState.rightStickXPosition = +0.25;
+        } else {
+          controllerState.rightStickXPosition = 0.0;
+        }
       }
     }
     if ( controllerState.leftStickXPosition > -0.1 && controllerState.leftStickXPosition < 0.1 ) {
