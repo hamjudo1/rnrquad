@@ -116,7 +116,7 @@ uint32_t rangeToCol(float range) {
      return 0x808080;
   } else if ( range < 0.1 ) {
     return red;
-  } else if ( range < 0.5 ) {
+  } else if ( range < 0.3 ) {
     return yellow;
   } else if ( range < 0.7 ) {
     return green;

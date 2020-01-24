@@ -14,6 +14,7 @@ enum color {
   blue = 0x00003f,
   magenta = 0x3f003f, 
   black = 0x000000,
+  white = 0x3f3f3f,
 } ;
 const int NUMPIXELS = 5;  
 class LedSet {
