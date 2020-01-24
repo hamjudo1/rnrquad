@@ -134,8 +134,14 @@ void baseLoop()
     }
   } else
   {
-    if ( voltage < 3.0 ) {
+    if ( voltage < 3.2 ) {
       color2 = black;
+      color1 = white;
+      redSet.blink(0,color1,color2);
+      redSet.blink(1,color2,color1);
+      redSet.blink(2,color1,color2);
+      redSet.blink(3,color2,color1);
+      redSet.blink(4,color1,color2);
     } else {
       float intensity = (voltage - 3.0) * 0.22;
       color1 = Led::rgbColor(0.0, (4.2 - 3.0) * 0.22, 0.0);
