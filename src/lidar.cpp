@@ -60,7 +60,23 @@ void disableRangeFinders() {
   rangeFindersDisabled = true;
   addCmd(enableRangeFinders, "RFC", "enable Rangefinders ", NULL);
 }
+float roiSize = 16.0;
 
+void roi() {
+  int roiX = (int)roiSize;
+  int roiY = (int)roiSize;
+  Serial.print("Setting region of interest on right range finder to ");
+  Serial.println(roiX);
+  rightR.setROI(roiX,roiY); // Note roiY is ignored!!!
+  leftR.setROI(roiX,roiY); // Note roiY is ignored!!!
+  upR.setROI(roiX,roiY); // Note roiY is ignored!!!
+  downR.setROI(roiX,roiY); // Note roiY is ignored!!!
+  forwardR.setROI(roiX,roiY); // Note roiY is ignored!!!
+}
+void setupRoi() {
+  addSym(&roiSize,"roisize","region of interest size, 4 to 16","0N");
+  addCmd(roi,"roi","set region of interest to roisize", NULL);
+}
 void initRangeFinder(SFEVL53L1X finder, int finderIndex) {
   if ( rangeConfig[finderIndex].enabled ) {
     int pinNo = rangeConfig[finderIndex].j5Index;
@@ -294,5 +310,6 @@ void setupRangeFinders() {
   nextReading = millis() + rangeFinderCycle;
 
   setupRangeFindersRun = true; 
+  setupRoi();
 }
 
