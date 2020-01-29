@@ -23,7 +23,7 @@ void processFlowPacket(int dx, int dy, int q, int t)
 {
   float flowHeight = rangesInM[DOWNRANGE] - 0.040;
   static int histIndex = 0;
-  const int flowHistSize = 10;
+  const int flowHistSize = 5;
   static float fxhist[flowHistSize] = {0,};
   static float fyhist[flowHistSize] = {0,};
 
