@@ -11,14 +11,19 @@
 float PID::tstep(float value)
 {
   float time = Utility::time();
-  float error = constrain (target - value, -.3, .1); //Error should never be wildly high
+  float error = target - value;
+  if ( altitudeMode ) {
+    error = constrain (error, -.3, .1); //Altitude Error should never be wildly high
+  }
   float proportional = error;
   float derivative = (error - previousError) / (time - previousTime);
   float integral =  (.9 * accumulatedError + .1 * error);
 
 
-  derivative = constrain(derivative, -.2, .2);
-  integral = constrain(integral, -.1, .1);
+  if ( altitudeMode ) {
+    derivative = constrain(derivative, -.2, .2);
+    integral = constrain(integral, -.1, .1);
+  }
 
   previousTime = time;
   previousError = error;
@@ -44,4 +49,5 @@ void PID::begin(float targetValue, float proportionalConstant, float integralCon
   previousError = -target;
   previousTime = Utility::time();
   C = constant;
+  altitudeMode = true;
 }
