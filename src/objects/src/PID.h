@@ -34,6 +34,7 @@ public:
   void begin(float targetValue, float proportionalConstant, float integralConstant, float derivativeConstant, float constant);
   float tstep(float value);
   bool altitudeMode;
+  void reset();
 private:
   float accumulatedError;
   float previousTime;

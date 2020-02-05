@@ -17,7 +17,7 @@ float PID::tstep(float value)
   }
   float proportional = error;
   float derivative = (error - previousError) / (time - previousTime);
-  float integral =  (.9 * accumulatedError + .1 * error);
+  float integral =  accumulatedError + error * (time - previousTime);
 
 
   if ( altitudeMode ) {
@@ -50,4 +50,11 @@ void PID::begin(float targetValue, float proportionalConstant, float integralCon
   previousTime = Utility::time();
   C = constant;
   altitudeMode = true;
+}
+
+void PID::reset() {
+  previousTime = Utility::time();
+  previousError = 0;
+  accumulatedError = 0;
+
 }
