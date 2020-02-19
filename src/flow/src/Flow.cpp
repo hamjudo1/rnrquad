@@ -34,8 +34,10 @@ void processFlowPacket(int dx, int dy, int q, int t)
 
   if ( ((sercom5timeStamp - lastSample) < 50000) && q > 70 )
   {
-    refSensor.flowX = dx*flowHeight; 
-    refSensor.flowY = dy*flowHeight;
+    // Positive X is to the right
+    // Positive Y is forward.
+    refSensor.flowX = dx*flowHeight*0.002; // This is approximately the motion in meters since last sample.
+    refSensor.flowY = - dy*flowHeight*0.002; // Negated to make forward motion positive.
     refSensor.flowPosX += refSensor.flowX;
     refSensor.flowPosY += refSensor.flowY;
     refSensor.flowPosQ += q;
@@ -79,19 +81,19 @@ void setupFlow()
   flowSerial.begin(19200);      // This will initialize SERCOM5 correctly, but mess up pin 6
   pinPeripheral(6, PIO_SERCOM); // Switch the port back to pin 6
   Led::hsvColorSingleLed(0, 0.0);
-  addSym(&rawXFlow, "rawxf", "flow sensor raw data", "1N");
-  addSym(&rawYFlow, "rawyf", "flow sensor raw data", "1N");
-  addSym(&rawQFlow, "rawqf", "flow sensor raw data", "0N");
-  addSym(&rawTFlow, "rawtf", "flow sensor raw data", "1N");
-  addSym(&(refSensor.flowX), "xf", "flow sensor X", "3N");
-  addSym(&(refSensor.flowY), "yf", "flow sensor Y", "3N");
-  addSym(&(refSensor.flowQ), "qf", "flow sensor Quality", "3N");
-  addSym(&(refSensor.flowPosSamples), "fps", "samples in flow sensor","0N");
+  addSym(&rawXFlow, "rawxf", "flow sensor raw data", "1");
+  addSym(&rawYFlow, "rawyf", "flow sensor raw data", "1");
+  addSym(&rawQFlow, "rawqf", "flow sensor raw data", "0");
+  // addSym(&rawTFlow, "rawtf", "flow sensor raw data", "1N");
+  // addSym(&(refSensor.flowX), "xf", "flow sensor X", "3N");
+  // addSym(&(refSensor.flowY), "yf", "flow sensor Y", "3N");
+  addSym(&(refSensor.flowQ), "qf", "flow sensor Quality", "3");
+  addSym(&(refSensor.flowPosSamples), "fps", "samples in flow sensor","0");
   addSym(&(refSensor.flowPosX), "xfp", "flow sensor X relative position", "3N");
   addSym(&(refSensor.flowPosY), "yfp", "flow sensor Y relative position", "3N");
-  addSym(&(refSensor.flowAveX), "xfa", "flow sensor X average velocity", "3N");
-  addSym(&(refSensor.flowAveY), "yfa", "flow sensor Y average velocity", "3N");
-  addSym(&(refSensor.flowPosQ), "qfp", "flow sensor Quality relative position", "3N");
+  // addSym(&(refSensor.flowAveX), "xfa", "flow sensor X average velocity", "3N");
+  // addSym(&(refSensor.flowAveY), "yfa", "flow sensor Y average velocity", "3N");
+  // addSym(&(refSensor.flowPosQ), "qfp", "flow sensor Quality relative position", "3N");
 }
 
 void pollFlow()
