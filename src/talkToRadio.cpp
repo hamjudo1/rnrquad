@@ -252,12 +252,14 @@ char trims[4];
 void setupController(void)
 {
   addSym(&refControl.throttle,"rt","controller throttle","3N");
-  addSym(&refControl.leftStickXPosition,"rx2","controller stick","3N");
-  addSym(&refControl.rightStickXPosition,"rx0","controller stick","3N");
-  addSym(&refControl.rightStickYPosition,"rx1","controller stick","3N");
-  addSym(&refControl.leftTrigger,"lt","0n");
-  addSym(&refControl.button7,"b7","0n");
-  addSym(&refControl.button8,"b8","0n");
+  addSym(&refControl.leftStickXPosition,"rx2","controller stick","3");
+  addSym(&refControl.rightStickXPosition,"rx0","controller stick","3");
+  addSym(&refControl.rightStickYPosition,"rx1","controller stick","3");
+  addSym(&refControl.leftTrigger,"lt","0");
+  addSym(&refControl.button7,"b7","0");
+  addSym(&refControl.button8,"b8","0");
+  addSym(&refControl.trim0,"trim0","0N");
+  addSym(&refControl.trim1,"trim1","0N");
 }
 int prevLT = 0;
 int currLT = 0;
