@@ -13,13 +13,18 @@ LedSet::LedSet (color def) {
     altdots[i] = defColor;
   }
 }
+void LedSet::reset() {
+  for(int i=0;i<NUMPIXELS;i++) {
+    constant(i,defColor);
+  }
+}
 void LedSet::show() {
   unsigned long now = millis() % 1000;
   int availPixels = NUMPIXELS;
   if (debugHang ) {
      availPixels = NUMPIXELS - 1;
   }
-  if ( (seconds() - refControl.leftTriggerTime) < 1.5 ) {
+  if ( (seconds() - refControl.leftTriggerTime) < 1.0 ) {
     for(int i=0; i<availPixels; i++) {
       pixel.setPixelColor(i,defColor);
     }

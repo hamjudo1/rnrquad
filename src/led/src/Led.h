@@ -21,6 +21,7 @@ class LedSet {
 public:
   LedSet(color def);
   void show();
+  void reset();
   void hsv(int dotNo, float h, float s, float v);
   void rgb(int dotNo, float r, float g, float b);
   void named(int dotNo, color name);
