@@ -74,7 +74,7 @@ void roi() {
   forwardR.setROI(roiX,roiY); // Note roiY is ignored!!!
 }
 void setupRoi() {
-  addSym(&roiSize,"roisize","region of interest size, 4 to 16","0N");
+  addSym(&roiSize,"roisize","region of interest size, 4 to 16","0");
   addCmd(roi,"roi","set region of interest to roisize", NULL);
 }
 void initRangeFinder(SFEVL53L1X finder, int finderIndex) {
