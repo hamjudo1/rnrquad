@@ -251,7 +251,7 @@ bool auxChanged = false;
 char trims[4];
 void setupController(void)
 {
-  addSym(&refControl.throttle,"rt","controller throttle","3N");
+  addSym(&refControl.throttle,"rt","controller throttle","3");
   addSym(&refControl.leftStickXPosition,"rx2","controller stick","3");
   addSym(&refControl.rightStickXPosition,"rx0","controller stick","3");
   addSym(&refControl.rightStickYPosition,"rx1","controller stick","3");
