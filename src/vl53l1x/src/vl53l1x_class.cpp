@@ -848,8 +848,12 @@ VL53L1X_ERROR VL53L1X::VL53L1X_StartTemperatureUpdate()
 	status = VL53L1_WrByte(Device,VL53L1_VHV_CONFIG__TIMEOUT_MACROP_LOOP_BOUND,0x81); /* full VHV */
 	status = VL53L1_WrByte(Device,0x0B,0x92);
 	status = VL53L1X_StartRanging();
+	uint32_t endTime = millis()+50;
 	while(tmp==0){
 		status = VL53L1X_CheckForDataReady(&tmp);
+		if ( millis() > endTime ) {
+		      return VL53L1_ERROR_TIME_OUT;
+		}
 	}
 	tmp  = 0;
 	status = VL53L1X_ClearInterrupt();
@@ -1107,6 +1111,9 @@ VL53L1X_ERROR VL53L1X::VL53L1_I2CRead(uint8_t DeviceAddr, uint16_t RegisterAddr,
    int i=0;
    while (dev_i2c->available())
    {
+     if ( i > numByteToRead ) {
+       return VL53L1_ERROR_COMMS_BUFFER_TOO_SMALL;
+     }
      pBuffer[i] = dev_i2c->read();
      i++;
    }
